@@ -1,0 +1,6 @@
+#To configure firebase, add a .env and .env.prod file with following properties
+
+FIREBASE_CONFIG_API_KEY=your-firebase-project-api-key
+FIREBASE_CONFIG_AUTH_DOMAIN=your-firebase-project-auth-domain
+FIREBASE_CONFIG_PROJECT_ID=your-firebase-project-id
+FIREBASE_CONFIG_DATABASE_URL=your-firebase-project-database-url

@@ -1,3 +1,5 @@
+.devcontainer
+
 # Logs
 logs
 *.log
@@ -102,3 +104,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+
+
+__pycache__/
+*.py[cod]
+*$py.class

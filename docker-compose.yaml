@@ -1,0 +1,30 @@
+version: "3.8"
+services: 
+  client:
+    build: client
+    stdin_open: true
+    tty: true
+    ports:
+      - "8080:8080"
+    volumes: 
+      - /app/node_modules
+      - /Users/yogesh/projects/bokeh-play/client:/app
+  server:
+    build: server
+    stdin_open: true
+    tty: true
+    ports:
+      - "8000:8000"
+    volumes: 
+      - /Users/yogesh/projects/bokeh-play/server:/app
+      - /Users/yogesh/projects/bokeh-play/sandbox/projects:/projects
+  sandbox:
+    build: sandbox
+    stdin_open: true
+    tty: true
+    ports:
+      - "5006:5006"
+    volumes: 
+      - /Users/yogesh/projects/bokeh-play/sandbox:/app
+
+  
