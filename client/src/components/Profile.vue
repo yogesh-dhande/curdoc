@@ -1,60 +1,67 @@
 <template>
-    <section id="settings">
-        <NavBar/> 
-        <div class="col1">
-            <h3>Settings</h3>
-            <p>Update your profile</p>
+  <div>
+    <nav-bar />
+    <b-container>
+      <b-form @submit="onSubmit">
+        <b-form-group id="input-group-1" label="Name" label-for="input-1">
+          <b-form-input
+            id="input-1"
+            v-model="name"
+            required
+            :placeholder="userProfile.name"
+          ></b-form-input>
+        </b-form-group>
 
-            <transition name="fade">
-                <p v-if="showSuccess" class="success">profile updated</p>
-            </transition>
+        <b-form-group id="input-group-2" label="Job Title" label-for="input-2">
+          <b-form-input
+            id="input-2"
+            v-model="title"
+            :placeholder="userProfile.title"
+          ></b-form-input>
+        </b-form-group>
 
-            <form @submit.prevent>
-                <label for="name">Name</label>
-                <input v-model.trim="name" type="text" :placeholder="userProfile.name" id="name" />
-
-                <label for="title">Job Title</label>
-                <input v-model.trim="title" type="text" :placeholder="userProfile.title" id="title" />
-
-                <button @click="updateProfile" class="button">Update Profile</button>
-            </form>
-        </div>
-    </section>
+        <b-button type="submit" variant="primary">Submit</b-button>
+      </b-form>
+    </b-container>
+  </div>
 </template>
 
 <script>
-    import { mapState } from 'vuex'
-    import NavBar from "./NavBar.vue"
+import { mapState } from "vuex";
+import NavBar from "./NavBar.vue";
 
-    export default {
-        name: 'Profile',
-        components: {
-            NavBar
-        },
-        data() {
-            return {
-                name: '',
-                title: '',
-                showSuccess: false
-            }
-        },
-        computed: {
-            ...mapState(['userProfile'])
-        },
-        methods: {
-            updateProfile() {
-                this.$store.dispatch('updateProfile', {
-                    name: this.name !== '' ? this.name : this.userProfile.name,
-                    title: this.title !== '' ? this.title : this.userProfile.title
-                })
+export default {
+  name: "Profile",
+  components: {
+    "nav-bar": NavBar,
+  },
+  data() {
+    return {
+      name: "",
+      title: "",
+      showSuccess: false,
+    };
+  },
+  computed: {
+    ...mapState(["userProfile"]),
+  },
+  methods: {
+    onSubmit(evt) {
+      evt.preventDefault();
+      this.$store.dispatch("updateProfile", {
+        name: this.name !== "" ? this.name : this.userProfile.name,
+        title: this.title !== "" ? this.title : this.userProfile.title,
+      });
 
-                this.name = ''
-                this.title = ''
+      this.name = "";
+      this.title = "";
 
-                this.showSuccess = true
+      this.showSuccess = true;
 
-                setTimeout(() => { this.showSuccess = false }, 2000)
-            }
-        }
-    }
+      setTimeout(() => {
+        this.showSuccess = false;
+      }, 2000);
+    },
+  },
+};
 </script>

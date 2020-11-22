@@ -1,20 +1,19 @@
 <template>
-<div>
-    <NavBar/> 
-    <div id="id"></div>
-</div>
-
+    <div>
+        <nav-bar/>
+        <div id="id"></div>
+    </div>
 </template>
 
 <script>
     import postscribe from 'postscribe'
     import axios from 'axios'
-    import NavBar from "./NavBar.vue"
+    import NavBar from './NavBar.vue'
 
     export default {
         name: 'bokeh-app',
         components: {
-            NavBar
+            'nav-bar': NavBar
         },
         props: {
             id: {

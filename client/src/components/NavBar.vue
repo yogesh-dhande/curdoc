@@ -4,9 +4,18 @@
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" is-nav>
             <b-navbar-nav class="ml-auto">
-                <b-nav-item to="bokeh-playground">Playground</b-nav-item>
-                <b-nav-item to="profile" v-if="user">{{ user }}</b-nav-item>
-                <b-nav-item @click="logout">Logout</b-nav-item>
+                <b-button-group class="mx-1">
+                    <b-button to="code" variant="info">Code</b-button>
+                    <b-button to="app" variant="success">Preview</b-button>
+                </b-button-group>
+                <b-nav-item-dropdown right>
+                    <!-- Using 'button-content' slot -->
+                    <template #button-content>
+                        <em>{{ user }}</em>
+                    </template>
+                    <b-dropdown-item to="profile">Profile</b-dropdown-item>
+                    <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>
+                </b-nav-item-dropdown>
             </b-navbar-nav>
         </b-collapse>
     </b-navbar>

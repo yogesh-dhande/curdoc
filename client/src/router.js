@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from './components/Login'
-import BokehApp from './components/BokehApp'
+import CodeEditor from './components/CodeEditor'
+import BokehApp from './components/BokehApp.vue'
 import Profile from './components/Profile'
 import firebase from 'firebase'
 
@@ -13,7 +14,7 @@ let router = new Router({
         routes: [
             {
                 path: '*',
-                redirect: '/profile'
+                redirect: '/code'
             },
             {
                 path: '/profile',
@@ -33,13 +34,20 @@ let router = new Router({
 
             },
             {
-                path: '/bokeh-playground',
-                name: 'Bokeh Playground',
+                path: '/code',
+                name: 'Code',
+                component: CodeEditor,
+                meta: {
+                    requiresAuth: true
+                }
+            },
+            {
+                path: '/app',
+                name: 'App',
                 component: BokehApp,
                 meta: {
                     requiresAuth: true
                 }
-
             }
         ]
 

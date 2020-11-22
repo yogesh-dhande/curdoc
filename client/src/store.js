@@ -6,7 +6,6 @@ const fb = require("./firebaseConfig.js");
 Vue.use(Vuex);
 
 export function buildStore(user) {
-
   let store = new Vuex.Store({
     state: {
       session: null,
@@ -22,7 +21,7 @@ export function buildStore(user) {
       },
       fetchUserProfile({ commit, state }) {
         fb.usersCollection
-          .doc(state.currentUser.uid)
+          .doc(state.user.uid)
           .get()
           .then((res) => {
             commit("setUserProfile", res.data());
@@ -36,13 +35,13 @@ export function buildStore(user) {
         let title = data.title;
 
         fb.usersCollection
-          .doc(state.currentUser.uid)
+          .doc(state.user.uid)
           .update({ name, title })
           .then(() => {
             // eslint-disable-line no-unused-vars
             // update all posts by user to reflect new name
             fb.postsCollection
-              .where("userId", "==", state.currentUser.uid)
+              .where("userId", "==", state.user.uid)
               .get()
               .then((docs) => {
                 docs.forEach((doc) => {
@@ -53,7 +52,7 @@ export function buildStore(user) {
               });
             // update all comments by user to reflect new name
             fb.commentsCollection
-              .where("userId", "==", state.currentUser.uid)
+              .where("userId", "==", state.user.uid)
               .get()
               .then((docs) => {
                 docs.forEach((doc) => {
@@ -69,15 +68,14 @@ export function buildStore(user) {
       },
     },
     mutations: {
-
       setCurrentUser(state, val) {
         state.user = val;
       },
       setUserProfile(state, val) {
         state.userProfile = val;
       },
-    }
-})
+    },
+  });
 
   return store;
 }
