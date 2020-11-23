@@ -11,7 +11,8 @@
 export default {
   name: 'App',
   mounted() {
-    console.log(window)
+    console.log(this.$route.params)
+    // Create a project id and push to the router
   }
 }
 </script>

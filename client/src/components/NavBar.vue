@@ -1,14 +1,11 @@
 <template>
     <b-navbar toggleable="lg" type="dark" variant="dark">
-        <b-navbar-brand to="terminal">Broccoli</b-navbar-brand>
+        <b-navbar-brand to="terminal">Broccolini</b-navbar-brand>
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" is-nav>
             <b-navbar-nav class="ml-auto">
-                <b-button-group class="mx-1">
-                    <b-button to="code" variant="info">Code</b-button>
-                    <b-button to="app" variant="success">Preview</b-button>
-                </b-button-group>
-                <b-nav-item-dropdown right>
+                <toolbar/>
+                <b-nav-item-dropdown right v-if="user != 'guest'">
                     <!-- Using 'button-content' slot -->
                     <template #button-content>
                         <em>{{ user }}</em>
@@ -16,6 +13,7 @@
                     <b-dropdown-item to="profile">Profile</b-dropdown-item>
                     <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>
                 </b-nav-item-dropdown>
+                <b-nav-item to="/login" v-else>Login</b-nav-item>
             </b-navbar-nav>
         </b-collapse>
     </b-navbar>
@@ -24,8 +22,13 @@
 <script>
     const fb = require('../firebaseConfig.js')
     import {mapState} from 'vuex'
+    import Toolbar from "./Toolbar"
 
     export default {
+        name: 'nav-bar',
+        components: {
+            'toolbar': Toolbar
+        },
         methods: {
             logout() {
                 fb.auth.signOut().then(() => {

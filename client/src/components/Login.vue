@@ -1,17 +1,6 @@
 <template>
     <div class="container-fluid" style="padding-left: 0; padding-right: 0">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link"><font-awesome-icon icon="seedling" size="lg" /> PySheets</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        <nav-bar></nav-bar>
         <div class="container-fluid">
             <div class="row row-no-gutters" style="margin-top: 100px">
                 <div id="col-start" class="col-xs-6 col-md-4 align-self-center"></div>
@@ -34,13 +23,15 @@
     import firebase from "firebase";
     import * as firebaseui from "firebaseui";
     import "firebaseui/dist/firebaseui.css";
+    import NavBar from './NavBar.vue'
 
     export default {
-        name: "Login",
+        name: "login",
+        components: {
+            'nav-bar': NavBar,
+        },
         data() {
             return {};
-        },
-        components: {
         },
         mounted() {
             let ui = firebaseui.auth.AuthUI.getInstance();

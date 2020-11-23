@@ -1,7 +1,6 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request
 from flask_cors import CORS
-from bokeh.client import pull_session
 from bokeh.embed import server_document
 
 # Initialize Flask app
@@ -12,44 +11,56 @@ CORS(app)
 PROJECTS_FOLDER_PATH = "/projects"
 
 
-def get_file_path(filename):
-    return os.path.join(PROJECTS_FOLDER_PATH, filename + '.py')
+def get_file_path(project_id):
+    return os.path.join(PROJECTS_FOLDER_PATH, project_id + '.py')
 
 
-def get_app_script_from_filename(filename):
-    app_url = "http://localhost:5006/main"
-    return server_document(url=app_url)
+def get_app_script_from_project_id(project_id):
+    app_url = f"http://localhost:5006/main"
+    script = server_document(arguments={'project': project_id}, url=app_url)
+    print(script)
+    return script
+
+def resolve_project_id(project_id):
+    return project_id if os.path.exists(get_file_path(project_id)) else 'default'
+
 
 @app.route("/", methods=["GET"])
 def index():
     return {'message': 'ok'}
 
-@app.route("/code/<filename>", methods=["GET"])
-def get_code(filename):
+@app.route("/code/<project_id>", methods=["GET"])
+def get_code(project_id):
     try:
-        print(filename)
-        script = get_app_script_from_filename(filename)
-
-        with open(get_file_path(filename), "r") as code_file:
-            code = code_file.read()
-
-        return {"code": code, "script": script}
+        with open(get_file_path(resolve_project_id(project_id)), "r") as code_file:
+            return {"code": code_file.read()}
 
     except Exception as e:
         return f"An Error Occured: {e}"
 
 
-@app.route("/code/<filename>", methods=["POST"])
-def post_code(filename):
+@app.route("/script/<project_id>", methods=["GET"])
+def get_script(project_id):
     try:
-        print(filename)
+        script = get_app_script_from_project_id(resolve_project_id(project_id))
+        return {"script": script}
+
+    except Exception as e:
+        return f"An Error Occured: {e}"
+
+
+@app.route("/code/<project_id>", methods=["POST"])
+def post_code(project_id):
+    try:
+        print(project_id)
+        print(request.json)
         code = request.json["code"]
         print(code)
 
-        with open(get_file_path(filename), "w+") as code_file:
+        with open(get_file_path(project_id), "w+") as code_file:
             code_file.write(code)
 
-        return {"script": get_app_script_from_filename(filename)}
+        return {"script": get_app_script_from_project_id(project_id)}
 
     except Exception as e:
         return f"An Error Occured: {e}"
@@ -57,4 +68,4 @@ def post_code(filename):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
-    app.run(threaded=True, host="0.0.0.0", port=port)
+    app.run(threaded=True, host="0.0.0.0", port=port, debug=True)

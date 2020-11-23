@@ -15,10 +15,13 @@ export default {
         }
     },
     props: {
-
+        code: {
+            type: String
+        }
     },
     mounted() {
         this.editor = ace.edit("editor", {
+            value: this.code,
             theme: "ace/theme/dracula",
             mode: "ace/mode/python",
             wrap: true,
@@ -27,12 +30,18 @@ export default {
             maxLines: 200,
             fontSize: 16,
             highlightSelectedWord: true,
-            highlightGutterLines: true
+            highlightGutterLine: true
 
         });
         this.editor.resize()
+        this.editor.on("blur", this.updateCode)
+    },
+    methods: {
+        updateCode (evt) {
+            console.log(evt)
+            this.$store.dispatch('updateCode', this.editor.getValue())
+        }
     }
-
 }
 </script>
 

@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import axios from "axios";
 
 const fb = require("./firebaseConfig.js");
 
@@ -9,15 +10,42 @@ export function buildStore(user) {
   let store = new Vuex.Store({
     state: {
       session: null,
-      user: user,
+      projectId: null,
+      code: "",
+      appScript: null,
+      user: user || 'guest',
       userProfile: {},
     },
+    getters: {
+    },
     actions: {
-      clearData({ commit }) {
-        commit("setCurrentUser", null);
-        commit("setUserProfile", {});
-        commit("setPosts", null);
-        commit("setHiddenPosts", null);
+      updateCode({commit}, code) {
+        commit("updateCode", code)
+      },
+      getCodeForProject({ commit, state }, projectId) {
+        if (state.projectId != projectId) {
+          commit("updateProjectId", projectId);
+          axios.get(`http://localhost:8000/code/${projectId}`).then((res) => {
+            commit("updateCode", res.data.code);
+          });
+        }
+      },
+      getScriptForProject({ commit, state }, projectId) {
+        if (state.projectId != projectId) {
+          commit("updateProjectId", projectId);
+          axios.get(`http://localhost:8000/script/${projectId}`).then((res) => {
+            commit("updateAppScript", res.data.script);
+          });
+        } else {
+          // must overwrite remote with local code first to get new script
+          axios
+            .post(`http://localhost:8000/code/${projectId}`, {
+              code: state.code,
+            })
+            .then((res) => {
+              commit("updateAppScript", res.data.script);
+            });
+        }
       },
       fetchUserProfile({ commit, state }) {
         fb.usersCollection
@@ -73,6 +101,15 @@ export function buildStore(user) {
       },
       setUserProfile(state, val) {
         state.userProfile = val;
+      },
+      updateCode(state, val) {
+        state.code = val;
+      },
+      updateAppScript(state, val) {
+        state.appScript = val;
+      },
+      updateProjectId(state, val) {
+        state.projectId = val;
       },
     },
   });

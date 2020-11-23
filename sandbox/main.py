@@ -13,20 +13,20 @@ doc = curdoc()
 
 args = doc.session_context.request.arguments
 print(args)
-filename = args.get('filename', [b'default'])[0].decode("utf-8") 
-print(filename)
-doc.title = filename
+project_id = args.get('project', [b'default'])[0].decode("utf-8").split("/")[0]
+print(project_id)
+doc.title = project_id
 
 sys.path.append(os.getcwd())
-filepath = os.path.join('projects', filename + '.py')
+filepath = os.path.join('projects', project_id + '.py')
+print(filepath)
 assert os.path.exists(filepath)
 with open(filepath, 'r') as code_file:
     for line in code_file.readlines():
         doc.add_root(Div(text=line))
 
-module = importlib.import_module(f'.{filename}', package='projects')
-modify_doc = getattr(module, 'modify_doc', False)
-assert modify_doc
+# module = importlib.import_module(f'.{project_id}', package='projects')
+# modify_doc = getattr(module, 'modify_doc', False)
+# assert modify_doc
 
-
-modify_doc(doc)
+# modify_doc(doc)

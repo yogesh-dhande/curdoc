@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from './components/Login'
 import CodeEditor from './components/CodeEditor'
-import BokehApp from './components/BokehApp.vue'
+import AppPreview from './components/AppPreview.vue'
 import Profile from './components/Profile'
 import firebase from 'firebase'
 
@@ -14,7 +14,7 @@ let router = new Router({
         routes: [
             {
                 path: '*',
-                redirect: '/code'
+                component: Profile,
             },
             {
                 path: '/profile',
@@ -34,20 +34,30 @@ let router = new Router({
 
             },
             {
-                path: '/code',
+                path: '/:projectId/code',
                 name: 'Code',
                 component: CodeEditor,
                 meta: {
-                    requiresAuth: true
-                }
+                    requiresAuth: false
+                },
+                props: true
             },
             {
-                path: '/app',
-                name: 'App',
-                component: BokehApp,
+                path: '/:projectId',
+                component: CodeEditor,
                 meta: {
-                    requiresAuth: true
-                }
+                    requiresAuth: false
+                },
+                redirect: '/:projectId/code',
+            },
+            {
+                path: '/:projectId/app',
+                name: 'App',
+                component: AppPreview,
+                meta: {
+                    requiresAuth: false
+                },
+                props: true
             }
         ]
 
