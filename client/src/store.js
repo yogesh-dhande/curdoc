@@ -23,8 +23,10 @@ export function buildStore(user) {
         commit("updateCode", code)
       },
       getCodeForProject({ commit, state }, projectId) {
+        console.log(`getting code for ${projectId} not ${state.projectId}`)
         if (state.projectId != projectId) {
-          commit("updateProjectId", projectId);
+          commit("updateProjectId", projectId)
+          console.log(`getting code for ${projectId}`)
           axios.get(`http://localhost:8000/code/${projectId}`).then((res) => {
             commit("updateCode", res.data.code);
           });

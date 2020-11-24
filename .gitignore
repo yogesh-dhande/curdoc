@@ -1,5 +1,8 @@
 .devcontainer
 
+sandbox/projects/*
+!sandbox/projects/default.py
+
 # Logs
 logs
 *.log

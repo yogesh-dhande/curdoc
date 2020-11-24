@@ -2,7 +2,7 @@
   <b-button-group class="mx-1">
       <b-button to="code" variant="info">Code</b-button>
       <b-button @click="preview" variant="success">Preview</b-button>
-      <b-button @click="publish" variant="warning">Publish</b-button>
+      <!-- <b-button @click="publish" variant="warning">Publish</b-button> -->
   </b-button-group>
 </template>
 

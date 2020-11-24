@@ -18,22 +18,38 @@ def get_file_path(project_id):
 def get_app_script_from_project_id(project_id):
     app_url = f"http://localhost:5006/main"
     script = server_document(arguments={'project': project_id}, url=app_url)
-    print(script)
     return script
 
-def resolve_project_id(project_id):
-    return project_id if os.path.exists(get_file_path(project_id)) else 'default'
+def get_code_for_project(project_id):
+    with open(get_file_path(project_id), "r") as code_file:
+        return code_file.read()
+
+
+def write_code_to_project(project_id, code):
+    with open(get_file_path(project_id), "w+") as code_file:
+        code_file.write(code)
+
+
+def does_project_exists(project_id):
+    return os.path.exists(get_file_path(project_id))
+
+
+def create_default_project_if_needed(project_id):
+    if not does_project_exists(project_id):
+        code = get_code_for_project('default')
+        write_code_to_project(project_id, code)
 
 
 @app.route("/", methods=["GET"])
 def index():
     return {'message': 'ok'}
 
+
 @app.route("/code/<project_id>", methods=["GET"])
 def get_code(project_id):
     try:
-        with open(get_file_path(resolve_project_id(project_id)), "r") as code_file:
-            return {"code": code_file.read()}
+        create_default_project_if_needed(project_id)    
+        return {"code": get_code_for_project(project_id)}
 
     except Exception as e:
         return f"An Error Occured: {e}"
@@ -42,8 +58,8 @@ def get_code(project_id):
 @app.route("/script/<project_id>", methods=["GET"])
 def get_script(project_id):
     try:
-        script = get_app_script_from_project_id(resolve_project_id(project_id))
-        return {"script": script}
+        create_default_project_if_needed(project_id)
+        return {"script": get_app_script_from_project_id(project_id)}
 
     except Exception as e:
         return f"An Error Occured: {e}"
@@ -55,10 +71,7 @@ def post_code(project_id):
         print(project_id)
         print(request.json)
         code = request.json["code"]
-        print(code)
-
-        with open(get_file_path(project_id), "w+") as code_file:
-            code_file.write(code)
+        write_code_to_project(project_id, code)
 
         return {"script": get_app_script_from_project_id(project_id)}
 

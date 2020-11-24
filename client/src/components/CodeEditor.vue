@@ -32,6 +32,7 @@ import { mapState } from 'vuex'
         mounted () {
             console.log(this.projectId)
             this.$store.dispatch('getCodeForProject', this.projectId)
+            console.log(this.projectId)
         }
     }
 </script>

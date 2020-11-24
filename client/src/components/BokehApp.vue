@@ -16,7 +16,6 @@
         },
         mounted() {
             console.log('Mouting bokeh app')
-            console.log(this.script)
             postscribe('#id', this.script)
         }
     }

@@ -4,6 +4,7 @@ import Login from './components/Login'
 import CodeEditor from './components/CodeEditor'
 import AppPreview from './components/AppPreview.vue'
 import Profile from './components/Profile'
+import Home from './components/Home'
 import firebase from 'firebase'
 
 Vue.use(Router);
@@ -14,7 +15,7 @@ let router = new Router({
         routes: [
             {
                 path: '*',
-                component: Profile,
+                component: Home,
             },
             {
                 path: '/profile',
