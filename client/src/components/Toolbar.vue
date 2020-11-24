@@ -7,11 +7,19 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
     name: 'toolbar',
+    computed: {
+      ...mapState(['userId', 'projectId'])
+    },
     methods: {
       preview () {
-        this.$store.dispatch('getScriptForProject', this.projectId)
+        this.$store.dispatch('getScriptForProject', {
+                userId: this.userId,
+                projectId: this.projectId
+            })
         this.$router.push('app')
       },
       publish () {

@@ -13,6 +13,9 @@ import { mapState } from 'vuex'
     export default {
         name: 'code-editor',
         props: {
+            userId: {
+                type: String
+            },
             projectId: {
                 type: String
             }
@@ -31,7 +34,10 @@ import { mapState } from 'vuex'
         },
         mounted () {
             console.log(this.projectId)
-            this.$store.dispatch('getCodeForProject', this.projectId)
+            this.$store.dispatch('getCodeForProject', {
+                userId: this.userId,
+                projectId: this.projectId
+            })
             console.log(this.projectId)
         }
     }

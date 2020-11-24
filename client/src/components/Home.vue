@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
     name: 'home',
     data () {
@@ -19,11 +21,14 @@ export default {
             projectName: ''
         }
     },
+    computed: {
+        ...mapState(['user'])
+    },
     methods: {
         createProject () {
-            this.$router.push(`/${this.projectName}/code`)
+            this.$router.push(`${this.user}/${this.projectName}/code`)
         },
-        // i.e. 0-255 -> '00'-'ff'
+
         dec2hex (dec) {
         return dec < 10
             ? '0' + String(dec)

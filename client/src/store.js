@@ -22,26 +22,32 @@ export function buildStore(user) {
       updateCode({commit}, code) {
         commit("updateCode", code)
       },
-      getCodeForProject({ commit, state }, projectId) {
-        console.log(`getting code for ${projectId} not ${state.projectId}`)
+      getCodeForProject({ commit, state }, payload) {
+        let userId = payload.userId
+        let projectId = payload.projectId
+        console.log(`getting code for ${userId} - ${projectId} not ${state.projectId}`)
         if (state.projectId != projectId) {
           commit("updateProjectId", projectId)
           console.log(`getting code for ${projectId}`)
-          axios.get(`http://localhost:8000/code/${projectId}`).then((res) => {
+          axios.get('http://localhost:8000/code', { params: payload } ).then((res) => {
             commit("updateCode", res.data.code);
           });
         }
       },
-      getScriptForProject({ commit, state }, projectId) {
+      getScriptForProject({ commit, state }, payload) {
+        let userId = payload.userId
+        let projectId = payload.projectId
         if (state.projectId != projectId) {
           commit("updateProjectId", projectId);
-          axios.get(`http://localhost:8000/script/${projectId}`).then((res) => {
+          axios.get('http://localhost:8000/script', { params: payload } ).then((res) => {
             commit("updateAppScript", res.data.script);
           });
         } else {
           // must overwrite remote with local code first to get new script
           axios
-            .post(`http://localhost:8000/code/${projectId}`, {
+            .post('http://localhost:8000/code', {
+              userId: userId,
+              projectId: projectId,
               code: state.code,
             })
             .then((res) => {

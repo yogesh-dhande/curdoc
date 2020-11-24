@@ -13,6 +13,9 @@ import { mapState } from 'vuex'
 export default {
     name: 'app-preview',
     props: {
+        userId: {
+            type: String
+        },
         projectId: {
             type: String
         }

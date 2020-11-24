@@ -19,7 +19,6 @@ let router = new Router({
             },
             {
                 path: '/profile',
-                name: 'Profile',
                 component: Profile,
                 meta: {
                     requiresAuth: true
@@ -27,16 +26,21 @@ let router = new Router({
             },
             {
                 path: '/login',
-                name: 'Login',
                 component: Login,
                 meta: {
                     requiresAuth: false
                 }
-
             },
             {
-                path: '/:projectId/code',
-                name: 'Code',
+                path: '/:userId/:projectId',
+                component: CodeEditor,
+                meta: {
+                    requiresAuth: false
+                },
+                redirect: '/:userId/:projectId/code',
+            },
+            {
+                path: '/:userId/:projectId/code',
                 component: CodeEditor,
                 meta: {
                     requiresAuth: false
@@ -44,16 +48,7 @@ let router = new Router({
                 props: true
             },
             {
-                path: '/:projectId',
-                component: CodeEditor,
-                meta: {
-                    requiresAuth: false
-                },
-                redirect: '/:projectId/code',
-            },
-            {
-                path: '/:projectId/app',
-                name: 'App',
+                path: '/:userId/:projectId/app',
                 component: AppPreview,
                 meta: {
                     requiresAuth: false
