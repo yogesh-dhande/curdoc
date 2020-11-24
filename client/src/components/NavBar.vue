@@ -5,6 +5,7 @@
         <b-collapse id="nav-collapse" is-nav>
             <b-navbar-nav class="ml-auto">
                 <toolbar/>
+                <!-- <b-nav-item to="/feedback">Feedback</b-nav-item> -->
                 <b-nav-item-dropdown right v-if="user != 'guest'">
                     <!-- Using 'button-content' slot -->
                     <template #button-content>

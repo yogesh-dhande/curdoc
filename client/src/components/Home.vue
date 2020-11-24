@@ -1,21 +1,26 @@
 <template>
-<b-container>
+<div>
+    <nav-bar/>
     <b-card
         style="max-width: 20rem;"
-        class="mb-2">
+        class="mx-auto">
         <b-form inline>
             <b-form-input v-model="projectName"></b-form-input>
             <b-button @click="createProject">New</b-button>
         </b-form>
     </b-card>
-</b-container>
+</div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import NavBar from './NavBar.vue'
 
 export default {
     name: 'home',
+    components: {
+        'nav-bar': NavBar,
+    },
     data () {
         return {
             projectName: ''

@@ -5,6 +5,7 @@ import CodeEditor from './components/CodeEditor'
 import AppPreview from './components/AppPreview.vue'
 import Profile from './components/Profile'
 import Home from './components/Home'
+import Feedback from './components/Feedback'
 import firebase from 'firebase'
 
 Vue.use(Router);
@@ -16,6 +17,10 @@ let router = new Router({
             {
                 path: '*',
                 component: Home,
+            },
+            {
+                path: '/feedback',
+                component: Feedback,
             },
             {
                 path: '/profile',
