@@ -1,6 +1,4 @@
 <template>
-  <div>
-    <nav-bar />
     <b-container class="mx-auto">
       <b-card style="max-width: 40rem">
         <b-card-header>Please Provide Feedback</b-card-header>
@@ -36,17 +34,12 @@
         </b-container>
       </b-card>
     </b-container>
-  </div>
 </template>
 
 <script>
-import NavBar from "./NavBar.vue";
 
 export default {
   name: "feedback",
-  components: {
-    "nav-bar": NavBar,
-  },
   data() {
     return {
       form: {

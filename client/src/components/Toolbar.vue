@@ -1,7 +1,7 @@
 <template>
   <b-button-group class="mx-1">
-      <b-button to="code" variant="info">Code</b-button>
-      <b-button @click="preview" variant="success">Preview</b-button>
+      <b-button @click="toCode" variant="info">Code</b-button>
+      <b-button @click="toPreview" variant="success">Preview</b-button>
       <!-- <b-button @click="publish" variant="warning">Publish</b-button> -->
   </b-button-group>
 </template>
@@ -12,15 +12,18 @@ import { mapState } from 'vuex'
 export default {
     name: 'toolbar',
     computed: {
-      ...mapState(['userId', 'projectId'])
+      ...mapState(['userName', 'projectName'])
     },
     methods: {
-      preview () {
+      toPreview () {
         this.$store.dispatch('getScriptForProject', {
-                userId: this.userId,
-                projectId: this.projectId
-            })
-        this.$router.push('app')
+          userName: this.userName,
+          projectName: this.projectName
+        })
+        this.$router.push(`/${this.userName}/${this.projectName}/app`)
+      },
+      toCode () {
+        this.$router.push(`/${this.userName}/${this.projectName}/code`)
       },
       publish () {
         console.log('publish')

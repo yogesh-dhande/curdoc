@@ -1,6 +1,6 @@
 import os
 from projects import (
-    create_default_project_if_needed,
+    create_default_project,
     get_app_script_from_project_id,
     get_code_for_project,
     write_code_to_project,
@@ -20,27 +20,43 @@ def index():
 
 @app.route("/code", methods=["GET"])
 def get_code():
-    user_id = request.args.get('userId')
-    project_id = request.args.get('projectId')
-    create_default_project_if_needed(user_id, project_id)
-    return {"code": get_code_for_project(user_id, project_id)}
-
+    try:
+        user_name = request.args.get("userName")
+        project_name = request.args.get("projectName")
+        return {"code": get_code_for_project(user_name, project_name)}
+    except Exception as e:
+        return str(e)
 
 @app.route("/script", methods=["GET"])
-def get_script(project_id):
-    user_id = request.args.get('userId')
-    project_id = request.args.get('projectId')
-    create_default_project_if_needed(user_id, project_id)
-    return {"script": get_app_script_from_project_id(user_id, project_id)}
+def get_script():
+    try:
+        user_name = request.args.get("userName")
+        project_name = request.args.get("projectName")
+        return {"script": get_app_script_from_project_id(user_name, project_name)}
+    except Exception as e:
+        return str(e)
+
+
+@app.route("/projects", methods=["POST"])
+def create_project():
+    try:
+        user_name = request.json.get("userName")
+        project_name = request.json.get("projectName")
+        return create_default_project(user_name, project_name)
+    except Exception as e:
+        return str(e)
 
 
 @app.route("/code", methods=["POST"])
 def post_code():
-    user_id = request.json.get('userId')
-    project_id = request.json.get('projectId')
-    code = request.json.get("code")
-    write_code_to_project(user_id, project_id, code)
-    return {"script": get_app_script_from_project_id(user_id, project_id)}
+    try:
+        user_name = request.json.get("userName")
+        project_name = request.json.get("projectName")
+        code = request.json.get("code")
+        write_code_to_project(user_name, project_name, code)
+        return {"status": "ok"}
+    except Exception as e:
+        return str(e)
 
 
 if __name__ == "__main__":

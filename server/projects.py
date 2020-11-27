@@ -1,32 +1,45 @@
 import os
 from bokeh.embed import server_document
+import database as db
 
 PROJECTS_FOLDER_PATH = "/projects"
 
 
-def get_file_path(user_id, project_id):
+def get_code_for_project(user_name, project_name):
+    return db.get_code_from_project(user_name, project_name)
+
+
+def get_file_path(project_id):
     return os.path.join(PROJECTS_FOLDER_PATH, project_id + '.py')
 
 
-def get_app_script_from_project_id(user_id, project_id):
+def write_project_to_filesystem(user_name, project_name):
+    project_id = db.get_project_id(user_name, project_name)
+    code = get_code_for_project(user_name, project_name)
+    with open(get_file_path(project_id), "w+") as code_file:
+        code_file.write(code)
+
+
+def get_app_script_from_project_id(user_name, project_name):
+    # this function creates files
+    write_project_to_filesystem(user_name, project_name)
+    project_id = db.get_project_id(user_name, project_name)
     app_url = f"http://localhost:5006/main"
     script = server_document(arguments={'project': project_id}, url=app_url)
     return script
 
-def get_code_for_project(user_id, project_id):
-    with open(get_file_path(user_id, project_id), "r") as code_file:
+
+def get_default_code_for_project(user_name):
+    with open(get_file_path("default"), "r") as code_file:
         return code_file.read()
 
-def write_code_to_project(user_id, project_id, code):
-    with open(get_file_path(user_id, project_id), "w+") as code_file:
-        code_file.write(code)
+
+def write_code_to_project(user_name, project_name, code):
+    # Writes to database
+    db.write_code_to_project(user_name, project_name, code)
 
 
-def does_project_exists(user_id, project_id):
-    return os.path.exists(get_file_path(user_id, project_id))
-
-
-def create_default_project_if_needed(user_id, project_id):
-    if not does_project_exists(user_id, project_id):
-        code = get_code_for_project(user_id, 'default')
-        write_code_to_project(user_id, project_id, code)
+def create_default_project(user_name, project_name):
+    db.add_project(user_name, project_name)
+    code = get_default_code_for_project(user_name)
+    return db.write_code_to_project(user_name, project_name, code)

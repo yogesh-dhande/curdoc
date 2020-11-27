@@ -11,6 +11,7 @@ COPY . /app
 RUN pip install -r requirements.txt
 
 ENV PORT=8000
+ENV SANDBOX_IMAGE=bokeh_play_sandbox
 EXPOSE $PORT
 
 CMD ["python", "app.py"]

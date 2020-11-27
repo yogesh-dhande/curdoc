@@ -13,25 +13,16 @@ Vue.use(BootstrapVue);
 library.add(faSeedling, faCat);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 
-import { buildStore } from "./store.js";
+import store from "./store.js";
 
 Vue.config.productionTip = false;
 
 
 let app;
+
+// handle page reload
 fb.auth.onAuthStateChanged((user) => {
-  const store = buildStore();
-  if (user) {
-    store.commit("setCurrentUser", user.email);
-  }
   if (!app) {
-    const store = buildStore();
-    // handle page reload
-    fb.auth.onAuthStateChanged((user) => {
-      if (user) {
-        store.commit("setCurrentUser", user.email);
-      }
-    });
 
     app = new Vue({
       el: "#app",
@@ -40,4 +31,9 @@ fb.auth.onAuthStateChanged((user) => {
       render: (h) => h(App),
     });
   }
+
+  if (user) {
+    store.commit("setCurrentUser", user.email);
+  }
+
 });

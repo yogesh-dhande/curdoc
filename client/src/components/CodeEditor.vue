@@ -1,28 +1,23 @@
 <template>
-    <div>
-        <nav-bar/>
-        <ace-editor :code="code" :key="code"> </ace-editor>
-    </div>
+    <ace-editor :code="code" :key="code"> </ace-editor>
 </template>
 
 <script>
 import AceEditor from "./AceEditor.vue"
-import NavBar from './NavBar.vue'
 import { mapState } from 'vuex'
 
     export default {
         name: 'code-editor',
         props: {
-            userId: {
+            userName: {
                 type: String
             },
-            projectId: {
+            projectName: {
                 type: String
             }
         },
         components: {
             'ace-editor': AceEditor,
-            'nav-bar': NavBar,
         },
         data () {
             return {
@@ -33,12 +28,7 @@ import { mapState } from 'vuex'
             ...mapState(['code'])
         },
         mounted () {
-            console.log(this.projectId)
-            this.$store.dispatch('getCodeForProject', {
-                userId: this.userId,
-                projectId: this.projectId
-            })
-            console.log(this.projectId)
-        }
+            console.log("mounting code editor now")
+        },
     }
 </script>

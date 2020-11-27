@@ -9,10 +9,7 @@ const createUser = (db, user) => {
                 verified: !!user.email
             },
         },
-        address: "",
         name: "",
-        phoneNumber: {},
-        birthday: "dd/MM/yyyy",
         profile_pic_url: ""
     }).then( () => {
         log("Written to users collection user: " + user.email);

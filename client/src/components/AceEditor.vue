@@ -20,7 +20,7 @@ export default {
         }
     },
     mounted() {
-        this.editor = ace.edit("editor", {
+        this.editor = ace.edit(this.$el, {
             value: this.code,
             theme: "ace/theme/dracula",
             mode: "ace/mode/python",

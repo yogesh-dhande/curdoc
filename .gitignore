@@ -3,6 +3,8 @@
 sandbox/projects/*
 !sandbox/projects/default.py
 
+server/databrowser-service-account-key.json
+
 # Logs
 logs
 *.log

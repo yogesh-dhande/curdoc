@@ -1,6 +1,6 @@
 <template>
 <div>
-    <nav-bar/>
+    
     <b-card
         style="max-width: 20rem;"
         class="mx-auto">
@@ -14,24 +14,21 @@
 
 <script>
 import { mapState } from 'vuex'
-import NavBar from './NavBar.vue'
 
 export default {
     name: 'home',
-    components: {
-        'nav-bar': NavBar,
-    },
     data () {
         return {
             projectName: ''
         }
     },
     computed: {
-        ...mapState(['user'])
+        ...mapState(['currentUser'])
     },
     methods: {
         createProject () {
-            this.$router.push(`${this.user}/${this.projectName}/code`)
+            this.$store.dispatch("createProject", this.projectName)
+            console.log("pushing router to ... ")
         },
 
         dec2hex (dec) {

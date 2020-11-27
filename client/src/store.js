@@ -1,63 +1,74 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+import router from "./router.js"
 
 const fb = require("./firebaseConfig.js");
 
 Vue.use(Vuex);
 
-export function buildStore(user) {
-  let store = new Vuex.Store({
-    state: {
-      session: null,
-      projectId: null,
-      code: "",
-      appScript: null,
-      user: user || 'guest',
-      userProfile: {},
-    },
+const initialState = {
+  session: null,
+  code: "",
+  appScript: null,
+  userName: null,  // for identification of code or project to load
+  projectName: null,  // for identification of code or project to load
+  currentUser: "guest",  // currently authenticated user
+  userProfile: {},
+}
+
+const store = new Vuex.Store({
+    state: initialState,
     getters: {
     },
     actions: {
-      updateCode({commit}, code) {
+      updateCode({commit, state}, code) {
         commit("updateCode", code)
+        console.log(`getting script for ${state.userName} - ${state.projectName}`)
+        axios.post('http://localhost:8000/code', {
+          userName: state.currentUser,
+          projectName: state.projectName,
+          code: state.code,
+        })
       },
-      getCodeForProject({ commit, state }, payload) {
-        let userId = payload.userId
-        let projectId = payload.projectId
-        console.log(`getting code for ${userId} - ${projectId} not ${state.projectId}`)
-        if (state.projectId != projectId) {
-          commit("updateProjectId", projectId)
-          console.log(`getting code for ${projectId}`)
-          axios.get('http://localhost:8000/code', { params: payload } ).then((res) => {
-            commit("updateCode", res.data.code);
-          });
-        }
+      createProject({commit, state}, projectName) {
+        commit("updateprojectName", projectName)
+        console.log(`creating project ${projectName}`)
+        commit("setuserName", state.currentUser)
+        axios.post('http://localhost:8000/projects', {
+          userName: state.currentUser,
+          projectName: state.projectName,
+          code: state.code,
+        }).then( res => {
+          console.log(res.data)
+          commit("updateCode", res.data.code);
+          router.push(`${state.currentUser}/${state.projectName}/code`)
+        })
       },
-      getScriptForProject({ commit, state }, payload) {
-        let userId = payload.userId
-        let projectId = payload.projectId
-        if (state.projectId != projectId) {
-          commit("updateProjectId", projectId);
-          axios.get('http://localhost:8000/script', { params: payload } ).then((res) => {
-            commit("updateAppScript", res.data.script);
-          });
-        } else {
-          // must overwrite remote with local code first to get new script
-          axios
-            .post('http://localhost:8000/code', {
-              userId: userId,
-              projectId: projectId,
-              code: state.code,
-            })
-            .then((res) => {
-              commit("updateAppScript", res.data.script);
-            });
-        }
+      getCodeForProject({ commit }, payload) {
+        commit("updateprojectName", payload.projectName)
+        commit("setuserName", payload.userName)
+        console.log(`getting code for ${payload.userName} - ${payload.projectName}`)
+        axios.get('http://localhost:8000/code', { params: payload } ).then((res) => {
+          commit("updateCode", res.data.code);
+          console.log(res.data.code)
+        });
+      },
+      getScriptForProject({ commit }, payload) {
+        commit("updateprojectName", payload.projectName)
+        commit("setuserName", payload.userName)
+        console.log(`getting script for ${payload.userName} - ${payload.projectName}`)
+        axios.get('http://localhost:8000/script', { params: payload } ).then((res) => {
+          console.log(res.data)
+          commit("updateAppScript", res.data.script);
+        });
+      },
+      clearData({commit}) {
+        commit("clearData")
       },
       fetchUserProfile({ commit, state }) {
         fb.usersCollection
-          .doc(state.user.uid)
+          .doc(state.currentUser)
           .get()
           .then((res) => {
             commit("setUserProfile", res.data());
@@ -71,13 +82,13 @@ export function buildStore(user) {
         let title = data.title;
 
         fb.usersCollection
-          .doc(state.user.uid)
+          .doc(state.currentUser)
           .update({ name, title })
           .then(() => {
             // eslint-disable-line no-unused-vars
             // update all posts by user to reflect new name
             fb.postsCollection
-              .where("userId", "==", state.user.uid)
+              .where("userName", "==", state.currentUser)
               .get()
               .then((docs) => {
                 docs.forEach((doc) => {
@@ -88,7 +99,7 @@ export function buildStore(user) {
               });
             // update all comments by user to reflect new name
             fb.commentsCollection
-              .where("userId", "==", state.user.uid)
+              .where("userName", "==", state.userName)
               .get()
               .then((docs) => {
                 docs.forEach((doc) => {
@@ -105,7 +116,10 @@ export function buildStore(user) {
     },
     mutations: {
       setCurrentUser(state, val) {
-        state.user = val;
+        state.currentUser = val;
+      },
+      setuserName(state, val) {
+        state.userName = val
       },
       setUserProfile(state, val) {
         state.userProfile = val;
@@ -116,11 +130,18 @@ export function buildStore(user) {
       updateAppScript(state, val) {
         state.appScript = val;
       },
-      updateProjectId(state, val) {
-        state.projectId = val;
+      updateprojectName(state, val) {
+        state.projectName = val;
       },
+      clearData(state) {
+        // Object.assign(state, initialState)
+        state.currentUser = 'guest'
+        state.code = ""
+        state.appScript = null
+        state.projectName = null
+        state.userName = null
+      }
     },
-  });
+  })
 
-  return store;
-}
+export default store

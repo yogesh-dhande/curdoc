@@ -1,5 +1,5 @@
 <template>
-    <div id="id"></div>
+    <div></div>
 </template>
 
 <script>
@@ -15,8 +15,8 @@
         computed: {
         },
         mounted() {
-            console.log('Mouting bokeh app')
-            postscribe('#id', this.script)
+            console.log(this.script)
+            postscribe(this.$el, this.script)
         }
     }
 </script>

@@ -1,6 +1,5 @@
 <template>
     <div class="container-fluid" style="padding-left: 0; padding-right: 0">
-        <nav-bar></nav-bar>
         <div class="container-fluid">
             <div class="row row-no-gutters" style="margin-top: 100px">
                 <div id="col-start" class="col-xs-6 col-md-4 align-self-center"></div>
@@ -23,13 +22,9 @@
     import firebase from "firebase";
     import * as firebaseui from "firebaseui";
     import "firebaseui/dist/firebaseui.css";
-    import NavBar from './NavBar.vue'
 
     export default {
         name: "login",
-        components: {
-            'nav-bar': NavBar,
-        },
         data() {
             return {};
         },
@@ -39,13 +34,20 @@
                 ui = new firebaseui.auth.AuthUI(firebase.auth());
             }
             let uiConfig = {
-                signInSuccessUrl: "/profile",
+                signInSuccessUrl: "/",
                 signInFlow: "popup",
                 signInOptions: [
-                    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-                    firebase.auth.EmailAuthProvider.PROVIDER_ID,
-                    firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
-                ]
+                    {
+                        provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                        requireDisplayName: true,
+                    }, {
+                        provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+                        requireDisplayName: true,
+                    }, {
+                        provider: firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
+                        requireDisplayName: true,
+                    }
+                ],  
             };
             ui.start("#firebaseui-auth-container", uiConfig);
         }

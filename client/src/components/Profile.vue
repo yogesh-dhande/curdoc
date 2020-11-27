@@ -1,6 +1,4 @@
 <template>
-  <div>
-    <nav-bar />
     <b-container>
       <b-form @submit="onSubmit">
         <b-form-group id="input-group-1" label="Name" label-for="input-1">
@@ -23,18 +21,13 @@
         <b-button type="submit" variant="primary">Submit</b-button>
       </b-form>
     </b-container>
-  </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import NavBar from "./NavBar.vue";
 
 export default {
   name: "Profile",
-  components: {
-    "nav-bar": NavBar,
-  },
   data() {
     return {
       name: "",

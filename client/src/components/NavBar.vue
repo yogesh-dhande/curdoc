@@ -1,15 +1,15 @@
 <template>
     <b-navbar toggleable="lg" type="dark" variant="dark">
-        <b-navbar-brand to="terminal">Broccolini</b-navbar-brand>
+        <b-navbar-brand to="/">Broccolini</b-navbar-brand>
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" is-nav>
             <b-navbar-nav class="ml-auto">
-                <toolbar/>
+                <toolbar v-if="projectName"/>
                 <!-- <b-nav-item to="/feedback">Feedback</b-nav-item> -->
-                <b-nav-item-dropdown right v-if="user != 'guest'">
+                <b-nav-item-dropdown right v-if="currentUser != 'guest'">
                     <!-- Using 'button-content' slot -->
                     <template #button-content>
-                        <em>{{ user }}</em>
+                        <em>{{ currentUser }}</em>
                     </template>
                     <b-dropdown-item to="profile">Profile</b-dropdown-item>
                     <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>
@@ -41,7 +41,7 @@
             }
         },
         computed: {
-            ...mapState(['user'])
+            ...mapState(['currentUser', 'projectName'])
         },
     }
 </script>

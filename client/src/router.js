@@ -15,10 +15,6 @@ let router = new Router({
 
         routes: [
             {
-                path: '*',
-                component: Home,
-            },
-            {
                 path: '/feedback',
                 component: Feedback,
             },
@@ -37,15 +33,15 @@ let router = new Router({
                 }
             },
             {
-                path: '/:userId/:projectId',
+                path: '/:userName/:projectName',
                 component: CodeEditor,
                 meta: {
                     requiresAuth: false
                 },
-                redirect: '/:userId/:projectId/code',
+                redirect: '/:userName/:projectName/code',
             },
             {
-                path: '/:userId/:projectId/code',
+                path: '/:userName/:projectName/code',
                 component: CodeEditor,
                 meta: {
                     requiresAuth: false
@@ -53,13 +49,17 @@ let router = new Router({
                 props: true
             },
             {
-                path: '/:userId/:projectId/app',
+                path: '/:userName/:projectName/app',
                 component: AppPreview,
                 meta: {
                     requiresAuth: false
                 },
                 props: true
-            }
+            },
+            {
+                path: '/',
+                component: Home,
+            },
         ]
 
     },
