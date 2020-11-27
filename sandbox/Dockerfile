@@ -26,6 +26,10 @@ WORKDIR /app
 
 COPY . .
 
+ARG USER=client
+RUN useradd -s /bin/bash -m ${USER}
+USER ${USER}
+
 CMD ["bokeh", "serve", "main.py", \
     "--allow-websocket-origin", "localhost:8080", \
     "--allow-websocket-origin", "localhost:5006"]
