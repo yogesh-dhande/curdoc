@@ -29,8 +29,8 @@ def get_app_script_from_project_id(user_name, project_name):
     return script
 
 
-def get_default_code_for_project(user_name):
-    with open(get_file_path("default"), "r") as code_file:
+def get_starter_code_for_project():
+    with open("resources/default.py", "r") as code_file:
         return code_file.read()
 
 
@@ -41,5 +41,5 @@ def write_code_to_project(user_name, project_name, code):
 
 def create_default_project(user_name, project_name):
     db.add_project(user_name, project_name)
-    code = get_default_code_for_project(user_name)
+    code = get_starter_code_for_project()
     return db.write_code_to_project(user_name, project_name, code)

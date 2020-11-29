@@ -1,0 +1,18 @@
+apiVersion: skaffold/v2beta9
+kind: Config
+metadata:
+  name: bokeh-play
+build:
+  artifacts:
+    - image: bokey-play_client
+      context: client
+    - image: bokey-play_sandbox
+      context: sandbox
+    - image: bokey-play_server
+      context: server
+  tagPolicy:
+    sha256: {}
+deploy:
+  kubectl:
+    manifests:
+      - kubernates-manifests/*.yaml

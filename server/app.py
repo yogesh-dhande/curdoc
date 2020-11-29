@@ -44,6 +44,7 @@ def create_project():
         project_name = request.json.get("projectName")
         return create_default_project(user_name, project_name)
     except Exception as e:
+        print(str(e))
         return str(e)
 
 

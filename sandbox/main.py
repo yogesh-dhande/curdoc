@@ -17,8 +17,8 @@ project_id = args.get('project', [b'default'])[0].decode("utf-8").split("/")[0]
 print(project_id)
 doc.title = project_id
 
-sys.path.append(os.getcwd())
-filepath = os.path.join('projects', project_id + '.py')
+sys.path.append("/projects")
+filepath = os.path.join("/projects", project_id + '.py')
 print(filepath)
 assert os.path.exists(filepath)
 with open(filepath, 'r') as code_file:

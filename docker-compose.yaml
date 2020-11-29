@@ -17,7 +17,7 @@ services:
       - "8000:8000"
     volumes: 
       - /Users/yogesh/projects/bokeh-play/server:/app
-      - /Users/yogesh/projects/bokeh-play/sandbox/projects:/projects
+      - projects:/projects
   sandbox:
     build: sandbox
     stdin_open: true
@@ -26,5 +26,7 @@ services:
       - "5006:5006"
     volumes: 
       - /Users/yogesh/projects/bokeh-play/sandbox:/app
-
+      - projects:/projects
+volumes:
+  projects:
   

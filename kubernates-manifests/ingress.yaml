@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: traffic-router
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            backend:
+              serviceName: frontend-service
+              servicePort: 80
+          - path: /backend
+            backend:
+              serviceName: backend-service
+              servicePort: 8000
+          - path: /sandbox
+            backend:
+              serviceName: sandbox-service
+              servicePort: 5006

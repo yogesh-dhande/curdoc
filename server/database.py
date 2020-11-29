@@ -13,6 +13,7 @@ app = firebase_admin.initialize_app(cred, {"databaseURL": os.getenv("DATABASE_UR
 db = firestore.client()
 projects_collection = db.collection("projects")
 users_collection = db.collection("users")
+constants_collection = db.collection("constants")
 blob_collection = db.collection("blob")
 
 
@@ -50,6 +51,10 @@ def write_code_to_project(user_name, project_name, code):
     project_ref = get_project_ref(user_name, project_name)
     project_ref.update({"code": code})
     return project_ref.get().to_dict()
+
+
+def get_starter_code():
+    return constants_collection.document("starterCode").get().to_dict()["text"]
 
 
 def get_code_from_project(user_name, project_name):
