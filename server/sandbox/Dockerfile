@@ -9,8 +9,8 @@ RUN if [ "${INSTALL_NODE}" = "true" ]; then su vscode -c "source /usr/local/shar
 
 # Copy environment.yml (if found) to a temp locaition so we update the environment. Also
 # copy "noop.txt" so the COPY instruction does not fail if no environment.yml exists.
-COPY environment.yml* /tmp/conda-tmp/
-RUN if [ -f "/tmp/conda-tmp/environment.yml" ]; then /opt/conda/bin/conda env update -n base -f /tmp/conda-tmp/environment.yml; fi \
+COPY environment.yaml* /tmp/conda-tmp/
+RUN if [ -f "/tmp/conda-tmp/environment.yaml" ]; then /opt/conda/bin/conda env update -n base -f /tmp/conda-tmp/environment.yaml; fi \
     && rm -rf /tmp/conda-tmp
 
 # [Optional] Uncomment to install a different version of Python than the default
@@ -30,6 +30,7 @@ ARG USER=client
 RUN useradd -s /bin/bash -m ${USER}
 USER ${USER}
 
-CMD ["bokeh", "serve", "main.py", \
-    "--allow-websocket-origin", "localhost:8080", \
-    "--allow-websocket-origin", "localhost:5006"]
+ARG PORT=5006
+EXPOSE ${PORT}
+
+CMD [ "/bin/bash", "start.sh" ]

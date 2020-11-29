@@ -15,18 +15,11 @@ services:
     tty: true
     ports:
       - "8000:8000"
+      - "5006-5010"
     volumes: 
       - /Users/yogesh/projects/bokeh-play/server:/app
       - projects:/projects
-  sandbox:
-    build: sandbox
-    stdin_open: true
-    tty: true
-    ports:
-      - "5006:5006"
-    volumes: 
-      - /Users/yogesh/projects/bokeh-play/sandbox:/app
-      - projects:/projects
+      - /var/run/docker.sock:/var/run/docker.sock
 volumes:
   projects:
   

@@ -34,6 +34,7 @@ def get_script():
         project_name = request.args.get("projectName")
         return {"script": get_app_script_from_project_id(user_name, project_name)}
     except Exception as e:
+        print(str(e))
         return str(e)
 
 
@@ -57,6 +58,7 @@ def post_code():
         write_code_to_project(user_name, project_name, code)
         return {"status": "ok"}
     except Exception as e:
+        print(str(e))
         return str(e)
 
 

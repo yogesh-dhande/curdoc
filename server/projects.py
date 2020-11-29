@@ -1,6 +1,9 @@
 import os
+import time
 from bokeh.embed import server_document
+from bokeh.client import pull_session
 import database as db
+from containers import start_bokeh_server
 
 PROJECTS_FOLDER_PATH = "/projects"
 
@@ -24,7 +27,17 @@ def get_app_script_from_project_id(user_name, project_name):
     # this function creates files
     write_project_to_filesystem(user_name, project_name)
     project_id = db.get_project_id(user_name, project_name)
-    app_url = f"http://localhost:5006/main"
+    port = start_bokeh_server(project_id)
+    app_url = f"http://localhost:{port}/main"
+
+    while True:
+        try:
+            pull_session(url=f"http://sandbox{port}:5006/main")
+            break
+        except Exception as e:
+            print(str(e))
+            time.sleep(1)
+            
     script = server_document(arguments={'project': project_id}, url=app_url)
     return script
 

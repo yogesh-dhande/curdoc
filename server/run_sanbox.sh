@@ -1,7 +1,14 @@
 #!/bin/bash
 PORT=$1
 
+# SANDBOX_IMAGE=bokeh_play_sandbox
+
+CONTAINER_NAME=sandbox$PORT
+
 exec docker run -d --rm \
     -p $PORT:5006 \
-    -v /Users/yogesh/projects/bokeh-play/server/sandbox:/app \
+    --network bokeh-play_default \
+    --network-alias $CONTAINER_NAME \
+    -v bokeh-play_projects:/app/projects:ro \
+    --name $CONTAINER_NAME \
     $SANDBOX_IMAGE

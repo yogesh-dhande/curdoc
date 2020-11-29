@@ -16,19 +16,21 @@ def is_port_in_use(port):
         return s.connect_ex(('0.0.0.0', port)) == 0
 
 
-def start_bokeh_server():
+def start_bokeh_server(project_id):
+    print(f"starting bokeh server for {project_id}")
     for p in AVAILABLE_PORTS:
-        import subprocess
-        process = subprocess.Popen(
-            ['/bin/bash', './run_sanbox.sh', str(p)], 
-            stdout=subprocess.PIPE, 
-            stderr=subprocess.PIPE
-        )
+        if not is_port_in_use(p):
+            import subprocess
+            process = subprocess.Popen(
+                ['./run_sanbox.sh', str(p)], 
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.PIPE
+            )
 
-        stdout, _ = process.communicate()
-        container_id = stdout.decode("utf-8")
-
-        if not process.returncode:
-            print(f"Started bokeh server on port {p}")
-            return p
+            stdout, _ = process.communicate()
+            container_id = stdout.decode("utf-8")
+            print(stdout, _)
+            if not process.returncode:
+                print(f"Started bokeh server on port {p}")
+                return p
 
