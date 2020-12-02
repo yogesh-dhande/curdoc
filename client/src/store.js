@@ -38,7 +38,7 @@ const store = new Vuex.Store({
         axios.post('http://localhost:8000/projects', {
           userName: state.currentUser,
           projectName: state.projectName,
-          code: state.code,
+          authUser: state.currentUser,
         }).then( res => {
           console.log(res.data)
           commit("updateCode", res.data.code);

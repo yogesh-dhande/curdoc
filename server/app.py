@@ -1,12 +1,10 @@
 import os
-from projects import (
-    create_default_project,
-    get_app_script_from_project_id,
-    get_code_for_project,
-    write_code_to_project,
-)
+
 from flask import Flask, request
 from flask_cors import CORS
+
+from projects import create_default_project
+from sessions import ClientSession
 
 
 app = Flask(__name__)
@@ -23,7 +21,8 @@ def get_code():
     try:
         user_name = request.args.get("userName")
         project_name = request.args.get("projectName")
-        return {"code": get_code_for_project(user_name, project_name)}
+        auth_user = request.args.get("authUser")
+        return {"code": ClientSession(auth_user).get_code(user_name, project_name)}
     except Exception as e:
         return str(e)
 
@@ -32,11 +31,14 @@ def get_script():
     try:
         user_name = request.args.get("userName")
         project_name = request.args.get("projectName")
-        return {"script": get_app_script_from_project_id(user_name, project_name)}
+        auth_user = request.args.get("authUser")
+        return {"script": ClientSession(auth_user).get_app_script(user_name, project_name)}
     except Exception as e:
         print(str(e))
         return str(e)
 
+# TODO get endpoint on projects for client to retrieve a project id
+# so other requests can be made with using id
 
 @app.route("/projects", methods=["POST"])
 def create_project():
@@ -46,7 +48,7 @@ def create_project():
         return create_default_project(user_name, project_name)
     except Exception as e:
         print(str(e))
-        return str(e)
+        return f"Error occurred: {e}"
 
 
 @app.route("/code", methods=["POST"])
@@ -54,8 +56,9 @@ def post_code():
     try:
         user_name = request.json.get("userName")
         project_name = request.json.get("projectName")
+        auth_user = request.args.get("authUser")
         code = request.json.get("code")
-        write_code_to_project(user_name, project_name, code)
+        ClientSession(auth_user).load_project(user_name, project_name).write_to_database(code)
         return {"status": "ok"}
     except Exception as e:
         print(str(e))

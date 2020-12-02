@@ -1,9 +1,7 @@
 #!/bin/bash
 PORT=$1
-
+CONTAINER_NAME=$2
 # SANDBOX_IMAGE=bokeh_play_sandbox
-
-CONTAINER_NAME=sandbox$PORT
 
 exec docker run -d --rm \
     -p $PORT:5006 \
