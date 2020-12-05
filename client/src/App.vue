@@ -21,7 +21,8 @@ export default {
     getCode (userName, projectName) {
       this.$store.dispatch('getCodeForProject', {
           userName: userName,
-          projectName: projectName
+          projectName: projectName,
+          authUser: this.currentUser
       })
     }
   },

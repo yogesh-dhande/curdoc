@@ -1,5 +1,8 @@
 <template>
+<div>
+    <h4>{{$store.state.userName}} - {{$store.state.projectName}}</h4>
     <ace-editor :code="code" :key="code"> </ace-editor>
+</div>
 </template>
 
 <script>
@@ -30,5 +33,10 @@ import { mapState } from 'vuex'
         mounted () {
             console.log("mounting code editor now")
         },
+        watch: {
+            '$route': (to, from) => {
+                console.log(to, from)
+            }
+        }
     }
 </script>

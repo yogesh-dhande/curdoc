@@ -65,34 +65,39 @@ class Firebase(object):
         db = firestore.client()
         self.projects = db.collection("projects")
         self.users = db.collection("users")
-        self.constants = db.collection("constants")
-        self.blobs = db.collection("blob")
 
     def does_project_exist(self, user_name, project_name):
-        user_doc = self.users.document(user_name)
-        project_doc = user_doc.collection("projects").document(project_name)
-        return project_doc.get().exists
+        return bool(self.projects.where("user", "==", user_name).where("name", "==", project_name).get())
 
+    # TODO cache the results of this function to avoid unnecessary calls
     def get_project_id(self, user_name, project_name):
-        user_doc = self.users.document(user_name)
-        project_doc = user_doc.collection("projects").document(project_name)
-        return project_doc.get().to_dict()["refKey"]
+        return self.projects.where(u"user", "==", user_name).where(u"name", "==", project_name).get()[0].id
 
-    def add_project(self, user_name, project_name):
+    def add_project(self, user_name, project_name, code):
         # TODO add fields like timeCreated: "timeCreated": firestore.SERVER_TIMESTAMP
         project_doc = self.projects.document()
-        project_doc.set({"name": project_name, "refKey": project_doc.id})
-        user_doc = self.users.document(user_name)
-        user_doc.collection("projects").document(project_name).set(
+        project_data = {
+            "name": project_name, 
+            "id": project_doc.id,
+            "user": user_name,
+            "code": code,
+            }
+
+        project_doc.set({**project_data, **{"timeCreated": firestore.SERVER_TIMESTAMP}})
+
+        user_id = self.users.where("name", "==", user_name).get()[0].id
+        self.users.document(user_id).collection("projects").document().set(
             {
-                "refKey": project_doc.id,
+                "id": project_doc.id,
                 "name": project_name,
             }
         )
+        return project_data
 
 
     def get_project_ref(self, user_name, project_name):
         project_id = self.get_project_id(user_name, project_name)
+        print(project_id)
         return self.projects.document(project_id)
 
 

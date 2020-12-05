@@ -34,7 +34,7 @@
                 ui = new firebaseui.auth.AuthUI(firebase.auth());
             }
             let uiConfig = {
-                signInSuccessUrl: "/",
+                signInSuccessUrl: this.$route.query.redirect ||  "/",
                 signInFlow: "popup",
                 signInOptions: [
                     {

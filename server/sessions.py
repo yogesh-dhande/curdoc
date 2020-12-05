@@ -10,11 +10,13 @@ class ClientSession(object):
 
     def load_project(self, user_name, project_name):
         self.project = Project(user_name, project_name)
+        assert self.container_service.get_container_session_for_project(self.project.id)
         return self.project
 
     def get_code(self, user_name, project_name):
+        print(user_name)
         self.load_project(user_name, project_name)
-        self.project.get_code()
+        return self.project.get_code()
         
     def get_app_script(self, user_name, project_name):
         # this function creates files

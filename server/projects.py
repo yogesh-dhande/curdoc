@@ -30,7 +30,8 @@ def get_starter_code_for_project():
         return code_file.read()
 
 
-def create_default_project(user_name, project_name):
-    db.add_project(user_name, project_name)
-    code = get_starter_code_for_project()
-    return db.write_code_to_project(user_name, project_name, code)
+def create_default_project(user_name, project_name, code=""):    
+    project_data = db.add_project(user_name, project_name, code)
+    project = Project(user_name, project_name)
+    project.write_to_filesystem()
+    return project_data

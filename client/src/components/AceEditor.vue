@@ -35,7 +35,7 @@ export default {
         });
         this.editor.resize()
         this.editor.on("blur", this.updateCode)
-        this.editor.setReadOnly(true)
+        // this.editor.setReadOnly(true)
     },
     methods: {
         updateCode (evt) {

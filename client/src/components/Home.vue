@@ -28,7 +28,6 @@ export default {
     methods: {
         createProject () {
             this.$store.dispatch("createProject", this.projectName)
-            console.log("pushing router to ... ")
         },
 
         dec2hex (dec) {

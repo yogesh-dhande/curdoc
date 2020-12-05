@@ -22,6 +22,7 @@ def get_code():
         user_name = request.args.get("userName")
         project_name = request.args.get("projectName")
         auth_user = request.args.get("authUser")
+        print(user_name, project_name, auth_user)
         return {"code": ClientSession(auth_user).get_code(user_name, project_name)}
     except Exception as e:
         return str(e)
@@ -45,7 +46,8 @@ def create_project():
     try:
         user_name = request.json.get("userName")
         project_name = request.json.get("projectName")
-        return create_default_project(user_name, project_name)
+        code = request.json.get("code")
+        return create_default_project(user_name, project_name, code)
     except Exception as e:
         print(str(e))
         return f"Error occurred: {e}"
