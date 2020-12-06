@@ -3,7 +3,6 @@ import os
 from flask import Flask, request
 from flask_cors import CORS
 
-from projects import create_default_project
 from sessions import ClientSession
 
 
@@ -15,6 +14,12 @@ CORS(app)
 def index():
     return {"message": "ok"}
 
+@app.route("/users/<user_name>", methods=["GET"])
+def get_user(user_name):
+    try:
+        return ClientSession(user_name).get_user()
+    except Exception as e:
+        return str(e)
 
 @app.route("/code", methods=["GET"])
 def get_code():
@@ -47,7 +52,7 @@ def create_project():
         user_name = request.json.get("userName")
         project_name = request.json.get("projectName")
         code = request.json.get("code")
-        return create_default_project(user_name, project_name, code)
+        return ClientSession(user_name).load_default_project(user_name, project_name, code)
     except Exception as e:
         print(str(e))
         return f"Error occurred: {e}"

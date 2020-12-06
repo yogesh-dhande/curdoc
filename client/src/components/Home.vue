@@ -1,6 +1,5 @@
 <template>
 <div>
-    
     <b-card
         style="max-width: 20rem;"
         class="mx-auto">
@@ -8,15 +7,20 @@
             <b-form-input v-model="projectName"></b-form-input>
             <b-button @click="createProject">New</b-button>
         </b-form>
+        <user :userName="currentUser.name"></user>
     </b-card>
 </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import User from './User.vue'
 
 export default {
     name: 'home',
+    components: {
+        'user': User
+    },
     data () {
         return {
             projectName: ''
@@ -29,18 +33,6 @@ export default {
         createProject () {
             this.$store.dispatch("createProject", this.projectName)
         },
-
-        dec2hex (dec) {
-        return dec < 10
-            ? '0' + String(dec)
-            : dec.toString(16)
-        },
-        // generateId :: Integer -> String
-        generateId (len) {
-            var arr = new Uint8Array((len || 40) / 2)
-            window.crypto.getRandomValues(arr)
-            return Array.from(arr, this.dec2hex).join('')
-        }
     }
 
 }

@@ -1,14 +1,15 @@
 import os
-from database import Firebase
+from database import db
 
 PROJECTS_FOLDER_PATH = "/projects"
-
-db = Firebase()
 class Project(object):
+
+    projects = {}
+
     def __init__(self, user_name, name) -> None:
         self.user_name = user_name
         self.name = name
-        self.id = db.get_project_id(user_name, name)
+        self.id = f"{user_name}-{name}"
 
     def get_code(self):
         return db.get_code_from_project(self.user_name, self.name)

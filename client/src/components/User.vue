@@ -1,7 +1,14 @@
 <template>
 <div>
-    <h1>{{currentUser}}</h1>
-    <h3 v-for="project in projects" :key="project.refKey"> {{project.name}} </h3>
+    <b-list-group>    
+        <b-list-group-item 
+            v-for="project in user.projects" 
+            :key="project.id"
+            :to="`/${user.name}/${project.name}/code`"
+        >    
+        {{project.name}}
+        </b-list-group-item>
+    </b-list-group>
 </div>
 </template>
 
@@ -16,12 +23,16 @@ import { mapState } from 'vuex'
             }
         },
         computed: {
-            ...mapState(['currentUser', 'projects'])
+            ...mapState(['user'])
         },
-        watch: {
-            '$route': (to, from) => {
-                console.log(to, from)
+        methods: {
+            setUser(userName) {
+                console.log("setting user")
+                this.$store.dispatch("setUser", userName)
             }
-        }
+        },
+        mounted () {
+            this.setUser(this.userName)
+        },
     }
 </script>

@@ -33,7 +33,7 @@ fb.auth.onAuthStateChanged((user) => {
   }
 
   if (user) {
-    store.dispatch("setCurrentUser", user);
+    store.dispatch("setCurrentUser", user.email);
   }
 
 });

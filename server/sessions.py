@@ -1,17 +1,27 @@
-from projects import Project
+from projects import Project, create_default_project
+from users import User
 from containers import container_service
 
 
 class ClientSession(object):
     def __init__(self, user, container_service=container_service) -> None:
-        self.user = user
+        self.user = User(user)
         self.container_service = container_service
         self.project = None
 
+    def get_user(self):
+        return self.user.get()
+
     def load_project(self, user_name, project_name):
         self.project = Project(user_name, project_name)
-        assert self.container_service.get_container_session_for_project(self.project.id)
+        self.container_service.ensure_container_for_project(self.project.id)
         return self.project
+
+    def load_default_project(self, user_name, project_name, code):
+        self.project = Project(user_name, project_name)
+        project_data = create_default_project(user_name, project_name, code)
+        self.container_service.ensure_container_for_project(self.project.id)
+        return project_data
 
     def get_code(self, user_name, project_name):
         print(user_name)

@@ -17,6 +17,9 @@ class Database(object):
         self.constants = None
         self.blobs = None
 
+    def get_user(self, user_name):
+        raise NotImplementedError
+
     def does_project_exist(self, user_name, project_name):
         raise NotImplementedError
 
@@ -43,12 +46,12 @@ class MemoryDB(object):
         return self.users[user_name]["projects"].get(project_name, False)
 
     def get_project_id(self, user_name, project_name):
-        return self.users[user_name]["projects"][project_name]["refKey"]
+        return self.users[user_name]["projects"][project_name]["id"]
 
     def add_project(self, user_name, project_name):
         self.users[user_name]["projects"][project_name] = {
             "name": project_name, 
-            "refKey": str(time.time)
+            "id": str(time.time)
         }
 
     def get_code_from_project(self, user_name, project_name):
@@ -60,18 +63,29 @@ class MemoryDB(object):
 class Firebase(object):
     def __init__(self) -> None:
         cred = credentials.Certificate("databrowser-service-account-key.json")
-        app = firebase_admin.initialize_app(cred, {"databaseURL": os.getenv("DATABASE_URL")})
-
+        firebase_admin.initialize_app(cred, {"databaseURL": os.getenv("DATABASE_URL")})
         db = firestore.client()
         self.projects = db.collection("projects")
         self.users = db.collection("users")
 
+    def get_user(self, user_name):
+        snap = self.users.where("name", "==", user_name).get()
+        try:
+            return snap[0].to_dict()
+        except IndexError:
+            return {}
+
     def does_project_exist(self, user_name, project_name):
-        return bool(self.projects.where("user", "==", user_name).where("name", "==", project_name).get())
+        project_id = self.get_project_id(user_name, project_name)
+        return True if project_id is not None else False
 
     # TODO cache the results of this function to avoid unnecessary calls
     def get_project_id(self, user_name, project_name):
-        return self.projects.where(u"user", "==", user_name).where(u"name", "==", project_name).get()[0].id
+        project_ref = self.get_project_ref(user_name, project_name)
+        try:
+            return project_ref.id
+        except AttributeError:
+            return None
 
     def add_project(self, user_name, project_name, code):
         # TODO add fields like timeCreated: "timeCreated": firestore.SERVER_TIMESTAMP
@@ -86,20 +100,21 @@ class Firebase(object):
         project_doc.set({**project_data, **{"timeCreated": firestore.SERVER_TIMESTAMP}})
 
         user_id = self.users.where("name", "==", user_name).get()[0].id
-        self.users.document(user_id).collection("projects").document().set(
-            {
+        self.users.document(user_id).update({
+            f"projects.{project_doc.id}": {
                 "id": project_doc.id,
                 "name": project_name,
             }
-        )
+        })
         return project_data
 
 
     def get_project_ref(self, user_name, project_name):
-        project_id = self.get_project_id(user_name, project_name)
-        print(project_id)
-        return self.projects.document(project_id)
-
+        snap = self.projects.where(u"user", "==", user_name).where(u"name", "==", project_name).get()
+        try:
+            return snap[0].reference
+        except IndexError:
+            return None
 
     def write_code_to_project(self, user_name, project_name, code):
         project_ref = self.get_project_ref(user_name, project_name)
@@ -110,4 +125,4 @@ class Firebase(object):
     def get_code_from_project(self, user_name, project_name):
         return self.get_project_ref(user_name, project_name).get().to_dict()["code"]
 
-
+db = Firebase()

@@ -3,3 +3,4 @@ flask-cors
 bokeh
 firebase-admin
 python-dotenv
+docker

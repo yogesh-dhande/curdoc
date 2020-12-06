@@ -38,11 +38,11 @@ let router = new Router({
                 component: User,
                 meta: {
                     requiresAuth: true
-                }
+                },
+                props: true
             },
             {
                 path: '/:userName/:projectName',
-                component: CodeEditor,
                 meta: {
                     requiresAuth: false
                 },
@@ -65,7 +65,7 @@ let router = new Router({
                 props: true
             },
             {
-                path: '/',
+                path: '*',
                 component: Home,
             },
         ]

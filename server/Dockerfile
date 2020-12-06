@@ -17,7 +17,7 @@ COPY . /app
 RUN pip install -r requirements.txt
 
 ARG USER=server
-RUN useradd -s /bin/bash -m ${USER}
+RUN useradd -s /bin/bash -m ${USER} -u 1000 && mkdir -p /projects && chown -R 1000 /projects
 USER ${USER}
 
 ENV PORT=8000

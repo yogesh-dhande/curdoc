@@ -1,6 +1,5 @@
 <template>
 <div>
-    <h4>{{$store.state.userName}} - {{$store.state.projectName}}</h4>
     <ace-editor :code="code" :key="code"> </ace-editor>
 </div>
 </template>
@@ -30,13 +29,18 @@ import { mapState } from 'vuex'
         computed: {
             ...mapState(['code'])
         },
+        methods: {
+            getCode (userName, projectName) {
+                this.$store.dispatch('getCodeForProject', {
+                    userName: userName,
+                    projectName: projectName,
+                    authUser: this.currentUser
+                })
+            }
+        },
         mounted () {
             console.log("mounting code editor now")
+            this.getCode(this.userName, this.projectName)
         },
-        watch: {
-            '$route': (to, from) => {
-                console.log(to, from)
-            }
-        }
     }
 </script>
