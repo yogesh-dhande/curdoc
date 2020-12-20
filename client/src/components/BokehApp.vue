@@ -15,7 +15,7 @@
         computed: {
         },
         mounted() {
-            console.log(this.script)
+            console.log("mounting bokeh app")
             postscribe(this.$el, this.script)
         }
     }

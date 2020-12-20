@@ -6,10 +6,10 @@
             <b-navbar-nav class="ml-auto">
                 <toolbar v-if="projectName"/>
                 <!-- <b-nav-item to="/feedback">Feedback</b-nav-item> -->
-                <b-nav-item-dropdown right v-if="currentUser != 'guest'">
+                <b-nav-item-dropdown right v-if="currentUser.name != 'guest'">
                     <!-- Using 'button-content' slot -->
                     <template #button-content>
-                        <em>{{ currentUser }}</em>
+                        <em>{{ currentUser.name }}</em>
                     </template>
                     <b-dropdown-item to="profile">Profile</b-dropdown-item>
                     <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>

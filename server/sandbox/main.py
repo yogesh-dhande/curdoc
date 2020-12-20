@@ -17,10 +17,11 @@ project_id = args.get('project', [b'default'])[0].decode("utf-8").split("/")[0]
 print(project_id)
 doc.title = project_id
 
-sys.path.append(os.getcwd())
-filepath = os.path.join('projects', project_id + '.py')
+print(sys.path)
+sys.path.append("projects")
+filepath = os.path.join("projects", project_id + '.py')
 print(filepath)
-assert os.path.exists(filepath)
+
 with open(filepath, 'r') as code_file:
     for line in code_file.readlines():
         doc.add_root(Div(text=line))

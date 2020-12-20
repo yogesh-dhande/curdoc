@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from './components/Login'
+import User from './components/User'
 import CodeEditor from './components/CodeEditor'
 import AppPreview from './components/AppPreview.vue'
 import Profile from './components/Profile'
@@ -33,8 +34,15 @@ let router = new Router({
                 }
             },
             {
+                path: '/:userName',
+                component: User,
+                meta: {
+                    requiresAuth: true
+                },
+                props: true
+            },
+            {
                 path: '/:userName/:projectName',
-                component: CodeEditor,
                 meta: {
                     requiresAuth: false
                 },
@@ -57,7 +65,7 @@ let router = new Router({
                 props: true
             },
             {
-                path: '/',
+                path: '*',
                 component: Home,
             },
         ]
@@ -68,16 +76,22 @@ let router = new Router({
 
 
 router.beforeEach((to, from, next) => {
-    const requiresAuth = to.matched.some((x) => x.meta.requiresAuth);
-    const currentUser = firebase.auth().currentUser;
-  
-    if (requiresAuth && !currentUser) {
-      next("/login");
-    } else if (requiresAuth && currentUser) {
-      next();
-    } else {
-      next();
-    }
+    let path = to.fullPath
+    console.log(to)
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        // this route requires auth, check if logged in
+        // if not, redirect to login page.
+        if (!firebase.auth().currentUser) {
+          next({
+            path: '/login',
+            query: { redirect: path }
+          })
+        } else {
+          next()
+        }
+      } else {
+        next() // make sure to always call next()!
+      }
   });
 
 export default router

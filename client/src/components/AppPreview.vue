@@ -1,5 +1,8 @@
 <template>
+<div>
+    <!-- <h4>{{$store.state.userName}} - {{$store.state.projectName}}</h4> -->
     <bokeh-app :script="appScript" :key="appScript" v-if="appScript"></bokeh-app>
+</div>
 </template>
 
 <script>
