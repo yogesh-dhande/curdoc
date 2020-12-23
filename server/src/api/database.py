@@ -89,10 +89,9 @@ class Firebase(object):
         return project_data
 
     def get_project_id(self, user_name, project_name):
-        project_ref = self.projects.where(u"user", "==", user_name).where(u"name", "==", project_name).get()[0].reference
         try:
-            return project_ref.id
-        except AttributeError:
+            return self.projects.where(u"user", "==", user_name).where(u"name", "==", project_name).get()[0].reference.id
+        except IndexError:
             return None
 
     def does_project_exist(self, project_id) -> bool:
