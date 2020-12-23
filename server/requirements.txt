@@ -2,5 +2,9 @@ flask
 flask-cors
 bokeh
 firebase-admin
+google-cloud-storage
 python-dotenv
 docker
+pytest
+black
+flake8

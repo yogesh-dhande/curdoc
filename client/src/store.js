@@ -1,7 +1,7 @@
+import axios from "axios";
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from "axios";
-import router from "./router.js"
+import router from "./router.js";
 
 // const fb = require("./firebaseConfig.js");
 
@@ -78,6 +78,25 @@ const initialState = {
   userProfile: {},
 }
 
+export function treeFromBlobList(blobList) {
+  let result = [];
+  let level = {result};
+
+  blobList.forEach(blob => {
+    let path = blob.filePath
+    path.split('/').reduce((r, name) => {
+      if(!r[name]) {
+        r[name] = {result: []};
+        r.result.push({name, children: r[name].result})
+      }
+      
+      return r[name];
+    }, level)
+  })
+
+  return result
+}
+
 const store = new Vuex.Store({
     state: initialState,
     getters: {
@@ -87,7 +106,8 @@ const store = new Vuex.Store({
     },
     actions: {
       setCurrentUser({commit}, userName) {
-        axios.get(`http://localhost:8000/users/${userName}`)
+        console.log(`${process.env.VUE_APP_BACKEND_URL}/users/${userName}`)
+        axios.get(`${process.env.VUE_APP_BACKEND_URL}/users/${userName}`)
         .then(
           res => {
             commit("setCurrentUser", res.data)
@@ -95,7 +115,7 @@ const store = new Vuex.Store({
         )
       },
       setUser({commit}, userName) {
-        axios.get(`http://localhost:8000/users/${userName}`)
+        axios.get(`${process.env.VUE_APP_BACKEND_URL}/users/${userName}`)
         .then(
           res => {
             console.log(res.data)
@@ -106,7 +126,7 @@ const store = new Vuex.Store({
       updateCode({commit, state}, code) {
         commit("updateCode", code)
         console.log(`getting script for ${state.userName} - ${state.projectName}`)
-        axios.post('http://localhost:8000/code', {
+        axios.post(`${process.env.VUE_APP_BACKEND_URL}/code`, {
           userName: state.currentUser.name,
           projectName: state.projectName,
           code: state.code,
@@ -118,7 +138,7 @@ const store = new Vuex.Store({
         commit("setuserName", state.currentUser.name)
         commit("updateCode", starterCode);
         router.push(`${state.currentUser.name}/${state.projectName}/code`)
-        axios.post('http://localhost:8000/projects', {
+        axios.post(`${process.env.SERVER_URL}/projects`, {
           userName: state.currentUser.name,
           projectName: state.projectName,
           code: starterCode
@@ -129,7 +149,7 @@ const store = new Vuex.Store({
         commit("setuserName", payload.userName)
         console.log(`getting code for ${payload.userName} - ${payload.projectName}`)
 
-        axios.get('http://localhost:8000/code', { params: payload } ).then((res) => {
+        axios.get(`${process.env.VUE_APP_BACKEND_URL}/code`, { params: payload } ).then((res) => {
           commit("updateCode", res.data.code);
           console.log(res.data)
         });
@@ -138,7 +158,7 @@ const store = new Vuex.Store({
         commit("updateprojectName", payload.projectName)
         commit("setuserName", payload.userName)
         console.log(`getting script for ${payload.userName} - ${payload.projectName}`)
-        axios.get('http://localhost:8000/script', { params: payload } ).then((res) => {
+        axios.get(`${process.env.VUE_APP_BACKEND_URL}/script`, { params: payload } ).then((res) => {
           console.log(res.data)
           commit("updateAppScript", res.data.script);
         });

@@ -1,13 +1,18 @@
 {
-    "configurations": [
-        {
-            "name": "Kubernetes: Run/Debug",
-            "type": "cloudcode.kubernetes",
-            "request": "launch",
-            "skaffoldConfig": "${workspaceFolder}/skaffold.yaml",
-            "watch": true,
-            "cleanUp": true,
-            "portForward": true
-        }
-    ]
+  "configurations": [
+    {
+      "name": "Python: Flask",
+      "type": "python",
+      "request": "launch",
+      "module": "flask",
+      "env": {
+        "FLASK_APP": "src/api/app.py",
+        "FLASK_ENV": "development",
+        "FLASK_DEBUG": "0"
+      },
+      "args": ["run", "--no-debugger"],
+      "jinja": false,
+      "cwd": "${workspaceFolder}/server",
+    }
+  ]
 }

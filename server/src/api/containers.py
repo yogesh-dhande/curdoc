@@ -1,14 +1,15 @@
 import os
+import socket
 import threading
 import time
 from contextlib import closing
-import socket
+from typing import Dict
 
 import docker
-from bokeh.embed import server_document
 from bokeh.client import pull_session
+from bokeh.embed import server_document
 
-allowed_ports = [5006, 5007, 5008]
+allowed_ports = range(5001, 5010)
 client = docker.from_env()
 
 def find_free_port():
@@ -83,10 +84,13 @@ class ContainerSession(ContainerSessionBase):
                     ports={5006: p},
                     network="bokeh-play_default",
                     volumes={
-                        "bokeh-play_projects": {
-                            "bind": "/app/projects",
+                        f"bokeh-play_projects": {
+                            "bind": f"/projects",
                             "mode": "ro"
                         }
+                    },
+                    environment={
+                        "PROJECT_ID": self.project_id
                     }
                 )
                 print(f"Started bokeh server on port {p} for {self.project_id}")
@@ -96,7 +100,7 @@ class ContainerSession(ContainerSessionBase):
 
             except Exception as e:
                 # Container name or port is already in use.
-                pass
+                print(str(e))
 
     def stop(self):
         if self.container:
@@ -116,19 +120,20 @@ class ContainerSession(ContainerSessionBase):
         wait_period = 1
         for i in range(15):  # Time out after 15 sec
             try:
-                pull_session(url=f"http://sandbox{self.port}:5006/main")
+                pull_session(url=f"http://sandbox{self.port}:5006/{self.project_id}")
                 script = server_document(arguments={'project': self.project_id}, url=app_url)
                 self.last_used = time.time()
                 return script
             except Exception as e:
                 time.sleep(wait_period)
+                print(str(e))
                 print(f"Waited {i*wait_period} seconds for Bokeh server to be ready")
                 
 
 class ContainerService(object):
-    container_sessions = {}  # project.id to container_session mapping
+    container_sessions: Dict[str, ContainerSessionBase] = {}  # project.id to container_session mapping
 
-    def __init__(self, container_session_type=ContainerSession) -> None:
+    def __init__(self, container_session_type: ContainerSessionBase=ContainerSession) -> None:
         self.container_session_type = container_session_type
         thread = threading.Thread(target=self.prune_containers)
         thread.daemon = True
@@ -168,7 +173,7 @@ class ContainerService(object):
         except KeyError:
             self.start_container(project_id)
 
-    def get_container_session_for_project(self, project_id):
+    def get_container_session_for_project(self, project_id) -> ContainerSessionBase:
         self.ensure_container_for_project(project_id)
         return self.container_sessions[project_id]
 
