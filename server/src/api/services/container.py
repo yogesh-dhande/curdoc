@@ -112,7 +112,7 @@ class ContainerService(object):
 
     def __init__(self, container_session_type: ContainerSessionBase=ContainerSession) -> None:
         self.container_session_type = container_session_type
-        thread = threading.Thread(target=self.prune_containers, daemon = True)
+        thread = threading.Thread(target=self.prune_containers, daemon=True)
         thread.start()
 
     def start_container(self, project_id):

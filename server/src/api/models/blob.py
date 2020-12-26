@@ -17,9 +17,15 @@ class Blob(BaseModel):
         return self
 
     def save(self) -> None:
+        if not self.text:
+            raise ValueError("Blob.save must be called with the text to be saved")
         storage_service.write_text_to_blob(self.project_id, self.relative_path, self.text)
 
+    def exists_locally(self) -> bool:
+        return storage_service.does_blob_exist_locally(self.project_id, self.relative_path)
+
     def download(self) -> None:
-        self.reload()
-        self.save()
+        if not self.exists_locally():
+            self.reload()
+            self.save()
 

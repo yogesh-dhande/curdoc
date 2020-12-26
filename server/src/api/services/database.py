@@ -43,13 +43,10 @@ class Firebase(Database):
 
     def get_project_id(self, user_name, project_name) -> Optional[str]:
         try:
-            return id_cache.get((user_name, project_name), 
-                self.projects
-                .where(u"user_name", "==", user_name)
-                .where(u"name", "==", project_name)
-                .get()[0]
-                .reference.id
-            )
+            project_id =  id_cache.get((user_name, project_name), None)
+            if project_id is None:
+                project_id = self.projects.where(u"user_name", "==", user_name).where(u"name", "==", project_name).get()[0].reference.id
+            return project_id
         except IndexError:
             return None
 

@@ -33,6 +33,10 @@ class StorageService(StorageBase):
     def get_cloud_path(project_id, relative_path):
         return os.path.join(f"projects/{project_id}", relative_path)
 
+    def does_blob_exist_locally(self, project_id, relative_path) -> bool:
+        path = self.get_local_path(project_id, relative_path)
+        return os.path.exists(path)
+
     def write_text_to_blob(self, project_id, relative_path, text):
         local_path = self.get_local_path(project_id, relative_path)
         ensure_dir_recursive(os.path.dirname(local_path))
