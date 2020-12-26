@@ -1,9 +1,9 @@
-.devcontainer
-
-sandbox/projects/*
-!sandbox/projects/default.py
-
+server/projects
 server/databrowser-service-account-key.json
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache*
 
 # Logs
 logs
@@ -109,9 +109,3 @@ dist
 
 # TernJS port file
 .tern-port
-
-
-
-__pycache__/
-*.py[cod]
-*$py.class

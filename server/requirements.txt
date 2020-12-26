@@ -8,3 +8,5 @@ docker
 pytest
 black
 flake8
+fastapi
+uvicorn

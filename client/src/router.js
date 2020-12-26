@@ -1,13 +1,13 @@
+import firebase from 'firebase'
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from './components/Login'
-import User from './components/User'
-import CodeEditor from './components/CodeEditor'
 import AppPreview from './components/AppPreview.vue'
-import Profile from './components/Profile'
-import Home from './components/Home'
+import CodeEditor from './components/CodeEditor'
 import Feedback from './components/Feedback'
-import firebase from 'firebase'
+import Home from './components/Home'
+import Login from './components/Login'
+import Profile from './components/Profile'
+import User from './components/User'
 
 Vue.use(Router);
 
@@ -76,6 +76,7 @@ let router = new Router({
 
 
 router.beforeEach((to, from, next) => {
+    console.log(firebase.auth())
     let path = to.fullPath
     console.log(to)
     if (to.matched.some(record => record.meta.requiresAuth)) {

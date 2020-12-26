@@ -20,7 +20,7 @@ services:
       - "5001-5010"
     volumes: 
       - /Users/yogesh/projects/bokeh-play/server:/app
-      - projects:/projects
+      - projects:/app/projects
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - FLASK_DEBUG_MODE=true

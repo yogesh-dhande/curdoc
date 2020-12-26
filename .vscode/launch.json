@@ -1,18 +1,13 @@
 {
   "configurations": [
     {
-      "name": "Python: Flask",
+      "name": "Python: FastAPI",
       "type": "python",
       "request": "launch",
-      "module": "flask",
-      "env": {
-        "FLASK_APP": "src/api/app.py",
-        "FLASK_ENV": "development",
-        "FLASK_DEBUG": "0"
-      },
-      "args": ["run", "--no-debugger"],
-      "jinja": false,
-      "cwd": "${workspaceFolder}/server",
+      "module": "uvicorn",
+      "args": ["app:app"],
+      "jinja": true,
+      "cwd": "${workspaceFolder}/server/src/api"
     }
   ]
 }
