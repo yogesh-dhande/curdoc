@@ -1,12 +1,14 @@
 <template>
-    <b-navbar toggleable="lg" type="dark" variant="dark">
+    <b-navbar toggleable="lg" type="dark" variant="dark" sticky>
         <b-navbar-brand to="/">Broccolini</b-navbar-brand>
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" is-nav>
-            <b-navbar-nav class="ml-auto">
-                <toolbar v-if="projectName"/>
+            <b-navbar-nav class="mx-auto">
+                <toolbar v-if="project.name" />
+            </b-navbar-nav>
+            <b-navbar-nav>
                 <!-- <b-nav-item to="/feedback">Feedback</b-nav-item> -->
-                <b-nav-item-dropdown right v-if="currentUser.name != 'guest'">
+                <b-nav-item-dropdown right v-if="currentUser.name">
                     <!-- Using 'button-content' slot -->
                     <template #button-content>
                         <em>{{ currentUser.name }}</em>
@@ -33,7 +35,7 @@
         methods: {
             logout() {
                 fb.auth.signOut().then(() => {
-                    this.$store.dispatch('clearData')
+                    this.$store.dispatch("setCurrentUser", {})
                     this.$router.push('/login')
                 }).catch(err => {
                     console.log(err)
@@ -41,7 +43,7 @@
             }
         },
         computed: {
-            ...mapState(['currentUser', 'projectName'])
+            ...mapState(['project', 'currentUser']),
         },
     }
 </script>

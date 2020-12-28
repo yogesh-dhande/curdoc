@@ -1,7 +1,26 @@
 <template>
-  <b-button-group class="mx-1">
-      <b-button @click="toCode" variant="info">Code</b-button>
-      <b-button @click="toPreview" variant="success">Preview</b-button>
+  <b-button-group class="mx-l">
+      <!-- <b-button variant="info">
+        <font-awesome-icon icon="save" />
+      </b-button>
+      <b-button variant="success">
+        <font-awesome-icon icon="sync" />
+      </b-button> -->
+      <b-button @click="toCode" variant="info">
+        <font-awesome-icon icon="code" />
+      </b-button>
+      <b-button @click="toPreview" variant="success">
+        <font-awesome-icon icon="chart-bar" />
+      </b-button>
+      <!-- <b-button @click="toVertical" variant="info">
+        <font-awesome-icon icon="columns" />
+      </b-button>
+      <b-button @click="toHorizontal" variant="success">
+        <font-awesome-icon icon="columns" rotation="270" />
+      </b-button> -->
+        <b-button variant="info">
+        <font-awesome-icon icon="cogs" />
+      </b-button>
       <!-- <b-button @click="publish" variant="warning">Publish</b-button> -->
   </b-button-group>
 </template>
@@ -12,18 +31,20 @@ import { mapState } from 'vuex'
 export default {
     name: 'toolbar',
     computed: {
-      ...mapState(['userName', 'projectName'])
+      ...mapState(['project'])
     },
     methods: {
       toPreview () {
-        this.$store.dispatch('getScriptForProject', {
-          userName: this.userName,
-          projectName: this.projectName
-        })
-        this.$router.push(`/${this.userName}/${this.projectName}/app`)
+        this.$router.push(`/${this.project.user.name}/${this.project.name}/app`)
       },
       toCode () {
-        this.$router.push(`/${this.userName}/${this.projectName}/code`)
+        this.$router.push(`/${this.project.user.name}/${this.project.name}/code`)
+      },
+      toVertical () {
+        this.$router.push(`/${this.project.user.name}/${this.project.name}?layout=vertical`)
+      },
+      toHorizontal () {
+        this.$router.push(`/${this.project.user.name}/${this.project.name}?layout=horizontal`)
       },
       publish () {
         console.log('publish')

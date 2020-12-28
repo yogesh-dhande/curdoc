@@ -5,7 +5,7 @@
       "type": "python",
       "request": "launch",
       "module": "uvicorn",
-      "args": ["app:app"],
+      "args": ["app:app", "--port", "5000"],
       "jinja": true,
       "cwd": "${workspaceFolder}/server/src/api"
     }

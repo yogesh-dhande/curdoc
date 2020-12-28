@@ -7,7 +7,7 @@
             <b-form-input v-model="projectName"></b-form-input>
             <b-button @click="createProject">New</b-button>
         </b-form>
-        <user :userName="currentUser.name"></user>
+        <user :user="currentUser"></user>
     </b-card>
 </div>
 </template>

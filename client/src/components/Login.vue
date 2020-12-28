@@ -1,21 +1,12 @@
 <template>
-    <div class="container-fluid" style="padding-left: 0; padding-right: 0">
-        <div class="container-fluid">
-            <div class="row row-no-gutters" style="margin-top: 100px">
-                <div id="col-start" class="col-xs-6 col-md-4 align-self-center"></div>
-                <div id="col-info" class="col-xs-6 col-md-4 align-self-center">
-                    <div class="card">
-                        <h5 class="card-header">Log in</h5>
-                        <div class="card-body">
-                            <section id="firebaseui-auth-container"></section>
-                        </div>
-                    </div>
-                </div>
-                <div id="col-end" class="col-xs-6 col-md-4 align-self-center"></div>
-            </div>
-        </div>
+    <b-container style="max-width: 25rem;">
+        <b-card class="mt-5">
+            <b-card-body>
+                <section id="firebaseui-auth-container"></section>
+            </b-card-body>
+        </b-card>
 
-    </div>
+    </b-container>
 </template>
 
 <script>
@@ -38,9 +29,6 @@
                 signInFlow: "popup",
                 signInOptions: [
                     {
-                        provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-                        requireDisplayName: true,
-                    }, {
                         provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
                         requireDisplayName: true,
                     }, {

@@ -1,5 +1,13 @@
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faCat, faSeedling } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChartBar,
+  faCode,
+  faCogs,
+  faColumns,
+  faKey,
+  faSave,
+  faSync
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import BootstrapVue from "bootstrap-vue";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -11,22 +19,18 @@ import store from "./store.js";
 const fb = require("./firebaseConfig.js");
 
 Vue.use(BootstrapVue);
-library.add(faSeedling, faCat);
+library.add(faCode, faChartBar, faColumns, faCogs, faKey, faSync, faSave);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
-
 
 Vue.config.productionTip = false;
 
-
 let app;
-
 // handle page reload
 fb.auth.onAuthStateChanged((user) => {
-  user.getIdToken(/* forceRefresh */ true)
-  .then(token => console.log(token))
-  
-  if (!app) {
+  // user.getIdToken(/* forceRefresh */ true)
+  // .then(token => console.log(token))
 
+  if (!app) {
     app = new Vue({
       el: "#app",
       router,
@@ -36,7 +40,7 @@ fb.auth.onAuthStateChanged((user) => {
   }
 
   if (user) {
-    store.dispatch("setCurrentUser", user.email);
+    store.dispatch("setCurrentUser", user.uid);
+    console.log(user.uid);
   }
-
 });

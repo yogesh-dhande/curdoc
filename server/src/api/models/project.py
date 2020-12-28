@@ -1,5 +1,5 @@
-import concurrent.futures
 import time
+from concurrent.futures import ThreadPoolExecutor
 from typing import List
 from typing import Optional
 
@@ -10,47 +10,54 @@ from services.container import container_service
 from services.database import database
 
 from models.blob import Blob
+from models.user import User
 
 
 class Project(BaseModel):
     name: str
-    user_name: str
+    user: User
     id: Optional[str] = None
     blob: Optional[List[Blob]] = []
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.id = database.get_project_id(self.user_name, self.name)
+        if not self.id:
+            self.id = database.get_project_id(self.user.name, self.name)
         self.download()
 
     def create(self) -> None:
         self.id = database.create_project(self.dict())
         with open("resources/default.py", "r") as file:  
-            blob = Blob(project_id=self.id, relative_path="main.py", text=file.read())
+            blob = Blob(relative_path="main.py", text=file.read())
             self.add_blob(blob)
         return self
 
     def get(self) -> "Project":  # TODO
         # Get data from the project document in firestore
         project = Project.parse_obj(database.get_project_json(self.id))
+        for blob in project.blob:
+            if blob.relative_path == "main.py":
+                blob.reload(project.id)
         return project
 
     def get_blob(self, relative_path) -> Blob:
-        blob = Blob(project_id=self.id, relative_path=relative_path)
-        blob.reload()
+        blob = Blob(relative_path=relative_path)
+        blob.reload(self.id)
         return blob
+
+    def update_blob(self, blob: Blob):
+        blob.save(self.id)
     
     def add_blob(self, blob: Blob) -> None:
         blob_json = blob.dict()
-        if blob.relative_path != "main.py":
-            blob_json.pop("text", None)
+        blob_json.pop("text", None)
         database.add_blob_to_project(self.id, blob_json)
-        blob.save()
+        blob.save(self.id)
         self.blob.append(blob)
 
     def download(self) -> None:
         for blob in self.blob:
-            blob.download()
+            blob.download(self.id)
 
     def get_app_script(self) -> Optional[str]:
         container_session = container_service.get_container_session_for_project(self.id)
@@ -71,12 +78,10 @@ class Project(BaseModel):
 
         wait_period = 0.1
         for i in range(1, 151):  # Time out after 15 sec 
-            with concurrent.futures.ThreadPoolExecutor() as executor:
+            with ThreadPoolExecutor() as executor:
                 future = executor.submit(is_server_ready)
                 result = future.result()
                 if result:
                     break
             time.sleep(wait_period)
             print(f"Waited {i*wait_period} seconds for Bokeh server to be ready")
-
-        

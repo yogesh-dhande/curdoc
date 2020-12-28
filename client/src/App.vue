@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <nav-bar :key="currentUser.name"/>
+      <b-overlay :show="loading" no-wrap>
+      </b-overlay>
     <router-view/>
   </div>
 </template>
@@ -18,8 +20,18 @@ export default {
   methods: {
   },
   computed: {
-      ...mapState(['userName', 'projectName', 'currentUser'])
+      ...mapState(['currentUser', 'loading']),
   },
+  watch: {
+    loading (newValue) {
+      console.log(newValue)
+      if (newValue) {
+        this.$refs['loading-modal'].show()
+      } else {
+        this.$refs['loading-modal'].hide()
+      } 
+    }
+  }
 
 }
 </script>

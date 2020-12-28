@@ -1,12 +1,11 @@
 import firebase from 'firebase'
 import Vue from 'vue'
 import Router from 'vue-router'
-import AppPreview from './components/AppPreview.vue'
-import CodeEditor from './components/CodeEditor'
 import Feedback from './components/Feedback'
 import Home from './components/Home'
 import Login from './components/Login'
 import Profile from './components/Profile'
+import Project from './components/Project'
 import User from './components/User'
 
 Vue.use(Router);
@@ -43,26 +42,44 @@ let router = new Router({
             },
             {
                 path: '/:userName/:projectName',
+                component: Project,
                 meta: {
                     requiresAuth: false
                 },
-                redirect: '/:userName/:projectName/code',
+                props: route => {
+                    return {
+                        ...route.params,
+                        layout: route.query.layout? route.query.layout: "code"
+                    }
+
+                }
             },
             {
                 path: '/:userName/:projectName/code',
-                component: CodeEditor,
+                component: Project,
                 meta: {
                     requiresAuth: false
                 },
-                props: true
+                props: route => {
+                    return {
+                        ...route.params,
+                        layout: "code"
+                    }
+
+                }
             },
             {
                 path: '/:userName/:projectName/app',
-                component: AppPreview,
+                component: Project,
                 meta: {
                     requiresAuth: false
                 },
-                props: true
+                props: route => {
+                    return {
+                        ...route.params,
+                        layout: "app"
+                    }
+                }
             },
             {
                 path: '*',

@@ -1,21 +1,20 @@
 <template>
 <div>
-    <ace-editor :code="code" :key="code"> </ace-editor>
+    <ace-editor 
+        :code="code"
+        @codeChanged="codeChanged"
+    > </ace-editor>
 </div>
 </template>
 
 <script>
 import AceEditor from "./AceEditor.vue"
-import { mapState } from 'vuex'
 
     export default {
         name: 'code-editor',
         props: {
-            userName: {
-                type: String
-            },
-            projectName: {
-                type: String
+            project: {
+                type: Object
             }
         },
         components: {
@@ -23,24 +22,32 @@ import { mapState } from 'vuex'
         },
         data () {
             return {
-                editor: null
+                editor: null,
+                relativePath: "main.py"
             }
         },
         computed: {
-            ...mapState(['code'])
+            blob () {
+                let blobList = this.project.blob.filter(
+                    blob => blob.relative_path == this.relativePath
+                )
+                return blobList.length > 0? blobList[0]: null
+            },
+            code () {
+                return this.blob? this.blob.text: ""
+            }
         },
         methods: {
-            getCode (userName, projectName) {
-                this.$store.dispatch('getCodeForProject', {
-                    userName: userName,
-                    projectName: projectName,
-                    authUser: this.currentUser
+            codeChanged(evt) {
+                console.log(evt)
+                this.blob.text = evt.text
+                this.$store.dispatch('updateCode', {
+                    project: this.project,
+                    blob: this.blob
                 })
             }
         },
         mounted () {
-            console.log("mounting code editor now")
-            this.getCode(this.userName, this.projectName)
         },
     }
 </script>

@@ -28,24 +28,29 @@ class Database(object):
     def add_blob_to_project(self, project_id: str, relative_path: str):
         raise NotImplementedError
 
+    def get_user_id_from_name(self, user_name) -> str:
+        raise NotImplementedError
+
 
 class Firebase(Database):
     def __init__(self) -> None:
         self.projects: firestore.CollectionReference = db.collection("projects")
         self.users: firestore.CollectionReference = db.collection("users")
 
-    def get_user_json(self, user_name) -> dict:
-        snap: firestore.firestore.DocumentSnapshot = self.users.where("name", "==", user_name).get()
+    def get_user_json(self, user_id: str) -> dict:
+        return self.users.document(user_id).get().to_dict()
+    
+    def get_user_id_from_name(self, user_name) -> dict:
         try:
-            return snap[0].to_dict()
+            return self.users.where("name", "==", user_name).get()[0].reference.id
         except IndexError:
-            return {}
+            return None
 
     def get_project_id(self, user_name, project_name) -> Optional[str]:
         try:
             project_id =  id_cache.get((user_name, project_name), None)
             if project_id is None:
-                project_id = self.projects.where(u"user_name", "==", user_name).where(u"name", "==", project_name).get()[0].reference.id
+                project_id = self.projects.where(u"user.name", "==", user_name).where(u"name", "==", project_name).get()[0].reference.id
             return project_id
         except IndexError:
             return None
@@ -60,7 +65,7 @@ class Firebase(Database):
 
         project_doc.set({**project_json, **{"timeCreated": firestore.SERVER_TIMESTAMP}})
 
-        user_id = self.users.where("name", "==", project_json["user_name"]).get()[0].id
+        user_id = project_json["user"]["id"]
         self.users.document(user_id).update({
             f"projects.{project_doc.id}": {
                 "id": project_doc.id,

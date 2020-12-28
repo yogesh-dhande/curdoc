@@ -17,6 +17,10 @@ export default {
     props: {
         code: {
             type: String
+        },
+        readOnly: {
+            type: Boolean,
+            default: false
         }
     },
     mounted() {
@@ -35,12 +39,14 @@ export default {
         });
         this.editor.resize()
         this.editor.on("blur", this.updateCode)
-        // this.editor.setReadOnly(true)
+        this.editor.setReadOnly(this.readOnly)
     },
     methods: {
         updateCode (evt) {
             console.log(evt)
-            this.$store.dispatch('updateCode', this.editor.getValue())
+            this.$emit("codeChanged", {
+                text: this.editor.getValue()
+            })
         }
     }
 }
