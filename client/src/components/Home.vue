@@ -31,6 +31,7 @@ export default {
     },
     methods: {
         createProject () {
+            this.projectName = ""
             this.$store.dispatch("createProject", this.projectName)
         },
     }

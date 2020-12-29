@@ -61,24 +61,26 @@ const store = new Vuex.Store({
       },
       async createProject({commit, state, dispatch}, projectName) {
         console.log(`creating project ${projectName}`)
-        commit("setLoading", true)
+        commit('setLoading', true)
         axios.post(`${process.env.VUE_APP_BACKEND_URL}/project`, {
           user: state.currentUser,
           name: projectName,
         }).then(res => {
           console.log(res.data)
           commit('setProject', res.data)
-          dispatch('setCurrentUser', state.currentUser.id)
-          commit("setLoading", false)
+          commit('setLoading', false)
           router.push(`${state.currentUser.name}/${projectName}/code`)
+          dispatch('setCurrentUser', state.currentUser.id)
         })
       },
       setProject({ commit, state }, payload) {
-        if (state.project.name != payload.project_name || state.project.user_name != payload.user_name) {
+        if (state.project.name != payload.project_name || state.project.user.name != payload.user_name) {
+          commit('setLoading', true)
           console.log(`getting project for ${payload.user_name} - ${payload.project_name}`)
           axios.get(`${process.env.VUE_APP_BACKEND_URL}/project`, 
             { params: payload } )
           .then((res) => {
+            commit('setLoading', false)
             commit("setProject", res.data);
           });
         }

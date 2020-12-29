@@ -82,6 +82,10 @@ let router = new Router({
                 }
             },
             {
+                path: '/',
+                component: Home,
+            },
+            {
                 path: '*',
                 component: Home,
             },
@@ -93,9 +97,7 @@ let router = new Router({
 
 
 router.beforeEach((to, from, next) => {
-    console.log(firebase.auth())
     let path = to.fullPath
-    console.log(to)
     if (to.matched.some(record => record.meta.requiresAuth)) {
         // this route requires auth, check if logged in
         // if not, redirect to login page.

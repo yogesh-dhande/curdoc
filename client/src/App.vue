@@ -3,7 +3,10 @@
     <nav-bar :key="currentUser.name"/>
       <b-overlay :show="loading" no-wrap>
       </b-overlay>
-    <router-view/>
+      <keep-alive>
+        <router-view />
+      </keep-alive>
+
   </div>
 </template>
 
@@ -23,16 +26,16 @@ export default {
       ...mapState(['currentUser', 'loading']),
   },
   watch: {
-    loading (newValue) {
-      console.log(newValue)
-      if (newValue) {
-        this.$refs['loading-modal'].show()
-      } else {
-        this.$refs['loading-modal'].hide()
-      } 
+    "$route.params" (params) {
+      console.log(params)
+      if (params.userName && params.projectName) {
+        this.$store.dispatch("setProject", {
+          user_name: params.userName,
+          project_name: params.projectName
+        })
+      }
     }
   }
-
 }
 </script>
 
