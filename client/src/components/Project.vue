@@ -36,11 +36,10 @@ export default {
         ...mapState(['project']),
     },
     mounted() {
-        // this.setProject()
-        this.$store.dispatch("setProject", {
-                            user_name: this.userName,
-                            project_name: this.projectName,
-                        })
+        this.$store.dispatch('setProject', {
+            user_name: this.userName,
+            project_name: this.projectName,
+        })
     },
 }
 </script>

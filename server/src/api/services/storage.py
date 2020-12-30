@@ -29,10 +29,6 @@ class StorageService(StorageBase):
     def get_local_path(project_id, relative_path):
         return os.path.join(f"/app/projects/{project_id}", relative_path)
 
-    @staticmethod
-    def get_cloud_path(project_id, relative_path):
-        return os.path.join(f"projects/{project_id}", relative_path)
-
     def does_blob_exist_locally(self, project_id, relative_path) -> bool:
         path = self.get_local_path(project_id, relative_path)
         return os.path.exists(path)
@@ -44,12 +40,11 @@ class StorageService(StorageBase):
         with open(local_path, "w+") as file:
             file.write(text)
 
-        cloud_path = self.get_cloud_path(project_id, relative_path)
-        cloud_storage_service.write_text_to_blob(cloud_path, text)
+        cloud_storage_service.write_text_to_blob(project_id, relative_path, text)
 
-    def get_text_from_blob(self, project_id, relative_path) -> str:
-        cloud_path = self.get_cloud_path(project_id, relative_path)
-        return cloud_storage_service.get_text_from_blob(cloud_path)
+    @staticmethod
+    def get_text_from_blob(project_id, relative_path) -> str:
+        return cloud_storage_service.get_text_from_blob(project_id, relative_path)
 
 
 storage_service = StorageService()

@@ -1,10 +1,10 @@
 from fastapi import FastAPI
-from fastapi import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from models.blob import Blob
 from models.project import Project
 from models.user import User
+from services.validation import register_exception_handlers
 
 app = FastAPI()
 
@@ -20,6 +20,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+register_exception_handlers(app)
 
 
 @app.get("/")

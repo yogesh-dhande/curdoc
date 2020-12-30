@@ -1,54 +1,52 @@
 <template>
-    <div id="editor" style="height:100%; width:100%"></div>
+    <div id="editor" style="height: 100%; width: 100%"></div>
 </template>
 
 <script>
-
-const ace = require("ace-builds")
-require("ace-builds/webpack-resolver")
+const ace = require('ace-builds')
+require('ace-builds/webpack-resolver')
 
 export default {
     name: 'ace-editor',
-    data () {
+    data() {
         return {
-            editor: Object
+            editor: Object,
         }
     },
     props: {
         code: {
-            type: String
+            type: String,
         },
-        readOnly: {
+        canEdit: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     mounted() {
         this.editor = ace.edit(this.$el, {
             value: this.code,
-            theme: "ace/theme/dracula",
-            mode: "ace/mode/python",
+            theme: 'ace/theme/dracula',
+            mode: 'ace/mode/python',
             wrap: true,
             autoScrollEditorIntoView: true,
             minLines: 60,
             maxLines: 200,
             fontSize: 16,
             highlightSelectedWord: true,
-            highlightGutterLine: true
-
-        });
+            highlightGutterLine: true,
+        })
         this.editor.resize()
-        this.editor.on("blur", this.updateCode)
-        this.editor.setReadOnly(this.readOnly)
+        this.editor.on('blur', this.updateCode)
+        this.editor.setReadOnly(!this.canEdit)
     },
     methods: {
-        updateCode (evt) {
+        updateCode(evt) {
             console.log(evt)
-            this.$emit("codeChanged", {
-                text: this.editor.getValue()
+            this.$emit('codeChanged', {
+                text: this.editor.getValue(),
             })
-        }
-    }
+        },
+    },
 }
 </script>
 

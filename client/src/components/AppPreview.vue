@@ -40,9 +40,9 @@ export default {
                 },
             })
             .then((res) => {
-                this.$store.commit('setLoading', false)
                 this.appScript = res.data
             })
+            .finally(() => this.$store.commit('setLoading', false))
     },
 }
 </script>

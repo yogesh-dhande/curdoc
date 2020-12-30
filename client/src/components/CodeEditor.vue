@@ -1,12 +1,18 @@
 <template>
     <div>
-        <ace-editor :code="code" :key="code" @codeChanged="codeChanged">
+        <ace-editor
+            :code="code"
+            :key="code"
+            :canEdit="canEdit"
+            @codeChanged="codeChanged"
+        >
         </ace-editor>
     </div>
 </template>
 
 <script>
 import AceEditor from './AceEditor.vue'
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'code-editor',
@@ -25,6 +31,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['canEdit']),
         blob() {
             let blobList = this.project.blob.filter(
                 (blob) => blob.relative_path == this.relativePath
