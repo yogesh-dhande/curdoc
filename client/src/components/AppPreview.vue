@@ -43,6 +43,10 @@ export default {
                 this.appScript = res.data
             })
             .finally(() => this.$store.commit('setLoading', false))
+            .catch((error) => {
+                this.$store.commit('setError', error)
+                this.$router.replace('/error')
+            })
     },
 }
 </script>

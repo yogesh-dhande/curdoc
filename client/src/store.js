@@ -40,26 +40,25 @@ const store = new Vuex.Store({
         },
       ],
     },
-    currentUser: {
-    },
+    currentUser: {},
     userProfile: {},
     loading: false,
     error: {
       response: {
         status: "404",
         data: {
-          message: "Page Not Found"
-        }
-      }
+          message: "Page Not Found",
+        },
+      },
     },
   },
   getters: {
     canEdit(state) {
       if (!state.currentUser.id) {
-        return false
+        return false;
       }
-      return state.currentUser.id == state.project.user.id
-    }
+      return state.currentUser.id == state.project.user.id;
+    },
   },
   actions: {
     setCurrentUser({ commit }, uid) {
@@ -71,8 +70,8 @@ const store = new Vuex.Store({
           commit("setCurrentUser", res.data ? res.data : {});
         })
         .catch((error) => {
-          commit("setError", error)
-          router.replace('/error')
+          commit("setError", error);
+          router.replace("/error");
         });
     },
     updateCode({ commit }, payload) {
@@ -82,7 +81,7 @@ const store = new Vuex.Store({
         .then((res) => commit("updateBlob", res.data))
         .catch((error) => commit("setError", error));
     },
-    async createProject({ commit, state, dispatch }, projectName) {
+    createProject({ commit, state, dispatch }, projectName) {
       console.log(`creating project ${projectName}`);
       commit("setLoading", true);
       axios
@@ -97,7 +96,10 @@ const store = new Vuex.Store({
           dispatch("setCurrentUser", state.currentUser.id);
         })
         .finally(() => commit("setLoading", false))
-        .catch((error) => commit("setError", error));
+        .catch((error) => {
+          commit("setError", error);
+          router.replace("/error");
+        });
     },
     setProject({ commit, state }, payload) {
       if (
@@ -115,7 +117,10 @@ const store = new Vuex.Store({
           .then((res) => {
             commit("setProject", res.data);
           })
-          .catch((error) => commit("setError", error))
+          .catch((error) => {
+            commit("setError", error);
+            router.replace("/error");
+          })
           .finally(() => commit("setLoading", false));
       }
     },
