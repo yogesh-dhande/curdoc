@@ -66,10 +66,6 @@ const store = new Vuex.Store({
         .then((res) => {
           console.log(res.data);
           commit("setCurrentUser", res.data ? res.data : {});
-        })
-        .catch((error) => {
-          commit("setError", error);
-          router.replace("/error");
         });
     },
     updateCode({ commit }, payload) {
