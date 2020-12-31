@@ -3,8 +3,6 @@ import Vue from "vue";
 import Vuex from "vuex";
 import router from "./router.js";
 
-// const fb = require("./firebaseConfig.js");
-
 Vue.use(Vuex);
 
 export function treeFromBlobList(blobList) {

@@ -1,4 +1,3 @@
-import firebase from "firebase";
 import Vue from "vue";
 import Router from "vue-router";
 import Error from "./components/Error";
@@ -8,6 +7,7 @@ import Login from "./components/Login";
 import Profile from "./components/Profile";
 import Project from "./components/Project";
 import User from "./components/User";
+import { auth } from "./firebaseConfig";
 
 Vue.use(Router);
 
@@ -100,7 +100,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.
-    if (!firebase.auth().currentUser) {
+    if (!auth.currentUser) {
       next({
         path: "/login",
         query: { redirect: path },
