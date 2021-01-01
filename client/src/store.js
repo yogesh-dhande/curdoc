@@ -26,7 +26,7 @@ export function treeFromBlobList(blobList) {
 
 const store = new Vuex.Store({
   state: {
-    session: {},
+    token: null,
     project: {
       id: null,
       name: null,
@@ -59,10 +59,14 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    setCurrentUser({ commit }, uid) {
+    setCurrentUser({ commit, state }, uid) {
       console.log(`${process.env.VUE_APP_BACKEND_URL}/user/${uid}`);
       axios
-        .get(`${process.env.VUE_APP_BACKEND_URL}/user/${uid}`)
+        .get(`${process.env.VUE_APP_BACKEND_URL}/user/${uid}`, {
+          headers: {
+            Authorization: "Bearer " + state.uid,
+          },
+        })
         .then((res) => {
           console.log(res.data);
           commit("setCurrentUser", res.data ? res.data : {});
@@ -160,6 +164,9 @@ const store = new Vuex.Store({
     },
     setError(state, val) {
       state.error = val;
+    },
+    setToken(state, val) {
+      state.token = val;
     },
   },
 });

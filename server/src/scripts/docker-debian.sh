@@ -9,8 +9,8 @@
 ENABLE_NONROOT_DOCKER=${1:-"true"}
 SOURCE_SOCKET=${2:-"/var/run/docker-host.sock"}
 TARGET_SOCKET=${3:-"/var/run/docker.sock"}
-USERNAME=${4:-"testuser"}
-PW=${5:-"testuser"}
+USERNAME=${4:-"server"}
+PW=${5:-"server"}
 
 set -e
 
@@ -45,6 +45,17 @@ if [ "${ENABLE_NONROOT_DOCKER}" = "false" ] || [ "${USERNAME}" = "root" ] || ! i
     chmod +x /usr/local/share/docker-init.sh
     exit 0
 fi
+
+# Function to call apt-get if needed
+apt-get-update-if-needed()
+{
+    if [ ! -d "/var/lib/apt/lists" ] || [ "$(ls /var/lib/apt/lists/ | wc -l)" = "0" ]; then
+        echo "Running apt-get update..."
+        apt-get update
+    else
+        echo "Skipping apt-get update."
+    fi
+}
 
 # If enabling non-root access and specified user is found, setup socat and add script
 chown -h "${USERNAME}":root "${TARGET_SOCKET}"

@@ -1,9 +1,13 @@
 from fastapi import FastAPI
+from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.params import Depends
+from starlette import status
 
 from models.blob import Blob
 from models.project import Project
 from models.user import User
+from services.auth import JWTBearer
 from services.validation import register_exception_handlers
 
 app = FastAPI()
@@ -31,12 +35,14 @@ async def root():
 
 @app.get("/user/{id}")
 async def get_user(id: str):
+    # TODO filter out private projects if current_user_id != id
     return User(id=id).get()
 
 
 @app.get("/project")
 async def get_project(user_name: str, project_name: str):
-    return Project(user=User.from_name(user_name), name=project_name).get()
+    user = User.from_name(user_name)
+    return Project(user=user, name=project_name).get()
 
 
 @app.get("/blob")
@@ -56,6 +62,12 @@ async def create_project(project: Project):
 
 
 @app.put("/blob")
-async def update_blob(project: Project, blob: Blob):
+async def update_blob(project: Project, blob: Blob, current_user_id: str = Depends(JWTBearer())):
+    if current_user_id != project.user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"You do not have permission to edit this project",
+        )
+
     project.update_blob(blob)
     return blob
