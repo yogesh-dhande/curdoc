@@ -1,12 +1,11 @@
+import Error from "@/views/Error";
+import Feedback from "@/views/Feedback";
+import Home from "@/views/Home";
+import Login from "@/views/Login";
+import Profile from "@/views/Profile";
+import Project from "@/views/Project";
 import Vue from "vue";
 import Router from "vue-router";
-import Error from "./components/Error";
-import Feedback from "./components/Feedback";
-import Home from "./components/Home";
-import Login from "./components/Login";
-import Profile from "./components/Profile";
-import Project from "./components/Project";
-import User from "./components/User";
 import { auth } from "./firebaseConfig";
 
 Vue.use(Router);
@@ -36,14 +35,6 @@ let router = new Router({
     {
       path: "/error",
       component: Error,
-    },
-    {
-      path: "/:userName",
-      component: User,
-      meta: {
-        requiresAuth: true,
-      },
-      props: true,
     },
     {
       path: "/",

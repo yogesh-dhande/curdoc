@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import CodeEditor from './CodeEditor.vue'
-import AppPreview from './AppPreview.vue'
+import CodeEditor from '@/components/CodeEditor.vue'
+import AppPreview from '@/views/AppPreview.vue'
 import { mapState } from 'vuex'
 
 export default {

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import BokehApp from './BokehApp.vue'
+import BokehApp from '@/components/BokehApp.vue'
 import axios from 'axios'
 
 export default {
