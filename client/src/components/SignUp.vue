@@ -124,11 +124,6 @@ export default {
                                         .doc(user.uid)
                                         .set(userDoc)
                                         .then(() => {
-                                            //  create store and save user
-                                            this.$store.commit(
-                                                'setCurrentUser',
-                                                userDoc
-                                            )
                                             this.$router.push('/')
                                             this.isLoading = false
                                         })

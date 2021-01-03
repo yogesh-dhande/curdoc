@@ -35,6 +35,7 @@ Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.config.productionTip = false;
 
 let app;
+let unsubscribe;
 // handle page reload
 fb.auth.onAuthStateChanged((user) => {
   if (!app) {
@@ -50,8 +51,14 @@ fb.auth.onAuthStateChanged((user) => {
     user.getIdToken(/* forceRefresh */ true).then((token) => {
       console.log(token);
       store.commit("setToken", token);
-      store.dispatch("setCurrentUser", user.uid);
+      unsubscribe = fb.usersCollection.doc(user.uid).onSnapshot((snap) => {
+        store.commit("setCurrentUser", snap.data() || {});
+      });
       // console.log(user.displayName);
     });
+  } else {
+    if (unsubscribe) {
+      unsubscribe();
+    }
   }
 });

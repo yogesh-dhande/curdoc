@@ -1,7 +1,6 @@
 import axios from "axios";
 import Vue from "vue";
 import Vuex from "vuex";
-import { usersCollection } from "./firebaseConfig";
 import router from "./router.js";
 
 Vue.use(Vuex);
@@ -60,14 +59,6 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    setCurrentUser({ commit }, uid) {
-      usersCollection
-        .doc(uid)
-        .get()
-        .then((snap) => {
-          commit("setCurrentUser", snap.data() || {});
-        });
-    },
     updateCode({ commit }, payload) {
       console.log(payload);
       axios
@@ -75,7 +66,7 @@ const store = new Vuex.Store({
         .then((res) => commit("updateBlob", res.data))
         .catch((error) => commit("setError", error));
     },
-    createProject({ commit, state, dispatch }, projectName) {
+    createProject({ commit, state }, projectName) {
       console.log(`creating project ${projectName}`);
       commit("setLoading", true);
       axios
@@ -87,7 +78,6 @@ const store = new Vuex.Store({
           console.log(res.data);
           commit("setProject", res.data);
           router.push(`${state.currentUser.name}/${projectName}/code`);
-          dispatch("setCurrentUser", state.currentUser.id);
         })
         .finally(() => commit("setLoading", false))
         .catch((error) => {
