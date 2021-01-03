@@ -1,7 +1,7 @@
 import Error from "@/views/Error";
 import Feedback from "@/views/Feedback";
 import Home from "@/views/Home";
-import Login from "@/views/Login";
+import LoginPage from "@/views/LoginPage";
 import Profile from "@/views/Profile";
 import Project from "@/views/Project";
 import Vue from "vue";
@@ -27,7 +27,7 @@ let router = new Router({
     },
     {
       path: "/login",
-      component: Login,
+      component: LoginPage,
       meta: {
         requiresAuth: false,
       },
@@ -46,12 +46,7 @@ let router = new Router({
       meta: {
         requiresAuth: false,
       },
-      props: (route) => {
-        return {
-          ...route.params,
-          layout: route.query.layout ? route.query.layout : "code",
-        };
-      },
+      redirect: "/code",
     },
     {
       path: "/:userName/:projectName/code",

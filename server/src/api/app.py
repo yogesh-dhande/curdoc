@@ -33,10 +33,10 @@ async def root():
     return {"message": "Hello World"}
 
 
-@app.get("/user/{id}")
-async def get_user(id: str):
+@app.get("/user/{name}")
+async def get_user(name: str):
     # TODO filter out private projects if current_user_id != id
-    return User(id=id).get()
+    return User.from_name(name).get()
 
 
 @app.get("/project")
@@ -57,6 +57,7 @@ async def get_script(user_name: str, project_name: str):
 
 @app.post("/project")
 async def create_project(project: Project):
+    print(project)
     project.create()
     return project
 

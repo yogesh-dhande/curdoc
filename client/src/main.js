@@ -7,6 +7,7 @@ import {
   faKey,
   faSave,
   faSync,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import BootstrapVue from "bootstrap-vue";
@@ -19,7 +20,16 @@ import store from "./store.js";
 const fb = require("./firebaseConfig.js");
 
 Vue.use(BootstrapVue);
-library.add(faCode, faChartBar, faColumns, faCogs, faKey, faSync, faSave);
+library.add(
+  faCode,
+  faChartBar,
+  faColumns,
+  faCogs,
+  faKey,
+  faSync,
+  faSave,
+  faTimes
+);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 
 Vue.config.productionTip = false;
@@ -41,7 +51,7 @@ fb.auth.onAuthStateChanged((user) => {
       console.log(token);
       store.commit("setToken", token);
       store.dispatch("setCurrentUser", user.uid);
-      console.log(user.uid);
+      // console.log(user.displayName);
     });
   }
 });

@@ -89,18 +89,7 @@ class Firebase(Database):
             project_doc: firestore.DocumentReference = self.projects.document()
             project_id = project_doc.id
             project_json["id"] = project_id
-
             project_doc.set({**project_json, **{"timeCreated": firestore.SERVER_TIMESTAMP}})
-
-            user_id = project_json["user"]["id"]
-            self.users.document(user_id).update(
-                {
-                    f"projects.{project_doc.id}": {
-                        "id": project_doc.id,
-                        "name": project_name,
-                    }
-                }
-            )
             return project_id
 
     def add_blob_to_project(self, project_id: str, blob_json: dict):

@@ -1,6 +1,7 @@
 import axios from "axios";
 import Vue from "vue";
 import Vuex from "vuex";
+import { usersCollection } from "./firebaseConfig";
 import router from "./router.js";
 
 Vue.use(Vuex);
@@ -59,17 +60,12 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    setCurrentUser({ commit, state }, uid) {
-      console.log(`${process.env.VUE_APP_BACKEND_URL}/user/${uid}`);
-      axios
-        .get(`${process.env.VUE_APP_BACKEND_URL}/user/${uid}`, {
-          headers: {
-            Authorization: "Bearer " + state.uid,
-          },
-        })
-        .then((res) => {
-          console.log(res.data);
-          commit("setCurrentUser", res.data ? res.data : {});
+    setCurrentUser({ commit }, uid) {
+      usersCollection
+        .doc(uid)
+        .get()
+        .then((snap) => {
+          commit("setCurrentUser", snap.data() || {});
         });
     },
     updateCode({ commit }, payload) {
