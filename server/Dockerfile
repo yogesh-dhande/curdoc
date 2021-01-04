@@ -13,10 +13,8 @@ RUN apt-get update \
     && /bin/bash docker-debian.sh \
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
-USER ${USER}
-
 COPY . /app
+WORKDIR /app
 
 RUN pip install -r requirements.txt
 
@@ -24,4 +22,6 @@ ENV PORT=5000
 ENV SANDBOX_IMAGE=bokeh_play_sandbox
 EXPOSE $PORT
 
-CMD ["/bin/bash", "scripts/run.sh"]
+USER ${USER}
+
+CMD ["/bin/bash", "src/scripts/run.sh"]

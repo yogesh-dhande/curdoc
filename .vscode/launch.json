@@ -1,13 +1,24 @@
 {
   "configurations": [
     {
+      "type": "chrome",
+      "request": "launch",
+      "name": "vuejs: chrome",
+      "url": "http://localhost:8080",
+      "webRoot": "${workspaceFolder}/client/src",
+      "breakOnLoad": true,
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*"
+      }
+    },
+    {
       "name": "Python: FastAPI",
       "type": "python",
       "request": "launch",
       "module": "uvicorn",
-      "args": ["app:app", "--port", "5000", "--reload"],
+      "args": ["app:app", "--port", "5000", "--reload", "--app-dir", "src/api"],
       "jinja": true,
-      "cwd": "${workspaceFolder}/server/src/api"
+      "cwd": "${workspaceFolder}/server"
     }
   ]
 }

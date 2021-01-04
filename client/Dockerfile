@@ -1,5 +1,7 @@
 FROM node
 
+RUN npm install -g firebase-tools
+
 WORKDIR /app
 
 COPY package.json .

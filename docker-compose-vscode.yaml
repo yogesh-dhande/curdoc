@@ -16,7 +16,7 @@ services:
     stdin_open: true
     tty: true
     ports:
-      - "8000:8000"
+      - "5000:5000"
       - "5001-5010"
     volumes: 
       - /Users/yogesh/projects/bokeh-play/server:/app

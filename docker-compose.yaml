@@ -1,16 +1,16 @@
 version: "3.8"
-services: 
+services:
   client:
     build: client
     stdin_open: true
     tty: true
     ports:
       - "8080:8080"
-    volumes: 
+    volumes:
       - /app/node_modules
       - /Users/yogesh/projects/bokeh-play/client:/app
     environment:
-      - VUE_APP_BACKEND_URL=http://localhost:8000
+      - VUE_APP_BACKEND_URL=http://localhost:5000
   server:
     build: server
     stdin_open: true
@@ -18,7 +18,7 @@ services:
     ports:
       - "8000:8000"
       - "5001-5010"
-    volumes: 
+    volumes:
       - /Users/yogesh/projects/bokeh-play/server:/app
       - projects:/app/projects
       - /var/run/docker.sock:/var/run/docker.sock
@@ -26,4 +26,3 @@ services:
       - FLASK_DEBUG_MODE=true
 volumes:
   projects:
-  
