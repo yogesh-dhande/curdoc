@@ -17,6 +17,7 @@
 
             <b-navbar-nav :class="{ 'ml-auto': !project.name }">
                 <!-- <b-nav-item to="/feedback">Feedback</b-nav-item> -->
+                <b-nav-item href="./blog/first.html">Blog</b-nav-item>
                 <b-nav-item-dropdown right v-if="currentUser.name">
                     <!-- Using 'button-content' slot -->
                     <template #button-content>
