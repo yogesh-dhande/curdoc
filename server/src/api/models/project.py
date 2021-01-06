@@ -25,7 +25,7 @@ class Project(BaseModel):
 
     def create(self) -> None:
         database.create_project(self.dict())
-        with open("resources/default.py", "r") as file:
+        with open("src/api/resources/default.py", "r") as file:
             blob = Blob(relative_path="main.py", text=file.read())
             self.add_blob(blob)
         return self
