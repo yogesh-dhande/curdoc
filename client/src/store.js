@@ -38,6 +38,8 @@ const store = new Vuex.Store({
         },
       ],
     },
+    appScript: null,
+    appScriptUpdatePending: false,
     currentUser: {},
     userProfile: {},
     loading: false,
@@ -59,11 +61,41 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    updateCode({ commit }, payload) {
+    async setAppScript({ commit }, payload) {
+      console.log("getting app script");
+      commit("setLoading", true);
+      return await axios
+        .get(`${process.env.VUE_APP_BACKEND_URL}/script`, {
+          params: payload,
+        })
+        .then((res) => {
+          console.log("setting state.appScript");
+          commit("setAppScript", res.data);
+        })
+        .finally(() => {
+          commit("setLoading", false);
+        })
+        .catch((error) => {
+          this.$store.commit("setError", error);
+          this.$router.replace("/error");
+        });
+    },
+    updateCode({ commit, state, dispatch }, payload) {
       console.log(payload);
+      commit("setAppScript", null);
       axios
-        .put(`${process.env.VUE_APP_BACKEND_URL}/blob`, payload)
-        .then((res) => commit("updateBlob", res.data))
+        .put(`${process.env.VUE_APP_BACKEND_URL}/blob`, payload, {
+          headers: {
+            Authorization: `Bearer ${state.token}`,
+          },
+        })
+        .then((res) => {
+          commit("updateBlob", res.data);
+          dispatch("setAppScript", {
+            user_name: payload.project.user.name,
+            project_name: payload.project.name,
+          });
+        })
         .catch((error) => commit("setError", error));
     },
     createProject({ commit, state }, projectName) {
@@ -85,28 +117,24 @@ const store = new Vuex.Store({
           router.replace("/error");
         });
     },
-    setProject({ commit, state }, payload) {
-      if (
-        state.project.name != payload.project_name ||
-        state.project.user.name != payload.user_name
-      ) {
-        commit("setLoading", true);
-        console.log(
-          `getting project for ${payload.user_name} - ${payload.project_name}`
-        );
-        axios
-          .get(`${process.env.VUE_APP_BACKEND_URL}/project`, {
-            params: payload,
-          })
-          .then((res) => {
-            commit("setProject", res.data);
-          })
-          .catch((error) => {
-            commit("setError", error);
-            router.replace("/error");
-          })
-          .finally(() => commit("setLoading", false));
-      }
+    async setProject({ commit }, payload) {
+      commit("setLoading", true);
+      console.log(
+        `getting project for ${payload.user_name} - ${payload.project_name}`
+      );
+      axios
+        .get(`${process.env.VUE_APP_BACKEND_URL}/project`, {
+          params: payload,
+        })
+        .then((res) => {
+          commit("setProject", res.data);
+          console.log(payload);
+        })
+        .catch((error) => {
+          commit("setError", error);
+          router.replace("/error");
+        })
+        .finally(() => commit("setLoading", false));
     },
     clearData({ commit }) {
       commit("clearData");
@@ -153,6 +181,12 @@ const store = new Vuex.Store({
     },
     setToken(state, val) {
       state.token = val;
+    },
+    setAppScript(state, script) {
+      state.appScript = script;
+    },
+    setAppScriptUpdatePending(state, val) {
+      state.appScriptUpdatePending = val;
     },
   },
 });

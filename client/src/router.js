@@ -1,3 +1,4 @@
+import AppPreview from "@/views/AppPreview";
 import Error from "@/views/Error";
 import Feedback from "@/views/Feedback";
 import Home from "@/views/Home";
@@ -54,16 +55,11 @@ let router = new Router({
       meta: {
         requiresAuth: false,
       },
-      props: (route) => {
-        return {
-          ...route.params,
-          layout: "code",
-        };
-      },
+      props: true,
     },
     {
       path: "/:userName/:projectName/app",
-      component: Project,
+      component: AppPreview,
       meta: {
         requiresAuth: false,
       },

@@ -1,52 +1,83 @@
 <template>
-    <div>
-        <bokeh-app
-            :script="appScript"
-            :key="appScript"
-            v-if="appScript"
-        ></bokeh-app>
-    </div>
+    <b-container>
+        <bokeh-app :script="script" :key="script" v-if="script"></bokeh-app>
+    </b-container>
 </template>
 
 <script>
 import BokehApp from '@/components/BokehApp.vue'
-import axios from 'axios'
+import { mapState } from 'vuex'
 
 export default {
     name: 'app-preview',
     props: {
-        project: {
-            type: Object,
+        userName: {
+            type: String,
         },
+        projectName: {
+            type: String,
+        },
+    },
+    data() {
+        return {
+            script: null,
+            scriptWatcher: null,
+        }
     },
     components: {
         'bokeh-app': BokehApp,
     },
-    data() {
-        return {
-            appScript: null,
-        }
+    computed: {
+        ...mapState(['appScript']),
+    },
+    methods: {
+        setScript() {
+            console.log('setting local script from state.appScript')
+            this.script = this.appScript
+            this.$store.commit('setAppScript', null)
+        },
     },
     mounted() {
         console.log(
-            `mounting app preview for ${this.project.user.name} - ${this.project.name}`
+            `mounting app preview for ${this.userName} - ${this.projectName}`
         )
-        this.$store.commit('setLoading', true)
-        axios
-            .get(`${process.env.VUE_APP_BACKEND_URL}/script`, {
-                params: {
-                    user_name: this.project.user.name,
-                    project_name: this.project.name,
-                },
+
+        if (!this.script) {
+            let payload = {
+                user_name: this.userName,
+                project_name: this.projectName,
+            }
+            this.$store.dispatch('setAppScript', payload).then(() => {
+                this.setScript()
+                this.$store.dispatch('setProject', payload)
             })
-            .then((res) => {
-                this.appScript = res.data
-            })
-            .finally(() => this.$store.commit('setLoading', false))
-            .catch((error) => {
-                this.$store.commit('setError', error)
-                this.$router.replace('/error')
-            })
+        }
+    },
+    beforeRouteEnter(to, from, next) {
+        console.log('entering app preview route')
+
+        next((vm) => {
+            if (vm.appScript) {
+                vm.setScript()
+            } else {
+                vm.scriptWatcher = vm.$watch('appScript', () => {
+                    vm.setScript()
+                    vm.scriptWatcher()
+                    vm.scriptWatcher = null
+                })
+            }
+        })
+    },
+    beforeRouteUpdate(to, from, next) {
+        console.log('updating app preview route')
+        next()
+    },
+    beforeRouteLeave(to, from, next) {
+        console.log('leaving app preview route')
+        if (this.scriptWatcher) {
+            this.scriptWatcher()
+        }
+        next()
     },
 }
 </script>

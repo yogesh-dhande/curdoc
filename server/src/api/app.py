@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.params import Depends
+from services.container import container_service
 from starlette import status
 
 from models.blob import Blob
@@ -26,6 +27,12 @@ app.add_middleware(
 )
 
 register_exception_handlers(app)
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    print("shutdown app ...")
+    container_service.stop_all_containers()
 
 
 @app.get("/")

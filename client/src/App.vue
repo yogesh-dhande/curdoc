@@ -21,17 +21,11 @@ export default {
     },
     methods: {},
     computed: {
-        ...mapState(['currentUser', 'loading']),
+        ...mapState(['currentUser', 'loading', 'project']),
     },
     watch: {
         '$route.params'(params) {
             console.log(params)
-            if (params.userName && params.projectName) {
-                this.$store.dispatch('setProject', {
-                    user_name: params.userName,
-                    project_name: params.projectName,
-                })
-            }
         },
     },
 }

@@ -6,11 +6,14 @@ from contextlib import closing
 from typing import Dict
 
 import docker
-from bokeh.client import pull_session
-from bokeh.embed import server_document
 
 allowed_ports = range(5001, 5010)
 client = docker.from_env()
+
+
+def get_container_name_for_port(port):
+    return f"sandbox{port}"
+
 
 def find_free_port():
     with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
@@ -66,7 +69,7 @@ class ContainerSession(ContainerSessionBase):
     def start(self):
         print(f"starting bokeh container for {self.project_id}")
         for p in allowed_ports:
-            container_name =  f"sandbox{p}"
+            container_name =  get_container_name_for_port(p)
             try:
                 self.container = client.containers.run(
                     name=container_name,
@@ -115,6 +118,18 @@ class ContainerService(object):
         thread = threading.Thread(target=self.prune_containers, daemon=True)
         thread.start()
 
+    
+    def stop_all_containers(self):
+        for port in allowed_ports:
+            container_name = get_container_name_for_port(port)
+            try:
+                container = client.containers.get(container_name)
+                print(container.name)
+                container.stop()
+            except Exception as e:
+                print(str(e))
+
+
     def start_container(self, project_id):
         container_session = self.container_session_type(project_id)
         container_session.start()
@@ -145,6 +160,7 @@ class ContainerService(object):
         try:
             container_session = self.container_sessions[project_id]
             if not container_session.is_container_running():
+                print(f"container for {project_id} named {container_session.container_name} was not running")
                 self.container_sessions.pop(project_id)
                 raise KeyError
         except KeyError:

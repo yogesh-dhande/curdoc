@@ -13,23 +13,17 @@
             >
             to start creating your own projects for free.
         </b-alert>
-        <div v-if="layout == 'code'">
-            <code-editor :project="project" :key="project.id"></code-editor>
-        </div>
-        <b-container v-if="layout == 'app'">
-            <app-preview :project="project" :key="project.id"></app-preview>
-        </b-container>
+        <code-editor :project="project" :key="project.id"></code-editor>
     </div>
 </template>
 
 <script>
 import CodeEditor from '@/components/CodeEditor.vue'
-import AppPreview from '@/views/AppPreview.vue'
 import { mapState } from 'vuex'
 
 export default {
     name: 'project',
-    components: { CodeEditor, AppPreview },
+    components: { CodeEditor },
     props: {
         userName: {
             type: String,
@@ -52,10 +46,45 @@ export default {
         },
     },
     mounted() {
-        this.$store.dispatch('setProject', {
-            user_name: this.userName,
-            project_name: this.projectName,
+        // let payload = {
+        //     user_name: this.userName,
+        //     project_name: this.projectName,
+        // }
+        // if (
+        //     this.project.name != payload.project_name ||
+        //     this.project.user.name != payload.user_name
+        // ) {
+        //     this.$store.dispatch('setProject', payload)
+        // }
+    },
+    beforeRouteEnter(to, from, next) {
+        console.log('entering project route')
+        console.log(to.params)
+
+        next((vm) => {
+            let params = to.params
+            if (params.userName && params.projectName) {
+                let payload = {
+                    user_name: params.userName,
+                    project_name: params.projectName,
+                }
+                if (
+                    vm.project.name != payload.project_name ||
+                    vm.project.user.name != payload.user_name
+                ) {
+                    vm.$store.dispatch('setProject', payload)
+                    vm.$store.dispatch('setAppScript', payload)
+                }
+            }
         })
+    },
+    beforeRouteUpdate(to, from, next) {
+        console.log('updating project route')
+        next()
+    },
+    beforeRouteLeave(to, from, next) {
+        console.log('leaving project route')
+        next()
     },
 }
 </script>
