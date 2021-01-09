@@ -6,11 +6,14 @@ from contextlib import closing
 from typing import Dict
 
 import docker
-from bokeh.client import pull_session
-from bokeh.embed import server_document
 
 allowed_ports = range(5001, 5010)
 client = docker.from_env()
+
+
+def get_container_name_for_port(port):
+    return f"sandbox{port}"
+
 
 def find_free_port():
     with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
@@ -34,7 +37,6 @@ class ContainerSessionBase(object):
         self.container_name = None
         self.container = None
         self.port = None
-        self.client_sessions = set()
 
     def start(self):
         raise NotImplementedError
@@ -47,10 +49,6 @@ class ContainerSessionBase(object):
 
     def _get_app_script(self):
         raise NotImplementedError
-
-    def get_app_script(self):
-        self.last_used = time.time()
-        return self._get_app_script()
 
 
 class MockContainerSession(ContainerSessionBase):
@@ -65,16 +63,13 @@ class MockContainerSession(ContainerSessionBase):
     def is_container_running(self):
         return True
 
-    def _get_app_script(self):
-        pass
-
 
 class ContainerSession(ContainerSessionBase):
     
     def start(self):
         print(f"starting bokeh container for {self.project_id}")
         for p in allowed_ports:
-            container_name =  f"sandbox{p}"
+            container_name =  get_container_name_for_port(p)
             try:
                 self.container = client.containers.run(
                     name=container_name,
@@ -113,21 +108,6 @@ class ContainerSession(ContainerSessionBase):
         except Exception as e:
             print(str(e))
             return False
-
-    def _get_app_script(self):
-        app_url = f"http://localhost:{self.port}/main"
-
-        wait_period = 1
-        for i in range(15):  # Time out after 15 sec
-            try:
-                pull_session(url=f"http://sandbox{self.port}:5006/{self.project_id}")
-                script = server_document(arguments={'project': self.project_id}, url=app_url)
-                self.last_used = time.time()
-                return script
-            except Exception as e:
-                time.sleep(wait_period)
-                print(str(e))
-                print(f"Waited {i*wait_period} seconds for Bokeh server to be ready")
                 
 
 class ContainerService(object):
@@ -135,9 +115,20 @@ class ContainerService(object):
 
     def __init__(self, container_session_type: ContainerSessionBase=ContainerSession) -> None:
         self.container_session_type = container_session_type
-        thread = threading.Thread(target=self.prune_containers)
-        thread.daemon = True
+        thread = threading.Thread(target=self.prune_containers, daemon=True)
         thread.start()
+
+    
+    def stop_all_containers(self):
+        for port in allowed_ports:
+            container_name = get_container_name_for_port(port)
+            try:
+                container = client.containers.get(container_name)
+                print(container.name)
+                container.stop()
+            except Exception as e:
+                print(str(e))
+
 
     def start_container(self, project_id):
         container_session = self.container_session_type(project_id)
@@ -160,7 +151,8 @@ class ContainerService(object):
                         print(f"Stopping container for {project_id}")
                         self.stop_container(project_id)
             except RuntimeError:
-                # TODO stopping containers changes dict size during iteration
+                # TODO stopping containers changes dict size during iteration, 
+                # fix by first retreiving the list to be stopped
                 pass
             time.sleep(60)
     
@@ -168,6 +160,7 @@ class ContainerService(object):
         try:
             container_session = self.container_sessions[project_id]
             if not container_session.is_container_running():
+                print(f"container for {project_id} named {container_session.container_name} was not running")
                 self.container_sessions.pop(project_id)
                 raise KeyError
         except KeyError:
@@ -175,12 +168,11 @@ class ContainerService(object):
 
     def get_container_session_for_project(self, project_id) -> ContainerSessionBase:
         self.ensure_container_for_project(project_id)
-        return self.container_sessions[project_id]
-
-    def get_app_script(self, client_session):  # TODO replace argument with a ClientSession object?
-        container_session = self.get_container_session_for_project(client_session.project.id)
-        container_session.client_sessions.add(client_session)
-        return container_session.get_app_script()
+        container_session = self.container_sessions[project_id]
+        container_session.last_used = time.time()
+        return container_session
 
 
 container_service = ContainerService()
+
+

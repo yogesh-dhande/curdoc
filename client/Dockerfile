@@ -1,5 +1,7 @@
 FROM node
 
+RUN npm install -g firebase-tools && apt-get update && apt-get install -y openjdk-8-jre
+
 WORKDIR /app
 
 COPY package.json .

@@ -1,5 +1,6 @@
 <template>
 <div>
+    <h6>{{ user.name }}</h6>
     <b-list-group>    
         <b-list-group-item 
             v-for="project in user.projects" 
@@ -13,26 +14,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 
     export default {
         name: 'user',
         props: {
-            userName: {
-                type: String
+            user: {
+                type: Object
             }
-        },
-        computed: {
-            ...mapState(['user'])
-        },
-        methods: {
-            setUser(userName) {
-                console.log("setting user")
-                this.$store.dispatch("setUser", userName)
-            }
-        },
-        mounted () {
-            this.setUser(this.userName)
         },
     }
 </script>

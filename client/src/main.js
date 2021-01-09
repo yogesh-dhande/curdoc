@@ -1,29 +1,44 @@
+import { library } from "@fortawesome/fontawesome-svg-core";
+import {
+  faChartBar,
+  faCode,
+  faCogs,
+  faColumns,
+  faKey,
+  faSave,
+  faSync,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import BootstrapVue from "bootstrap-vue";
+import "bootstrap-vue/dist/bootstrap-vue.css";
+import "bootstrap/dist/css/bootstrap.css";
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
+import store from "./store.js";
 const fb = require("./firebaseConfig.js");
 
-import BootstrapVue from "bootstrap-vue";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faSeedling, faCat } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 Vue.use(BootstrapVue);
-library.add(faSeedling, faCat);
+library.add(
+  faCode,
+  faChartBar,
+  faColumns,
+  faCogs,
+  faKey,
+  faSync,
+  faSave,
+  faTimes
+);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
-
-import store from "./store.js";
 
 Vue.config.productionTip = false;
 
-
 let app;
-
+let unsubscribe;
 // handle page reload
 fb.auth.onAuthStateChanged((user) => {
   if (!app) {
-
     app = new Vue({
       el: "#app",
       router,
@@ -33,7 +48,17 @@ fb.auth.onAuthStateChanged((user) => {
   }
 
   if (user) {
-    store.dispatch("setCurrentUser", user.email);
+    user.getIdToken(/* forceRefresh */ true).then((token) => {
+      console.log(token);
+      store.commit("setToken", token);
+      unsubscribe = fb.usersCollection.doc(user.uid).onSnapshot((snap) => {
+        store.commit("setCurrentUser", snap.data() || {});
+      });
+      // console.log(user.displayName);
+    });
+  } else {
+    if (unsubscribe) {
+      unsubscribe();
+    }
   }
-
 });

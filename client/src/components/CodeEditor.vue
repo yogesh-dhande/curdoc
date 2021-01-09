@@ -1,46 +1,59 @@
 <template>
-<div>
-    <ace-editor :code="code" :key="code"> </ace-editor>
-</div>
+    <div>
+        <ace-editor
+            :code="code"
+            :key="code"
+            :canEdit="canEdit"
+            @codeChanged="codeChanged"
+        >
+        </ace-editor>
+    </div>
 </template>
 
 <script>
-import AceEditor from "./AceEditor.vue"
-import { mapState } from 'vuex'
+import AceEditor from './AceEditor.vue'
+import { mapGetters } from 'vuex'
 
-    export default {
-        name: 'code-editor',
-        props: {
-            userName: {
-                type: String
-            },
-            projectName: {
-                type: String
-            }
+export default {
+    name: 'code-editor',
+    props: {
+        project: {
+            type: Object,
         },
-        components: {
-            'ace-editor': AceEditor,
+    },
+    components: {
+        'ace-editor': AceEditor,
+    },
+    data() {
+        return {
+            editor: null,
+            relativePath: 'main.py',
+        }
+    },
+    computed: {
+        ...mapGetters(['canEdit']),
+        blob() {
+            let blobList = this.project.blob.filter(
+                (blob) => blob.relative_path == this.relativePath
+            )
+            return blobList.length > 0 ? blobList[0] : null
         },
-        data () {
-            return {
-                editor: null
-            }
+        code() {
+            return this.blob ? this.blob.text : ''
         },
-        computed: {
-            ...mapState(['code'])
+    },
+    methods: {
+        codeChanged(evt) {
+            console.log(evt)
+            this.blob.text = evt.text
+            this.$store.dispatch('updateCode', {
+                project: this.project,
+                blob: this.blob,
+            })
         },
-        methods: {
-            getCode (userName, projectName) {
-                this.$store.dispatch('getCodeForProject', {
-                    userName: userName,
-                    projectName: projectName,
-                    authUser: this.currentUser
-                })
-            }
-        },
-        mounted () {
-            console.log("mounting code editor now")
-            this.getCode(this.userName, this.projectName)
-        },
-    }
+    },
+    mounted() {
+        console.log('mounting code editor')
+    },
+}
 </script>

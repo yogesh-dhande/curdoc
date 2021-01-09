@@ -1,93 +1,81 @@
-import os
+from fastapi import FastAPI
+from fastapi.exceptions import HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.params import Depends
+from services.container import container_service
+from starlette import status
 
-from flask import Flask
-from flask import request
-from flask_cors import CORS
+from models.blob import Blob
+from models.project import Project
+from models.user import User
+from services.auth import JWTBearer
+from services.validation import register_exception_handlers
 
-from sessions import ClientSession
+app = FastAPI()
 
-app = Flask(__name__)
-CORS(app)
+origins = [
+    "http://localhost:8080",
+    "http://localhost",
+]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.route("/", methods=["GET"])
-def index():
-    return {"message": "ok"}
-
-
-@app.route("/users/<user_name>", methods=["GET"])
-def get_user(user_name):
-    try:
-        return ClientSession(user_name).get_user()
-    except Exception as e:
-        return str(e)
-
-
-@app.route("/projects", methods=["GET"])
-def get_project():
-    try:
-        user_name = request.args.get("userName")
-        project_name = request.args.get("projectName")
-        auth_user = request.args.get("authUser")
-        print(user_name, project_name, auth_user)
-        return ClientSession(auth_user).get_project(user_name, project_name)
-    except Exception as e:
-        return str(e)
+register_exception_handlers(app)
 
 
-@app.route("/code", methods=["GET"])
-def get_code():
-    try:
-        user_name = request.args.get("userName")
-        project_name = request.args.get("projectName")
-        auth_user = request.args.get("authUser")
-        relative_file_path = request.args.get("relativePath")
-        code = ClientSession(auth_user).get_code(user_name, project_name, relative_file_path)
-        return {"code": code}
-    except Exception as e:
-        return str(e)
+@app.on_event("shutdown")
+async def shutdown_event():
+    print("shutdown app ...")
+    container_service.stop_all_containers()
 
 
-@app.route("/script", methods=["GET"])
-def get_script():
-    try:
-        user_name = request.args.get("userName")
-        project_name = request.args.get("projectName")
-        auth_user = request.args.get("authUser")
-        return {"script": ClientSession(auth_user).get_app_script(user_name, project_name)}
-    except Exception as e:
-        print(str(e))
-        return str(e)
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
 
 
-@app.route("/projects", methods=["POST"])
-def create_project():
-    try:
-        user_name = request.json.get("userName")
-        project_name = request.json.get("projectName")
-        code = request.json.get("code")
-        return ClientSession(user_name).load_default_project(user_name, project_name, code)
-    except Exception as e:
-        print(str(e))
-        return f"Error occurred: {e}"
+@app.get("/user/{name}")
+async def get_user(name: str):
+    # TODO filter out private projects if current_user_id != id
+    return User.from_name(name).get()
 
 
-@app.route("/code", methods=["POST"])
-def post_code():
-    try:
-        user_name = request.json.get("userName")
-        project_name = request.json.get("projectName")
-        auth_user = request.json.get("authUser")
-        relative_file_path = request.json.get("relativePath")
-        code = request.json.get("code")
-        ClientSession(auth_user).load_project(user_name, project_name).write_code(relative_file_path, code)
-        return {"status": "ok"}
-    except Exception as e:
-        print(str(e))
-        return str(e)
+@app.get("/project")
+async def get_project(user_name: str, project_name: str):
+    user = User.from_name(user_name)
+    return Project(user=user, name=project_name).get()
 
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    print(port)
-    app.run(threaded=True, host="0.0.0.0", port=port, debug=os.environ.get("FLASK_DEBUG_MODE"))
+@app.get("/blob")
+async def get_blob(user_name: str, project_name: str, relative_file_path: str):
+    return Project(user=User.from_name(user_name), name=project_name).get_blob(relative_file_path)
+
+
+@app.get("/script")
+async def get_script(user_name: str, project_name: str):
+    return Project(user=User.from_name(user_name), name=project_name).get_app_script()
+
+
+@app.post("/project")
+async def create_project(project: Project):
+    print(project)
+    project.create()
+    return project
+
+
+@app.put("/blob")
+async def update_blob(project: Project, blob: Blob, current_user_id: str = Depends(JWTBearer())):
+    if current_user_id != project.user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"You do not have permission to edit this project",
+        )
+
+    project.update_blob(blob)
+    return blob
