@@ -19,8 +19,11 @@ class Project(BaseModel):
     blob: Optional[List[Blob]] = []
 
     @property
-    def id(self):
-        _id = database.get_project_id(self.user.name, self.name)
+    def id(self) -> str:
+        _id = self.__dict__.get('id')
+        if _id is None:
+            _id = database.get_project_id(self.user.name, self.name)
+            self.__dict__['id'] = _id
         return _id
 
     def create(self) -> None:

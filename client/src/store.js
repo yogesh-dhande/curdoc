@@ -128,7 +128,7 @@ const store = new Vuex.Store({
         })
         .then((res) => {
           commit("setProject", res.data);
-          console.log(payload);
+          console.log(res.data);
         })
         .catch((error) => {
           commit("setError", error);
