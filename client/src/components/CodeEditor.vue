@@ -1,11 +1,6 @@
 <template>
     <div>
-        <ace-editor
-            :code="code"
-            :key="code"
-            :canEdit="canEdit"
-            @codeChanged="codeChanged"
-        >
+        <ace-editor :blob="blob" :canEdit="canEdit" @updateCode="updateCode">
         </ace-editor>
     </div>
 </template>
@@ -28,6 +23,8 @@ export default {
         return {
             editor: null,
             relativePath: 'main.py',
+            codeChanged: false,
+            codeChangeCallback: null,
         }
     },
     computed: {
@@ -38,18 +35,22 @@ export default {
             )
             return blobList.length > 0 ? blobList[0] : null
         },
-        code() {
-            return this.blob ? this.blob.text : ''
-        },
     },
     methods: {
-        codeChanged(evt) {
-            console.log(evt)
+        updateCode(evt) {
+            this.codeChanged = true
             this.blob.text = evt.text
-            this.$store.dispatch('updateCode', {
-                project: this.project,
-                blob: this.blob,
-            })
+            clearTimeout(this.codeChangeCallback)
+
+            this.codeChangeCallback = setTimeout(() => {
+                if (this.codeChanged) {
+                    this.$store.dispatch('updateCode', {
+                        project: this.project,
+                        blob: this.blob,
+                    })
+                    this.codeChanged = false
+                }
+            }, 3000)
         },
     },
     mounted() {

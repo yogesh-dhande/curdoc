@@ -11,11 +11,12 @@ export default {
     data() {
         return {
             editor: Object,
+            editorSessions: {},
         }
     },
     props: {
-        code: {
-            type: String,
+        blob: {
+            type: Object,
         },
         canEdit: {
             type: Boolean,
@@ -24,25 +25,47 @@ export default {
     },
     mounted() {
         this.editor = ace.edit(this.$el, {
-            value: this.code,
-            theme: 'ace/theme/dracula',
-            mode: 'ace/mode/python',
             wrap: true,
             autoScrollEditorIntoView: true,
             minLines: 60,
             maxLines: 200,
-            fontSize: 16,
+            fontSize: 14,
             highlightSelectedWord: true,
             highlightGutterLine: true,
         })
         this.editor.resize()
-        this.editor.on('blur', this.updateCode)
+        this.editor.on('change', this.updateCode)
         this.editor.setReadOnly(!this.canEdit)
+
+        this.$watch(
+            'blob',
+            (newValue) => {
+                let relativePath = newValue.relative_path
+                let text = newValue.text
+                if (!this.editorSessions[relativePath]) {
+                    this.editorSessions[relativePath] = new ace.EditSession(
+                        text
+                    )
+                }
+                this.editor.setSession(this.editorSessions[relativePath])
+                this.editor.setOptions({
+                    theme: 'ace/theme/dracula',
+                    mode: 'ace/mode/python',
+                    enableBasicAutocompletion: true,
+                })
+            },
+            { immediate: true }
+        )
+    },
+    computed: {
+        code() {
+            return this.blob ? this.blob.text : ''
+        },
     },
     methods: {
         updateCode(evt) {
             console.log(evt)
-            this.$emit('codeChanged', {
+            this.$emit('updateCode', {
                 text: this.editor.getValue(),
             })
         },
