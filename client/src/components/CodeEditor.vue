@@ -1,17 +1,21 @@
 <template>
     <div>
-        <ace-editor
-            :code="code"
-            :key="code"
+        <!-- <ace-editor
+            :blob="blob"
             :canEdit="canEdit"
-            @codeChanged="codeChanged"
-        >
-        </ace-editor>
+            @updateCode="updateCode"
+        ></ace-editor> -->
+        <monaco-editor
+            :blob="blob"
+            :canEdit="canEdit"
+            @updateCode="updateCode"
+        ></monaco-editor>
     </div>
 </template>
 
 <script>
-import AceEditor from './AceEditor.vue'
+// import AceEditor from './AceEditor.vue'
+import MonacoEditor from './MonacoEditor'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -22,12 +26,15 @@ export default {
         },
     },
     components: {
-        'ace-editor': AceEditor,
+        // 'ace-editor': AceEditor,
+        'monaco-editor': MonacoEditor,
     },
     data() {
         return {
             editor: null,
             relativePath: 'main.py',
+            codeChanged: false,
+            codeChangeCallback: null,
         }
     },
     computed: {
@@ -38,18 +45,22 @@ export default {
             )
             return blobList.length > 0 ? blobList[0] : null
         },
-        code() {
-            return this.blob ? this.blob.text : ''
-        },
     },
     methods: {
-        codeChanged(evt) {
-            console.log(evt)
+        updateCode(evt) {
+            this.codeChanged = true
             this.blob.text = evt.text
-            this.$store.dispatch('updateCode', {
-                project: this.project,
-                blob: this.blob,
-            })
+            clearTimeout(this.codeChangeCallback)
+
+            this.codeChangeCallback = setTimeout(() => {
+                if (this.codeChanged) {
+                    this.$store.dispatch('updateCode', {
+                        project: this.project,
+                        blob: this.blob,
+                    })
+                    this.codeChanged = false
+                }
+            }, 3000)
         },
     },
     mounted() {

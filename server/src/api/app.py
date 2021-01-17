@@ -2,13 +2,14 @@ from fastapi import FastAPI
 from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.params import Depends
-from services.container import container_service
 from starlette import status
 
 from models.blob import Blob
 from models.project import Project
 from models.user import User
 from services.auth import JWTBearer
+from services.cloud_storage import cloud_storage_service
+from services.container import container_service
 from services.validation import register_exception_handlers
 
 app = FastAPI()
@@ -31,8 +32,9 @@ register_exception_handlers(app)
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    print("shutdown app ...")
+    print("shuting the server down")
     container_service.stop_all_containers()
+    cloud_storage_service.sync()
 
 
 @app.get("/")

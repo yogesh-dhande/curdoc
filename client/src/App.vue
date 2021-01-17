@@ -2,7 +2,7 @@
     <div id="app">
         <nav-bar :key="currentUser.name" />
         <div>
-            <b-overlay :show="loading" no-wrap> </b-overlay>
+            <!-- <b-overlay :show="loading" no-wrap> </b-overlay> -->
             <keep-alive>
                 <router-view />
             </keep-alive>

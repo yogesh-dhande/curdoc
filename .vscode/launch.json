@@ -16,7 +16,16 @@
       "type": "python",
       "request": "launch",
       "module": "uvicorn",
-      "args": ["app:app", "--port", "5000", "--reload", "--app-dir", "src/api"],
+      "args": [
+        "app:app",
+        "--port",
+        "5000",
+        "--reload",
+        "--app-dir",
+        "src/api",
+        "--host",
+        "0.0.0.0"
+      ],
       "jinja": true,
       "cwd": "${workspaceFolder}/server"
     }

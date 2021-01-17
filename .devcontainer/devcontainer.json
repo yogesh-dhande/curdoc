@@ -34,14 +34,15 @@
     "eamodio.gitlens",
     "dbaeumer.vscode-eslint",
     "sdras.vue-vscode-snippets",
-    "ms-azuretools.vscode-docker"
+    "ms-azuretools.vscode-docker",
+    "waderyan.gitblame"
   ],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
 
   // Uncomment the next line if you want start specific services in your Docker Compose config.
-  "runServices": ["server"]
+  "runServices": []
 
   // Uncomment the next line if you want to keep your containers running after VS Code shuts down.
   // "shutdownAction": "none",

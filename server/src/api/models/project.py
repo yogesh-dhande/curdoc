@@ -12,6 +12,9 @@ from services.database import database
 from models.blob import Blob
 from models.user import User
 
+with open("src/api/resources/default.py", "r") as file:
+    STARTER_CODE = file.read()
+
 
 class Project(BaseModel):
     name: str
@@ -19,21 +22,23 @@ class Project(BaseModel):
     blob: Optional[List[Blob]] = []
 
     @property
-    def id(self):
-        _id = database.get_project_id(self.user.name, self.name)
+    def id(self) -> str:
+        _id = self.__dict__.get("id")
+        if _id is None:
+            _id = database.get_project_id(self.user.name, self.name)
+            self.__dict__["id"] = _id
         return _id
 
     def create(self) -> None:
         database.create_project(self.dict())
-        with open("src/api/resources/default.py", "r") as file:
-            blob = Blob(relative_path="main.py", text=file.read())
-            self.add_blob(blob)
+        blob = Blob(relative_path="main.py", text=STARTER_CODE)
+        self.add_blob(blob)
         return self
 
     def get(self) -> "Project":  # TODO
-        self.download()
         # Get data from the project document in firestore
         project = Project.parse_obj(database.get_project_json(self.id))
+        project.ensure_locally()
         for blob in project.blob:
             if blob.relative_path == "main.py":
                 blob.reload(project.id)
@@ -54,12 +59,13 @@ class Project(BaseModel):
         blob.save(self.id)
         self.blob.append(blob)
 
-    def download(self) -> None:
+    def ensure_locally(self) -> None:
         for blob in self.blob:
-            blob.download(self.id)
+            blob.ensure_locally(self.id)
 
     def get_app_script(self) -> Optional[str]:
-        self.download()
+        project = Project.parse_obj(database.get_project_json(self.id))
+        project.ensure_locally()
         container_session = container_service.get_container_session_for_project(self.id)
         self.wait_for_server_to_be_ready(container_session)
 

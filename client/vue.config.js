@@ -1,13 +1,11 @@
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin;
+
+const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
+
 module.exports = {
   configureWebpack: {
     devtool: "source-map",
-  },
-  chainWebpack: (config) => {
-    config.module
-      .rule("node")
-      .test(/\.node$/)
-      .use("node-loader")
-      .loader("node-loader")
-      .end();
+    plugins: [new BundleAnalyzerPlugin(), new MonacoWebpackPlugin()],
   },
 };

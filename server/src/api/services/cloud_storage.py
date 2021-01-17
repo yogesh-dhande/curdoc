@@ -1,15 +1,16 @@
 import os
+import subprocess
 
 from firebase_admin.storage import bucket
 from firebase_admin.storage import storage
 
+from services.storage import PROJECTS_DIR
 from services.validation import BlobNotFoundError
 
-STORAGE_BUCKET = os.getenv("STORAGE_BUCKET") or "databrowser-ykd.appspot.com"
+STORAGE_BUCKET = os.getenv("STORAGE_BUCKET")
 
 
 class CloudStorageBase(object):
-
     def get_text_from_blob(self, path) -> str:
         raise NotImplementedError
 
@@ -18,7 +19,6 @@ class CloudStorageBase(object):
 
 
 class GoogleCloudStorage(CloudStorageBase):
-
     def __init__(self) -> None:
         super().__init__()
         self.bucket: storage.Bucket = bucket(STORAGE_BUCKET)
@@ -37,6 +37,12 @@ class GoogleCloudStorage(CloudStorageBase):
     def write_text_to_blob(self, project_id, relative_path, text) -> None:
         path = self.get_path(project_id, relative_path)
         self.bucket.blob(path).upload_from_string(text)
+
+    @staticmethod
+    def sync():
+        # TODO run at a regular interval?
+        process = subprocess.Popen(["gsutil", "-m", "rsync", "-r", PROJECTS_DIR, os.getenv("CLOUD_PROJECTS_DIR")])
+        process.communicate()
 
 
 cloud_storage_service = GoogleCloudStorage()

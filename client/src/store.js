@@ -38,8 +38,10 @@ const store = new Vuex.Store({
         },
       ],
     },
+    // whenever code or project  changes, state.appScript is changed
+    // but not applied to the app until the router navigates to the AppPreview component.
+    // Set to null when no pending changes
     appScript: null,
-    appScriptUpdatePending: false,
     currentUser: {},
     userProfile: {},
     loading: false,
@@ -128,11 +130,12 @@ const store = new Vuex.Store({
         })
         .then((res) => {
           commit("setProject", res.data);
-          console.log(payload);
+          console.log(res.data);
         })
         .catch((error) => {
           commit("setError", error);
           router.replace("/error");
+          console.log("set project error");
         })
         .finally(() => commit("setLoading", false));
     },
@@ -184,9 +187,6 @@ const store = new Vuex.Store({
     },
     setAppScript(state, script) {
       state.appScript = script;
-    },
-    setAppScriptUpdatePending(state, val) {
-      state.appScriptUpdatePending = val;
     },
   },
 });
