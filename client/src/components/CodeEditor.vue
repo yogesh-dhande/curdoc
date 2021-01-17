@@ -1,12 +1,21 @@
 <template>
     <div>
-        <ace-editor :blob="blob" :canEdit="canEdit" @updateCode="updateCode">
-        </ace-editor>
+        <!-- <ace-editor
+            :blob="blob"
+            :canEdit="canEdit"
+            @updateCode="updateCode"
+        ></ace-editor> -->
+        <monaco-editor
+            :blob="blob"
+            :canEdit="canEdit"
+            @updateCode="updateCode"
+        ></monaco-editor>
     </div>
 </template>
 
 <script>
-import AceEditor from './AceEditor.vue'
+// import AceEditor from './AceEditor.vue'
+import MonacoEditor from './MonacoEditor'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -17,7 +26,8 @@ export default {
         },
     },
     components: {
-        'ace-editor': AceEditor,
+        // 'ace-editor': AceEditor,
+        'monaco-editor': MonacoEditor,
     },
     data() {
         return {

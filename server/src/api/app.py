@@ -32,7 +32,7 @@ register_exception_handlers(app)
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    print("shuting the server down ...")
+    print("shuting the server down")
     container_service.stop_all_containers()
     cloud_storage_service.sync()
 

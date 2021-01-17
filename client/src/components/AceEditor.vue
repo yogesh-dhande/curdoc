@@ -20,7 +20,7 @@ export default {
         },
         canEdit: {
             type: Boolean,
-            default: false,
+            default: true,
         },
     },
     mounted() {

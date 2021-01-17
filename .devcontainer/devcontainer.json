@@ -10,7 +10,7 @@
 
   // The 'service' property is the name of the service for the container that VS Code should
   // use. Update this value and .devcontainer/docker-compose.yml to the real service name.
-  "service": "server",
+  "service": "client",
 
   // The optional 'workspaceFolder' property is the path VS Code should open by default when
   // connected. This is typically a file mount in .devcontainer/docker-compose.yml
@@ -23,26 +23,26 @@
 
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
-	"ms-python.python",
-	"ms-python.vscode-pylance",
-	"octref.vetur",
-	"esbenp.prettier-vscode",
-	"magicstack.magicpython",
-	"christian-kohler.path-intellisense",
-	"christian-kohler.npm-intellisense",
-	"donjayamanne.githistory",
-	"eamodio.gitlens",
-	"dbaeumer.vscode-eslint",
-	"sdras.vue-vscode-snippets",
-	"ms-azuretools.vscode-docker",
-	"waderyan.gitblame"
-],
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "octref.vetur",
+    "esbenp.prettier-vscode",
+    "magicstack.magicpython",
+    "christian-kohler.path-intellisense",
+    "christian-kohler.npm-intellisense",
+    "donjayamanne.githistory",
+    "eamodio.gitlens",
+    "dbaeumer.vscode-eslint",
+    "sdras.vue-vscode-snippets",
+    "ms-azuretools.vscode-docker",
+    "waderyan.gitblame"
+  ],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
 
   // Uncomment the next line if you want start specific services in your Docker Compose config.
-  "runServices": ["server"]
+  "runServices": []
 
   // Uncomment the next line if you want to keep your containers running after VS Code shuts down.
   // "shutdownAction": "none",

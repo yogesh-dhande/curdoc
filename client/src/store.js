@@ -135,6 +135,7 @@ const store = new Vuex.Store({
         .catch((error) => {
           commit("setError", error);
           router.replace("/error");
+          console.log("set project error");
         })
         .finally(() => commit("setLoading", false));
     },
