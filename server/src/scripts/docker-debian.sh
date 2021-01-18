@@ -92,8 +92,8 @@ log()
     echo -e "[\$(date)] \$@" | sudoIf tee -a \${SOCAT_LOG} > /dev/null
 }
 
-echo -e "\n** \$(date) **" | sudoIf tee -a \${SOCAT_LOG} > /dev/null
 log "Ensuring ${USERNAME} has access to ${SOURCE_SOCKET} via ${TARGET_SOCKET}"
+echo -e "\n** \$(date) **" | sudoIf tee -a \${SOCAT_LOG} > /dev/null
 
 # If enabled, try to add a docker group with the right GID. If the group is root, 
 # fall back on using socat to forward the docker socket to another unix socket so 

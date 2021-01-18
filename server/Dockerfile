@@ -13,18 +13,20 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] \
     && pip uninstall crcmod && pip install --no-cache-dir -U crcmod
 
 ARG USER=server
-RUN useradd -s /bin/bash -m ${USER} -u 1000 && mkdir -p /projects && chown -R 1000 /projects
+RUN groupadd docker && useradd -s /bin/bash -m ${USER} -u 1000 -g docker && mkdir -p /projects && chown -R 1000 /projects
 
 COPY src/scripts/docker-debian.sh .
 
 RUN apt-get update \
     && /bin/bash docker-debian.sh \
-    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* && chmod 666 /var/run/docker.sock
 
-COPY . /app
 WORKDIR /app
 
+COPY requirements.txt .
 RUN pip install -r requirements.txt
+
+COPY . /app
 
 ENV PORT=5000
 ENV SANDBOX_IMAGE=bokeh_play_sandbox

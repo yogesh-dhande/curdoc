@@ -1,5 +1,14 @@
 version: "3.8"
 services:
+  lsp:
+    build: lsp
+    stdin_open: true
+    tty: true
+    ports:
+      - "8000:8000"
+    volumes:
+      - /app/node_modules
+      - /Users/yogesh/projects/bokeh-play/lsp:/app
   client:
     build: client
     stdin_open: true
@@ -22,7 +31,5 @@ services:
       - /Users/yogesh/projects/bokeh-play/server:/app
       - projects:/app/projects
       - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - FLASK_DEBUG_MODE=true
 volumes:
   projects:

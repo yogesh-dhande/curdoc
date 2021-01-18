@@ -4,6 +4,9 @@
 
 <script>
 import * as monaco from 'monaco-editor'
+import { MonacoServices } from 'monaco-languageclient'
+import { connectToMonacoServer } from '@/languageClient'
+
 export default {
     name: 'monaco',
     data() {
@@ -34,7 +37,10 @@ export default {
         this.editor.onDidChangeModelContent(() => {
             this.updateCode()
         })
+
+        MonacoServices.install(this.editor)
         console.log(this.editor)
+        connectToMonacoServer()
     },
     methods: {
         updateCode() {
