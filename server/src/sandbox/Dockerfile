@@ -1,5 +1,3 @@
-# See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.148.1/containers/python-3-miniconda/.devcontainer/base.Dockerfile
-
 FROM continuumio/anaconda3
 
 COPY environment.yaml* /tmp/conda-tmp/

@@ -13,13 +13,16 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] \
     && pip uninstall crcmod && pip install --no-cache-dir -U crcmod
 
 ARG USER=server
-RUN groupadd docker && useradd -s /bin/bash -m ${USER} -u 1000 -g docker && mkdir -p /projects && chown -R 1000 /projects
+RUN groupadd docker && useradd -s /bin/bash -m ${USER} -u 1000 -g docker \
+    && mkdir -p /projects && chown -R 1000 /projects
 
 COPY src/scripts/docker-debian.sh .
 
 RUN apt-get update \
     && /bin/bash docker-debian.sh \
-    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* && chmod 666 /var/run/docker.sock
+    && apt-get autoremove -y && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/* \
+    && chmod 666 /var/run/docker.sock
 
 WORKDIR /app
 
