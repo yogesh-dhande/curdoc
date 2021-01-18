@@ -14,7 +14,12 @@ COPY . .
 
 RUN pip install python-language-server[all]
 
-EXPOSE 3000
+ENV PORT=3000
+EXPOSE $PORT
+
+ARG USER=lsp
+RUN useradd -s /bin/bash -m ${USER}
+USER ${USER}
 
 CMD ["node", "app.js"]
 
