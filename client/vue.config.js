@@ -7,5 +7,13 @@ module.exports = {
   configureWebpack: {
     devtool: "source-map",
     plugins: [new BundleAnalyzerPlugin(), new MonacoWebpackPlugin()],
+    resolve: {
+      alias: {
+        vscode: require.resolve(
+          "monaco-languageclient/lib/vscode-compatibility"
+        ),
+      },
+      extensions: [".js", ".json", ".ttf"],
+    },
   },
 };

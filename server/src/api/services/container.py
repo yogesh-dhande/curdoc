@@ -79,8 +79,8 @@ class ContainerSession(ContainerSessionBase):
                     ports={5006: p},
                     network="bokeh-play_default",
                     volumes={
-                        f"bokeh-play_projects": {
-                            "bind": f"/projects",
+                        os.path.join(os.environ.get("PROJECTS_DIR"), self.project_id): {
+                            "bind": f"/{self.project_id}",
                             "mode": "ro"
                         }
                     },
