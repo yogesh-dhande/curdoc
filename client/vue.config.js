@@ -15,5 +15,8 @@ module.exports = {
       },
       extensions: [".js", ".json", ".ttf"],
     },
+    node: {
+      setImmediate: true,
+    },
   },
 };
