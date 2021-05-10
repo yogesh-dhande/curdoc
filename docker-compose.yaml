@@ -32,7 +32,7 @@ services:
       - projects:/app/projects
       - /Users/yogesh/projects/bokeh-play/server/projects:/projects
       - /var/run/docker.sock:/var/run/docker.sock
-    environment: 
+    environment:
       PROJECTS_DIR: /Users/yogesh/projects/bokeh-play/server/projects
 volumes:
   projects:

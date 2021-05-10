@@ -105,7 +105,6 @@ export default {
                             this.errors.push(
                                 `Username ${this.name} is already taken.`
                             )
-                            this.isLoading = false
                         } else {
                             auth.createUserWithEmailAndPassword(
                                 this.email,
@@ -129,20 +128,17 @@ export default {
                                         })
                                         .catch((error) => {
                                             this.errors.push(error.message)
-                                            // set loading class to true
-                                            this.isLoading = false
                                         })
                                 })
                                 .catch((error) => {
                                     this.errors.push(error.message)
-                                    // set loading class to true
-                                    this.isLoading = false
                                 })
                         }
                     })
                     .catch((error) => {
                         this.errors.push(error.message)
                     })
+                    .finally(() => (this.isLoading = false))
             }
         },
         isEmpty() {

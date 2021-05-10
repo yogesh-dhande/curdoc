@@ -14,8 +14,9 @@ export default {
     },
     computed: {},
     mounted() {
-        console.log('mounting bokeh app')
-        postscribe(this.$refs['script-app'], this.script)
+        if (this.script) {
+            postscribe(this.$refs['script-app'], this.script)
+        }
     },
 }
 </script>
