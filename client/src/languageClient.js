@@ -4,6 +4,7 @@ import {
   createConnection,
   ErrorAction,
   MonacoLanguageClient,
+  MonacoServices
 } from "monaco-languageclient";
 import { listen } from "vscode-ws-jsonrpc";
 
@@ -41,14 +42,75 @@ function connectToMonacoServer() {
     onConnection: (connection) => {
       var languageClient = createLanguageClient(connection);
       var disposable = languageClient.start();
-      connection.onClose(function() {
+      connection.onClose(function () {
         return disposable.dispose();
       });
-      connection.onError(function(error) {
+      connection.onError(function (error) {
         console.log(error);
       });
     },
   });
 }
 
-export { connectToMonacoServer };
+const editorService = {
+  _editor: null,
+
+  currentModel: {},
+  data: {},
+
+  initialize(el) {
+    if (!this._editor) {
+      this._editor = monaco.editor.create(el, {
+        model: null,
+        language: "python",
+        theme: "vs-dark",
+        minimap: false,
+        fontSize: 14,
+        readOnly: !this.canEdit,
+        automaticLayout: true,
+      });
+      MonacoServices.install(this._editor);
+      console.log(this._editor);
+      connectToMonacoServer();
+    }
+    this.data = {};
+  },
+
+  setModel(key, text, readonly) {
+    // TODO: save state of current model
+    if (
+      this.currentModel.model &&
+      this.currentModel.model === this._editor.getModel() &&
+      this.currentModel.key in this.data
+    ) {
+      this.data[this.currentModel.key].state = this._editor.saveViewState();
+    }
+
+    // cretae a new model if one does not already exist
+    if (!this.data[key]) {
+      this.data[key] = {
+        model: monaco.editor.createModel(text, "python"),
+        state: null,
+        key: key,
+      };
+    }
+    
+    this._editor.updateOptions({ readOnly: readonly })
+    this._editor.setModel(this.data[key].model);
+    this._editor.restoreViewState(this.data[key].state);
+    this._editor.focus();
+    this.currentModel = this.data[key];
+  },
+
+  setCallback(callback) {
+    this._editor.onDidChangeModelContent(() => {
+      callback();
+    });
+  },
+
+  getValue () {
+    return this._editor.getValue()
+  }
+};
+
+export { editorService };

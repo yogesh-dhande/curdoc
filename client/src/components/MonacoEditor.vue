@@ -3,9 +3,7 @@
 </template>
 
 <script>
-import * as monaco from 'monaco-editor'
-import { MonacoServices } from 'monaco-languageclient'
-import { connectToMonacoServer } from '@/languageClient'
+import { editorService } from '@/languageClient'
 
 export default {
     name: 'monaco',
@@ -16,6 +14,9 @@ export default {
         }
     },
     props: {
+        project: {
+            type: Object,
+        },
         blob: {
             type: Object,
         },
@@ -25,27 +26,19 @@ export default {
         },
     },
     mounted() {
-        this.editor = monaco.editor.create(this.$el, {
-            value: this.blob.text,
-            language: 'python',
-            theme: 'vs-dark',
-            minimap: false,
-            fontSize: 14,
-            readOnly: !this.canEdit,
-            automaticLayout: true,
-        })
-        this.editor.onDidChangeModelContent(() => {
-            this.updateCode()
-        })
-
-        MonacoServices.install(this.editor)
-        console.log(this.editor)
-        connectToMonacoServer()
+        editorService.initialize(this.$el)
+        editorService.setModel(this.project.id, this.blob.text, !this.canEdit)
+        editorService.setCallback(this.updateCode)
+    },
+    watch: {
+        'blob.text'() {
+            editorService.setModel(this.project.id, this.blob.text)
+        },
     },
     methods: {
         updateCode() {
             this.$emit('updateCode', {
-                text: this.editor.getValue(),
+                text: editorService.getValue(),
             })
         },
     },

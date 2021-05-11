@@ -37,6 +37,6 @@ EXPOSE $PORT
 
 ENV SANDBOX_IMAGE=bokeh_play_sandbox
 
-USER ${USER}
+# USER ${USER}
 
 CMD ["/bin/bash", "src/scripts/run.sh"]
