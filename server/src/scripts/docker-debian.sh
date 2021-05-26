@@ -80,11 +80,7 @@ SOCAT_PID=\${SOCAT_PATH_BASE}.pid
 # Wrapper function to only use sudo if not already root
 sudoIf()
 {
-    if [ "\$(id -u)" -ne 0 ]; then
-        sudo "\$@"
-    else
-        "\$@"
-    fi
+    "\$@"
 }
 
 # Log messages

@@ -13,6 +13,7 @@
 <script>
 import { mapState } from 'vuex'
 import User from '@/components/User.vue'
+import { starterCode } from './../projects.js'
 
 export default {
     name: 'home',
@@ -29,7 +30,19 @@ export default {
     },
     methods: {
         createProject() {
-            this.$store.dispatch('createProject', this.projectName)
+            this.$store.dispatch('createProject', {
+                name: this.projectName,
+                user: {
+                    id: this.currentUser.id,
+                    name: this.currentUser.name,
+                },
+                blob: [
+                    {
+                        relative_path: 'main.py',
+                        text: starterCode,
+                    },
+                ],
+            })
             this.projectName = ''
         },
     },

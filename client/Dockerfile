@@ -1,19 +1,14 @@
-FROM node
-
-RUN npm install -g firebase-tools && apt-get update && apt-get install -y openjdk-8-jre
+FROM node:14-alpine
 
 WORKDIR /app
-
-COPY package*.json .
+COPY . .
 RUN npm install
 
-COPY . .
-
 EXPOSE 8080
+ENV HOST=0.0.0.0
+ENV PORT=8080
 
 ARG VUE_APP_BACKEND_URL
 ENV VUE_APP_BACKEND_URL=$VUE_APP_BACKEND_URL
 
-USER node
-
-CMD ["npm", "run", "serve"]
+CMD ["npm", "run", "dev"]

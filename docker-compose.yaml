@@ -1,14 +1,14 @@
 version: "3.8"
 services:
-  lsp:
-    build: lsp
-    stdin_open: true
-    tty: true
-    ports:
-      - "8000:8000"
-    volumes:
-      - /app/node_modules
-      - /Users/yogesh/projects/bokeh-play/lsp:/app
+  # lsp:
+  #   build: lsp
+  #   stdin_open: true
+  #   tty: true
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - /app/node_modules
+  #     - /Users/yogesh/projects/bokeh-play/lsp:/app
   client:
     build: client
     stdin_open: true
@@ -20,19 +20,19 @@ services:
       - /Users/yogesh/projects/bokeh-play/client:/app
     environment:
       - VUE_APP_BACKEND_URL=http://localhost:5000
-  server:
-    build: server
-    stdin_open: true
-    tty: true
-    ports:
-      - "5000:5000"
-      - "5001-5010"
-    volumes:
-      - /Users/yogesh/projects/bokeh-play/server:/app
-      - projects:/app/projects
-      - /Users/yogesh/projects/bokeh-play/server/projects:/projects
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      PROJECTS_DIR: /Users/yogesh/projects/bokeh-play/server/projects
+  # server:
+  #   build: server
+  #   stdin_open: true
+  #   tty: true
+  #   ports:
+  #     - "5000:5000"
+  #     - "5001-5010"
+  #   volumes:
+  #     - /Users/yogesh/projects/bokeh-play/server:/app
+  #     - projects:/app/projects
+  #     - /Users/yogesh/projects/bokeh-play/server/projects:/projects
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   environment:
+  #     PROJECTS_DIR: /Users/yogesh/projects/bokeh-play/server/projects
 volumes:
   projects:

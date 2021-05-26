@@ -4,3 +4,5 @@ client/node_modules
 .devcontainer
 Dockerfile
 docker-debian.sh
+.github
+.nuxt

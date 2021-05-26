@@ -12,18 +12,8 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] \
     && apt-get update -y && apt-get install google-cloud-sdk -y \
     && pip uninstall crcmod && pip install --no-cache-dir -U crcmod
 
-ARG USER=server
-RUN groupadd docker && useradd -s /bin/bash -m ${USER} -u 1000 -g docker \
-    && mkdir -p /projects && chown -R 1000 /projects
 
-COPY src/scripts/docker-debian.sh .
-
-RUN apt-get update \
-    && /bin/bash docker-debian.sh \
-    && apt-get autoremove -y && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN chmod 666 /var/run/docker.sock
+RUN curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh
 
 WORKDIR /app
 
@@ -37,6 +27,11 @@ EXPOSE $PORT
 
 ENV SANDBOX_IMAGE=bokeh_play_sandbox
 
-# USER ${USER}
+ARG USER=server
+RUN useradd -s /bin/bash -m ${USER} -u 1000 -g 999 \
+    && mkdir -p /projects && chown -R 1000 /projects
+
+USER ${USER}
+
 
 CMD ["/bin/bash", "src/scripts/run.sh"]

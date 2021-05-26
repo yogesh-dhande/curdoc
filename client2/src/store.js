@@ -1,6 +1,7 @@
 import axios from "axios";
 import Vue from "vue";
 import Vuex from "vuex";
+import { projectsCollection } from "./firebaseConfig";
 import router from "./router.js";
 
 Vue.use(Vuex);
@@ -63,24 +64,26 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    async setAppScript({ commit }, payload) {
-      console.log("getting app script");
-      commit("setLoading", true);
-      return await axios
-        .get(`${process.env.VUE_APP_BACKEND_URL}/script`, {
-          params: payload,
-        })
-        .then((res) => {
-          console.log("setting state.appScript");
-          commit("setAppScript", res.data);
-        })
-        .finally(() => {
-          commit("setLoading", false);
-        })
-        .catch((error) => {
-          commit("setError", error);
-          router.replace("/error");
-        });
+    async setAppScript(payload) {
+      console.log(
+        `getting app script for ${payload.user_name} - ${payload.project_name}`
+      );
+      // commit("setLoading", true);
+      // return await axios
+      //   .get(`${process.env.VUE_APP_BACKEND_URL}/script`, {
+      //     params: payload,
+      //   })
+      //   .then((res) => {
+      //     console.log("setting state.appScript");
+      //     commit("setAppScript", res.data);
+      //   })
+      //   .finally(() => {
+      //     commit("setLoading", false);
+      //   })
+      //   .catch((error) => {
+      //     commit("setError", error);
+      //     router.replace("/error");
+      //   });
     },
     updateCode({ commit, state, dispatch }, payload) {
       console.log(payload);
@@ -100,44 +103,33 @@ const store = new Vuex.Store({
         })
         .catch((error) => commit("setError", error));
     },
-    createProject({ commit, state }, projectName) {
-      console.log(`creating project ${projectName}`);
-      commit("setLoading", true);
-      axios
-        .post(`${process.env.VUE_APP_BACKEND_URL}/project`, {
-          user: state.currentUser,
-          name: projectName,
-        })
-        .then((res) => {
-          console.log(res.data);
-          commit("setProject", res.data);
-          router.push(`${state.currentUser.name}/${projectName}/code`);
-        })
-        .finally(() => commit("setLoading", false))
-        .catch((error) => {
-          commit("setError", error);
-          router.replace("/error");
-        });
+    async createProject({ commit }, project) {
+      let doc = projectsCollection.doc();
+      project.id = doc.id;
+
+      let res = await doc.set(project);
+      commit("setProject", res.data);
+      router.push(`${project.user.name}/${project.name}/code`);
     },
     async setProject({ commit }, payload) {
       commit("setLoading", true);
       console.log(
         `getting project for ${payload.user_name} - ${payload.project_name}`
       );
-      axios
-        .get(`${process.env.VUE_APP_BACKEND_URL}/project`, {
-          params: payload,
-        })
-        .then((res) => {
-          commit("setProject", res.data);
-          console.log(res.data);
-        })
-        .catch((error) => {
-          commit("setError", error);
-          router.replace("/error");
-          console.log("set project error");
-        })
-        .finally(() => commit("setLoading", false));
+      // axios
+      //   .get(`${process.env.VUE_APP_BACKEND_URL}/project`, {
+      //     params: payload,
+      //   })
+      //   .then((res) => {
+      //     commit("setProject", res.data);
+      //     console.log(res.data);
+      //   })
+      //   .catch((error) => {
+      //     commit("setError", error);
+      //     router.replace("/error");
+      //     console.log("set project error");
+      //   })
+      //   .finally(() => commit("setLoading", false));
     },
     clearData({ commit }) {
       commit("clearData");
