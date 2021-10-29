@@ -13,11 +13,7 @@
             >
             to start creating your own projects for free.
         </b-alert>
-        <code-editor
-            :project="project"
-            :key="project.id"
-            v-if="project.id"
-        ></code-editor>
+        <code-editor :project="project" v-if="project.id"></code-editor>
     </div>
 </template>
 

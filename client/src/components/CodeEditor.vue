@@ -7,6 +7,7 @@
         ></ace-editor> -->
         <monaco-editor
             :blob="blob"
+            :project="project"
             :canEdit="canEdit"
             @updateCode="updateCode"
         ></monaco-editor>

@@ -1,4 +1,5 @@
-bokeh serve /${PROJECT_ID} --dev --allow-websocket-origin localhost:8080 \
+cd workspace
+bokeh serve ${PROJECT_ID} --dev --allow-websocket-origin localhost:8080 \
     --allow-websocket-origin localhost:5000 \
     --allow-websocket-origin localhost:5001 \
     --allow-websocket-origin localhost:5002 \

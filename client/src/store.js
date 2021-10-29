@@ -78,8 +78,8 @@ const store = new Vuex.Store({
           commit("setLoading", false);
         })
         .catch((error) => {
-          this.$store.commit("setError", error);
-          this.$router.replace("/error");
+          commit("setError", error);
+          router.replace("/error");
         });
     },
     updateCode({ commit, state, dispatch }, payload) {

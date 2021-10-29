@@ -48,7 +48,6 @@ export default {
                 project_name: this.projectName,
             }
             this.$store.dispatch('setAppScript', payload).then(() => {
-                this.setScript()
                 this.$store.dispatch('setProject', payload)
             })
         }

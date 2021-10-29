@@ -43,6 +43,7 @@ fi
 if [ "${ENABLE_NONROOT_DOCKER}" = "false" ] || [ "${USERNAME}" = "root" ] || ! id -u ${USERNAME} > /dev/null 2>&1; then
     echo '/usr/bin/env bash -c "\$@"' > /usr/local/share/docker-init.sh
     chmod +x /usr/local/share/docker-init.sh
+    echo 'exiting without non-root access'
     exit 0
 fi
 
@@ -130,3 +131,4 @@ set +e
 EOF
 chmod +x /usr/local/share/docker-init.sh
 chown ${USERNAME}:root /usr/local/share/docker-init.sh
+echo 'enabling non-root access'
