@@ -1,11 +1,27 @@
 <template>
-    <div class="bg-gray-800">
+    <div class="bg-gray-800 min-h-screen">
         <div
-            class="max-w-4xl mx-auto text-center py-12 px-2 sm:px-6 lg:py-16 lg:px-8"
+            class="
+                max-w-4xl
+                mx-auto
+                text-center
+                py-12
+                px-2
+                sm:px-6
+                lg:py-16 lg:px-8
+            "
         >
             <div class="flex flex-col place-items-center">
                 <h1
-                    class="text-4xl tracking-tight font-extrabold text-blue-100 sm:text-5xl md:text-6xl"
+                    class="
+                        text-4xl
+                        tracking-tight
+                        font-extrabold
+                        text-blue-100
+                        sm:text-5xl
+                        md:text-6xl
+                        lg:text-7xl
+                    "
                 >
                     Build and share
                     <span class="block text-blue-400">
@@ -17,7 +33,19 @@
                 <div class="inline-flex rounded-md shadow">
                     <nuxt-link
                         to="/register"
-                        class="w-full px-8 py-3 border border-transparent font-bold rounded-md text-blue-50 bg-blue-500 hover:bg-blue-600 border-none md:py-4 md:text-lg md:px-10"
+                        class="
+                            w-full
+                            px-8
+                            py-3
+                            border border-transparent
+                            font-bold
+                            rounded-md
+                            text-blue-50
+                            bg-blue-500
+                            hover:bg-blue-600
+                            border-none
+                            md:py-4 md:text-lg md:px-10
+                        "
                     >
                         Start Coding
                     </nuxt-link>
@@ -25,7 +53,18 @@
                 <div class="ml-3 inline-flex">
                     <nuxt-link
                         to="/demo"
-                        class="w-full px-8 py-3 border border-transparent font-bold rounded-md text-blue-700 bg-blue-100 hover:bg-blue-300 md:py-4 md:text-lg md:px-10"
+                        class="
+                            w-full
+                            px-8
+                            py-3
+                            border border-transparent
+                            font-bold
+                            rounded-md
+                            text-blue-700
+                            bg-blue-100
+                            hover:bg-blue-300
+                            md:py-4 md:text-lg md:px-10
+                        "
                     >
                         See Demo
                     </nuxt-link>
@@ -44,7 +83,7 @@
 
 <script>
 export default {
-    name: 'landing',
+    name: 'Landing',
 }
 </script>
 

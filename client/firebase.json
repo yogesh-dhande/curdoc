@@ -1,20 +1,14 @@
 {
-  "database": {
-    "rules": "database.rules.json"
-  },
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
   "functions": {
+    "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run lint"]
   },
   "hosting": {
-    "public": "dist",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "**",
@@ -27,15 +21,12 @@
   },
   "emulators": {
     "auth": {
-      "port": 9099
-    },
-    "functions": {
       "port": 10000
     },
-    "firestore": {
+    "functions": {
       "port": 10001
     },
-    "database": {
+    "firestore": {
       "port": 10002
     },
     "hosting": {

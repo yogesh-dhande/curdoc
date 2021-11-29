@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import NavBar from '~/components/NavBar'
+import NavBar from '@/components/NavBar'
 export default {
     components: {
         NavBar,
@@ -24,7 +24,7 @@ export default {
     },
 
     // a beforeMount call to add a listener to the window
-    beforeMount() {
+    mounted() {
         window.addEventListener('scroll', this.handleScroll)
     },
 
@@ -35,10 +35,7 @@ export default {
             if (window.pageYOffset > 0) {
                 // user is scrolled
                 if (this.view.atTopOfPage) this.view.atTopOfPage = false
-            } else {
-                // user is at top of page
-                if (!this.view.atTopOfPage) this.view.atTopOfPage = true
-            }
+            } else if (!this.view.atTopOfPage) this.view.atTopOfPage = true
         },
     },
 }

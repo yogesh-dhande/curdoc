@@ -3,7 +3,7 @@
         <monaco-editor
             v-if="blob"
             :blob="blob"
-            :canEdit="canEdit"
+            :can-edit="canEdit"
             @updateCode="updateCode"
         ></monaco-editor>
     </div>
@@ -14,14 +14,19 @@ import MonacoEditor from '@/components/MonacoEditor'
 import { mapGetters } from 'vuex'
 
 export default {
-    name: 'code-editor',
+    components: {
+        'monaco-editor': MonacoEditor,
+    },
     props: {
         project: {
             type: Object,
+            default: () => {
+                return {
+                    id: null,
+                    blob: [],
+                }
+            },
         },
-    },
-    components: {
-        'monaco-editor': MonacoEditor,
     },
     data() {
         return {
@@ -36,6 +41,7 @@ export default {
             if (this.project.blob.length > 0) {
                 return this.project.blob[0]
             }
+            return null
         },
     },
     methods: {
@@ -53,9 +59,6 @@ export default {
                 }
             }, 3000)
         },
-    },
-    mounted() {
-        console.log('mounting code editor')
     },
 }
 </script>

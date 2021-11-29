@@ -1,5 +1,5 @@
 <template>
-    <bokeh-app :script="script" :key="script" v-if="script"></bokeh-app>
+    <bokeh-app v-if="script" :key="script" :script="script"></bokeh-app>
 </template>
 
 <script>
@@ -7,47 +7,9 @@ import BokehApp from '@/components/BokehApp.vue'
 import { mapState } from 'vuex'
 
 export default {
-    name: 'app',
-    async asyncData(context) {
-        let returnData = {
-            userName: context.params.userName,
-            projectUrl: context.params.projectUrl,
-        }
-        return returnData
-    },
-    data() {
-        return {
-            script: null,
-            scriptWatcher: null,
-        }
-    },
+    name: 'App',
     components: {
         'bokeh-app': BokehApp,
-    },
-    computed: {
-        ...mapState(['appScript']),
-    },
-    methods: {
-        setScript() {
-            console.log('setting local script from state.appScript')
-            this.script = this.appScript
-            this.$store.commit('setAppScript', null)
-        },
-    },
-    mounted() {
-        console.log(
-            `mounting app preview for ${this.userName} - ${this.projectUrl}`
-        )
-
-        if (!this.script) {
-            let payload = {
-                userName: this.userName,
-                projectUrl: this.projectUrl,
-            }
-            this.$store.dispatch('setAppScript', payload).then(() => {
-                this.$store.dispatch('setProject', payload)
-            })
-        }
     },
     beforeRouteEnter(to, from, next) {
         console.log('entering app preview route')
@@ -74,6 +36,43 @@ export default {
             this.scriptWatcher()
         }
         next()
+    },
+    asyncData(context) {
+        const returnData = {
+            userName: context.params.userName,
+            projectUrl: context.params.projectUrl,
+        }
+        return returnData
+    },
+    data() {
+        return {
+            script: null,
+            scriptWatcher: null,
+        }
+    },
+    computed: {
+        ...mapState(['appScript']),
+    },
+    async mounted() {
+        console.log(
+            `mounting app preview for ${this.userName} - ${this.projectUrl}`
+        )
+
+        if (!this.script) {
+            const payload = {
+                userName: this.userName,
+                projectUrl: this.projectUrl,
+            }
+            await this.$store.dispatch('setProject', payload)
+            await this.$store.dispatch('setAppScript')
+        }
+    },
+    methods: {
+        setScript() {
+            console.log('setting local script from state.appScript')
+            this.script = this.appScript
+            this.$store.commit('SET_APP_SCRIPT', null)
+        },
     },
 }
 </script>

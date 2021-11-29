@@ -31,7 +31,7 @@ ARG USER=server
 RUN useradd -s /bin/bash -m ${USER} -u 1000 -g 999 \
     && mkdir -p /projects && chown -R 1000 /projects
 
-USER ${USER}
+# USER ${USER}
 
 
 CMD ["/bin/bash", "src/scripts/run.sh"]

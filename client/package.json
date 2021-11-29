@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nuxt --dotenv .env",
-    "firebase": "npm run default && firebase emulators:start --import tests/.seed",
+    "firebase": "npm run default && firebase emulators:start",
     "export": "firebase emulators:export tests/.seed",
     "default": "firebase use default",
     "prod": "firebase use prod",

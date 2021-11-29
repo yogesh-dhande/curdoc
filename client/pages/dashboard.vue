@@ -2,7 +2,7 @@
     <div
         class="max-w-2xl mx-auto px-2 lg:px-12 py-2 lg:py-12 text-blue-100 bg-gray-800 min-h-screen"
     >
-        <create-project></create-project>
+        <create-project class="shadow-2xl p-2"></create-project>
     </div>
 </template>
 
@@ -11,22 +11,22 @@ import { mapState } from 'vuex'
 import CreateProject from '@/components/CreateProject'
 
 export default {
-    name: 'dashboard',
+    name: 'Dashboard',
     middleware: 'auth',
     componets: {
         CreateProject,
-    },
-    head() {
-        return this.$createSEOMeta({
-            title: 'Dashboard. Broccolini',
-            noIndex: true,
-        })
     },
     data() {
         return {
             posts: [],
             listeners: [],
         }
+    },
+    head() {
+        return this.$createSEOMeta({
+            title: 'Dashboard. Broccolini',
+            noIndex: true,
+        })
     },
     computed: {
         ...mapState(['currentUser', 'readonly']),
@@ -37,19 +37,22 @@ export default {
             return this.formatBytes(0, 1)
         },
     },
-    mounted() {
-        this.attachListerners()
-    },
     watch: {
         currentUser() {
             this.detachListeners()
             this.attachListerners()
         },
     },
+    mounted() {
+        this.attachListerners()
+    },
+    beforeDestroy() {
+        this.detachListeners()
+    },
     methods: {
         attachListerners() {
             if (this.currentUser.id) {
-                let listener = this.$projectsCollection
+                const listener = this.$projectsCollection
                     .where('user.id', '==', this.currentUser.id)
                     .onSnapshot((querySnapshot) => {
                         this.posts = []
@@ -93,9 +96,6 @@ export default {
                 units: sizes[i],
             }
         },
-    },
-    beforeDestroy() {
-        this.detachListeners()
     },
 }
 </script>

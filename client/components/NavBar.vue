@@ -2,14 +2,40 @@
     <nav>
         <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
             <div
-                class="relative flex whitespace-nowrap items-center justify-between h-16"
+                class="
+                    relative
+                    flex
+                    whitespace-nowrap
+                    items-center
+                    justify-start
+                    h-16
+                "
             >
                 <div
-                    class="absolute inset-y-0 left-0 flex items-center lg:hidden"
+                    class="
+                        absolute
+                        inset-y-0
+                        left-0
+                        flex
+                        items-center
+                        lg:hidden
+                    "
                 >
                     <!-- Mobile menu button-->
                     <button
-                        class="inline-flex items-center justify-center p-2 rounded-md text-blue-100 hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-100"
+                        class="
+                            inline-flex
+                            items-center
+                            justify-center
+                            p-2
+                            rounded-md
+                            text-blue-100
+                            hover:text-blue-400
+                            focus:outline-none
+                            focus:ring-2
+                            focus:ring-inset
+                            focus:ring-blue-100
+                        "
                         aria-expanded="false"
                         @click="showMobileMenu = !showMobileMenu"
                     >
@@ -59,10 +85,25 @@
                     </button>
                 </div>
                 <div
-                    class="flex-1 flex items-center justify-center lg:items-stretch lg:justify-start"
+                    class="
+                        flex-1 flex
+                        space-x-4
+                        items-center
+                        justify-center
+                        lg:justify-start
+                    "
                 >
                     <div
-                        class="flex-shrink-0 text-blue-100 hover:text-blue-400 font-bold text-2xl flex items-center border-transparent"
+                        class="
+                            flex-shrink-0
+                            text-blue-100
+                            hover:text-blue-400
+                            font-bold
+                            text-2xl
+                            flex
+                            items-center
+                            border-transparent
+                        "
                     >
                         <nuxt-link to="/" class="italic">
                             Broccolini
@@ -73,40 +114,69 @@
             /> -->
                         </nuxt-link>
                     </div>
+                    <toolbar />
                 </div>
-                <div
-                    class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
-                >
+
+                <div class="flex items-center pr-2">
                     <div class="hidden lg:block md:ml-6">
-                        <div class="flex space-x-4">
+                        <div class="flex space-x-4 items-center">
                             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                             <nuxt-link
-                                to="/feedback"
-                                class="text-blue-100 hover:text-blue-400 px-3 py-2 text-lg font-bold border-transparent"
-                                >Feedback</nuxt-link
-                            >
-                            <nuxt-link
                                 to="/dashboard"
-                                class="text-blue-100 hover:text-blue-400 px-3 py-2 text-lg font-bold border-transparent"
+                                class="
+                                    text-blue-100
+                                    hover:text-blue-400
+                                    px-3
+                                    py-2
+                                    text-lg
+                                    font-bold
+                                    border-transparent
+                                "
                                 >Dashboard</nuxt-link
                             >
 
                             <div v-if="!currentUser.id" class="self-center">
                                 <nuxt-link
                                     to="/login"
-                                    class="text-blue-100 hover:text-blue-400 px-3 py-2 text-lg font-bold border-transparent"
+                                    class="
+                                        text-blue-100
+                                        hover:text-blue-400
+                                        px-3
+                                        py-2
+                                        text-lg
+                                        font-bold
+                                        border-transparent
+                                    "
                                     >Sign In</nuxt-link
                                 >
                                 <nuxt-link
                                     to="/register"
-                                    class="text-blue-100 bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md text-md font-bold mx-4"
+                                    class="
+                                        text-blue-100
+                                        bg-blue-600
+                                        hover:bg-blue-700
+                                        px-3
+                                        py-2
+                                        rounded-md
+                                        text-md
+                                        font-bold
+                                        mx-4
+                                    "
                                     >Sign Up</nuxt-link
                                 >
                             </div>
                             <div v-else>
                                 <button
-                                    class="text-blue-100 hover:text-blue-400 px-3 py-2 text-lg font-bold border-transparent"
                                     id="user-menu"
+                                    class="
+                                        text-blue-100
+                                        hover:text-blue-400
+                                        px-3
+                                        py-2
+                                        text-lg
+                                        font-bold
+                                        border-transparent
+                                    "
                                     aria-haspopup="true"
                                     @click="logout"
                                 >
@@ -128,31 +198,60 @@
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                 <nuxt-link
-                    to="/feedback"
-                    class="block text-blue-100 hover:text-blue-400 px-3 py-2 text-lg font-bold"
-                    >Feedback</nuxt-link
-                >
-                <nuxt-link
                     to="/dashboard"
-                    class="block text-blue-100 hover:text-blue-400 px-3 py-2 text-lg font-bold"
+                    class="
+                        block
+                        text-blue-100
+                        hover:text-blue-400
+                        px-3
+                        py-2
+                        text-lg
+                        font-bold
+                    "
                     >Dashboard</nuxt-link
                 >
                 <div v-if="!currentUser.id">
                     <nuxt-link
                         to="/login"
-                        class="block text-blue-100 hover:text-blue-400 px-3 py-2 text-lg font-bold"
+                        class="
+                            block
+                            text-blue-100
+                            hover:text-blue-400
+                            px-3
+                            py-2
+                            text-lg
+                            font-bold
+                        "
                         >Sign In</nuxt-link
                     >
                     <nuxt-link
                         to="/register"
-                        class="block text-blue-100 bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md text-md font-bold"
+                        class="
+                            block
+                            text-blue-100
+                            bg-blue-600
+                            hover:bg-blue-700
+                            px-3
+                            py-2
+                            rounded-md
+                            text-md
+                            font-bold
+                        "
                         >Sign Up</nuxt-link
                     >
                 </div>
                 <div v-else>
                     <button
-                        class="block text-blue-100 hover:text-blue-400 px-3 py-2 text-lg font-bold"
                         id="user-menu"
+                        class="
+                            block
+                            text-blue-100
+                            hover:text-blue-400
+                            px-3
+                            py-2
+                            text-lg
+                            font-bold
+                        "
                         aria-haspopup="true"
                         @click="logout"
                     >
@@ -161,6 +260,7 @@
                 </div>
             </div>
         </div>
+        <toolbar class="lg:hidden" />
     </nav>
 </template>
 
@@ -168,12 +268,14 @@
 import { mapState } from 'vuex'
 
 export default {
-    name: 'nav-bar',
     data() {
         return {
             showProfileMenu: false,
             showMobileMenu: false,
         }
+    },
+    computed: {
+        ...mapState(['currentUser']),
     },
     methods: {
         logout() {
@@ -182,9 +284,6 @@ export default {
                 this.$router.go()
             })
         },
-    },
-    computed: {
-        ...mapState(['currentUser']),
     },
 }
 </script>

@@ -1,3 +1,4 @@
+import * as axios from "axios";
 import { starterCode } from "./code";
 
 export const state = () => ({
@@ -9,15 +10,17 @@ export const state = () => ({
   readonly: {},
   project: {
     id: null,
-    name: null,
+    url: null,
     user: {},
     blob: [
       {
-        relativePath: "main.py"
-      }
-    ]
+        fullPath: "initialPath",
+        relativePath: "app/main.py",
+        text: "",
+      },
+    ],
   },
-  appScript: null
+  appScript: null,
 });
 
 export const getters = {
@@ -25,33 +28,23 @@ export const getters = {
     if (!state.currentUser.id) {
       return false;
     }
-    return state.currentUser.id == state.project.user.id;
+    return state.currentUser.id === state.project.user.id;
   },
   userProjectUrls(state) {
     if (!state.currentUser.projects) {
       return [];
     }
-    return Object.values(state.currentUser.projects).map(project => {
+    return Object.values(state.currentUser.projects).map((project) => {
       return project.url;
     });
   },
-  userTags(state) {
-    if (!state.currentUser.posts) {
-      return [];
-    }
-    let tagList = Object.values(state.currentUser.posts).map(post => {
-      return post.tags;
-    });
-
-    return [...new Set([].concat.apply([], tagList))];
-  },
   loggedIn(state) {
     return state.authUserId;
-  }
+  },
 };
 
 export const actions = {
-  async nuxtServerInit({ commit }, { res }) {
+  nuxtServerInit({ commit }, { res }) {
     if (res && res.locals && res.locals.user) {
       const {
         allClaims: claims,
@@ -62,24 +55,24 @@ export const actions = {
     }
   },
 
-  async onAuthStateChangedAction({ commit }, { authUser }) {
-    commit("SET_AUTH_STATE", authUser ? authUser : {});
+  onAuthStateChangedAction({ commit }, { authUser }) {
+    commit("SET_AUTH_STATE", authUser || {});
 
     if (!authUser) {
       // remove state
       commit("SET_USER", {});
       commit("SET_TOKEN", null);
     } else {
-      authUser.getIdToken(/* forceRefresh */ true).then(token => {
+      authUser.getIdToken(/* forceRefresh */ true).then((token) => {
         this.$fire.analytics.setUserId(authUser.uid);
         commit("SET_TOKEN", token);
         commit("SET_EMAIL_VERIFIED", authUser.emailVerified);
 
-        this.$usersCollection.doc(authUser.uid).onSnapshot(snap => {
+        this.$usersCollection.doc(authUser.uid).onSnapshot((snap) => {
           commit("SET_USER", snap.data() || {});
         });
 
-        this.$readonlyCollection.doc(authUser.uid).onSnapshot(snap => {
+        this.$readonlyCollection.doc(authUser.uid).onSnapshot((snap) => {
           commit("SET_READONLY_DATA", snap.data() || {});
         });
       });
@@ -87,25 +80,25 @@ export const actions = {
   },
 
   async createProject({ state }, url) {
-    let projectRef = this.$projectsCollection.doc();
+    const projectRef = this.$projectsCollection.doc();
 
-    let relativePath = "main.py";
-    let blob = {
-      relativePath: relativePath,
-      fullPath: `${state.currentUser.id}/projects/${projectRef.id}/${relativePath}`
+    const relativePath = "main.py";
+    const blob = {
+      relativePath,
+      fullPath: `${state.currentUser.id}/projects/${projectRef.id}/${relativePath}`,
     };
 
     await this.$storageRef.child(blob.fullPath).putString(starterCode);
 
-    let project = {
+    const project = {
       id: projectRef.id,
-      url: url,
+      url,
       created: this.$fireModule.firestore.FieldValue.serverTimestamp(),
       blob: [blob],
       user: {
         id: state.currentUser.id,
-        name: state.currentUser.name
-      }
+        name: state.currentUser.name,
+      },
     };
 
     await projectRef.set(project);
@@ -118,32 +111,42 @@ export const actions = {
       `getting project for ${payload.userName}/projects/${payload.projectUrl}`
     );
 
-    let querySnapshot = await this.$projectsCollection
+    const querySnapshot = await this.$projectsCollection
       .where("user.name", "==", payload.userName)
       .where("url", "==", payload.projectUrl)
       .get();
 
     if (!querySnapshot.empty) {
       const project = querySnapshot.docs[0].data();
-      project.blob.forEach(async blob => {
-        // let url = await this.$storageRef.child(blob.fullPath).getDownloadURL();
-        // let res = await axios.get(url);
-        // console.log(res.data);
-        blob.text = starterCode;
-      });
+
+      for (const blob of project.blob) {
+        const url = await this.$storageRef
+          .child(blob.fullPath)
+          .getDownloadURL();
+        const res = await axios.get(url);
+
+        blob.text = res.data;
+      }
+
       commit("SET_PROJECT", project);
-      console.log(project);
     }
   },
 
-  async setAppScript({ state, commit }, payload) {
+  async setAppScript({ state, commit }) {
     console.log("getting app script");
-    // payload.project = state.project;
-    // let res = await axios.get(`${process.env.VUE_APP_BACKEND_URL}/script`, {
-    //   params: payload,
-    // });
-    // commit("SET_APP_SCRIPT", res.data);
-  }
+    const res = await axios.post(
+      `http://localhost:5000/project`,
+      state.project
+    );
+    console.log(res.data);
+    commit("SET_APP_SCRIPT", res.data);
+  },
+
+  updateCode({ state, commit, dispatch }, payload) {
+    commit("UPDATE_CODE", payload); // not necessary?
+    this.$storageRef.child(payload.blob.fullPath).putString(payload.text);
+    dispatch("setAppScript", state.project);
+  },
 };
 
 export const mutations = {
@@ -167,5 +170,12 @@ export const mutations = {
   },
   SET_APP_SCRIPT(state, script) {
     state.appScript = script;
-  }
+  },
+  UPDATE_CODE(state, payload) {
+    for (const blob of state.project.blob) {
+      if (blob.fullPath === payload.blob.fullPath) {
+        blob.text = payload.text;
+      }
+    }
+  },
 };

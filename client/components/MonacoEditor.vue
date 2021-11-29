@@ -4,28 +4,39 @@
 
 <script>
 export default {
-    name: 'monaco',
     props: {
         blob: {
             type: Object,
+            default: () => {
+                return {
+                    relativePath: 'app/main.py',
+                    text: '',
+                }
+            },
         },
         canEdit: {
             type: Boolean,
             default: true,
         },
     },
-    mounted() {
-        this.$editor.initialize(this.$el)
-        this.$editor.setModel(this.blob.fullPath, this.blob.text, !this.canEdit)
-        this.$editor.setCallback(this.updateCode)
-    },
     watch: {
         'blob.fullPath'() {
-            this.$editor.setModel(this.blob.fullPath, this.blob.text)
+            console.log('watching to update')
+            this.$editor.setModel(
+                this.blob.fullPath,
+                this.blob.text,
+                !this.canEdit
+            )
         },
         canEdit() {
             this.$editor.setReadOnly(!this.canEdit)
         },
+    },
+    mounted() {
+        console.log('mounting monaco editor')
+        this.$editor.initialize(this.$el)
+        this.$editor.setModel(this.blob.fullPath, this.blob.text, !this.canEdit)
+        this.$editor.setCallback(this.updateCode)
     },
     methods: {
         updateCode() {

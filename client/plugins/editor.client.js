@@ -4,7 +4,7 @@ import {
   createConnection,
   ErrorAction,
   MonacoLanguageClient,
-  MonacoServices
+  MonacoServices,
 } from "monaco-languageclient";
 import { listen } from "vscode-ws-jsonrpc";
 
@@ -12,7 +12,7 @@ monaco.languages.register({
   id: "python",
   extensions: [".py"],
   aliases: ["python"],
-  mimetypes: ["application/text"]
+  mimetypes: ["application/text"],
 });
 
 function createLanguageClient(connection) {
@@ -22,101 +22,101 @@ function createLanguageClient(connection) {
       documentSelector: ["python"],
       errorHandler: {
         error: () => ErrorAction.Continue,
-        closed: () => CloseAction.DoNotRestart
-      }
+        closed: () => CloseAction.DoNotRestart,
+      },
     },
     connectionProvider: {
       get: (errorHandler, closeHandler) => {
         return Promise.resolve(
           createConnection(connection, errorHandler, closeHandler)
         );
-      }
-    }
+      },
+    },
   });
 }
 
 function connectToMonacoServer() {
   const webSocket = new WebSocket("ws://localhost:8000");
   listen({
-    webSocket: webSocket,
-    onConnection: connection => {
-      var languageClient = createLanguageClient(connection);
-      var disposable = languageClient.start();
-      connection.onClose(function() {
+    webSocket,
+    onConnection: (connection) => {
+      const languageClient = createLanguageClient(connection);
+      const disposable = languageClient.start();
+      connection.onClose(function () {
         return disposable.dispose();
       });
-      connection.onError(function(error) {
+      connection.onError(function (error) {
         console.log(error);
       });
-    }
+    },
   });
 }
 
+let _editor = null;
+
+let currentModel = {};
+let editorModels = {};
+
 const editorService = {
-  _editor: null,
-
-  currentModel: {},
-  data: {},
-
   initialize(el) {
-    if (!this._editor) {
-      const editor = monaco.editor.create(el, {
-        model: null,
-        language: "python",
-        theme: "vs-dark",
-        minimap: false,
-        fontSize: 14,
-        readOnly: !this.canEdit,
-        automaticLayout: true
-      });
-      MonacoServices.install(monaco);
-      connectToMonacoServer();
-      this._editor = editor;
-      console.log(editor);
-    }
-    this.data = {};
+    console.log("creating editor");
+    const editor = monaco.editor.create(el, {
+      model: null,
+      language: "python",
+      theme: "vs-dark",
+      minimap: false,
+      fontSize: 14,
+      readOnly: !this.canEdit,
+      automaticLayout: true,
+    });
+    MonacoServices.install(monaco);
+    connectToMonacoServer();
+    _editor = editor;
+    editorModels = {};
   },
 
   setModel(key, text, readOnly) {
     // TODO: save state of current model
     if (
-      this.currentModel.model &&
-      this.currentModel.model === this._editor.getModel() &&
-      this.currentModel.key in this.data
+      currentModel.model &&
+      currentModel.model === _editor.getModel() &&
+      currentModel.key in editorModels
     ) {
-      this.data[this.currentModel.key].state = this._editor.saveViewState();
+      console.log("saving editor state of the current model");
+      // editorModels[currentModel.key].state = _editor.saveViewState();
     }
 
-    // cretae a new model if one does not already exist
-    if (!this.data[key]) {
-      this.data[key] = {
+    // create a new model if one does not already exist
+    if (!editorModels[key]) {
+      console.log("editor model key not found", key);
+      editorModels[key] = {
         model: monaco.editor.createModel(text, "python"),
         state: null,
-        key: key
+        key,
       };
     }
-
-    this._editor.updateOptions({ readOnly });
-    this._editor.setModel(this.data[key].model);
-    this._editor.restoreViewState(this.data[key].state);
-    this._editor.focus();
-    this.currentModel = this.data[key];
+    console.log("setting editor model");
+    _editor.updateOptions({ readOnly });
+    _editor.setModel(editorModels[key].model);
+    // _editor.restoreViewState(editorModels[key].state);
+    _editor.focus();
+    currentModel = editorModels[key];
   },
 
   setCallback(callback) {
-    this._editor.onDidChangeModelContent(() => {
+    _editor.onDidChangeModelContent(() => {
       callback();
     });
   },
 
   getValue() {
-    return this._editor.getValue();
+    return _editor.getValue();
   },
   setReadOnly(readOnly) {
-    this._editor.updateOptions({ readOnly });
-  }
+    _editor.updateOptions({ readOnly });
+  },
 };
 
-export default async (ctx, inject) => {
+export default (ctx, inject) => {
   inject("editor", editorService);
 };

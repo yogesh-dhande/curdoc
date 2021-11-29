@@ -7,12 +7,12 @@
 <script>
 export default {
     async asyncData(context) {
-        let returnData = {
+        const returnData = {
             userName: context.params.userName,
             user: null,
         }
 
-        let querySnapshot = await context.app.$usersCollection
+        const querySnapshot = await context.app.$usersCollection
             .where('name', '==', returnData.userName)
             .get()
 

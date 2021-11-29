@@ -1,13 +1,29 @@
 <template>
     <form-page>
         <h1
-            class="text-center text-2xl tracking-tight font-extrabold text-blue-100 sm:text-3xl md:text-5xl"
+            class="
+                text-center text-2xl
+                tracking-tight
+                font-extrabold
+                text-blue-100
+                sm:text-3xl
+                md:text-5xl
+            "
         >
             Build and share
             <span class="block text-blue-400"> Bokeh applications </span>
         </h1>
         <form
-            class="max-w-lg m-4 pt-6 pb-12 px-10 bg-gray-900 bg-opacity-25 rounded-lg shadow-xl"
+            class="
+                max-w-lg
+                m-4
+                pt-6
+                pb-12
+                px-10
+                bg-gray-900 bg-opacity-25
+                rounded-lg
+                shadow-xl
+            "
         >
             <div class="mt-3">
                 <label class="block text-sm font-medium mt-2 mb-0">
@@ -16,40 +32,50 @@
                 <div class="mt-1">
                     <input
                         id="email"
+                        v-model="email"
                         name="email"
                         type="email"
                         autocomplete="email"
                         required
                         rows="3"
-                        class="shadow-sm focus:ring-gray-500 focus:border-gray-500 mt-1 p-2 block w-full text-sm bg-gray-800 rounded-md"
-                        v-model="email"
+                        class="
+                            shadow-sm
+                            focus:ring-gray-500 focus:border-gray-500
+                            mt-1
+                            p-2
+                            block
+                            w-full
+                            text-sm
+                            bg-gray-800
+                            rounded-md
+                        "
                         @focus="clearErrors"
                     />
                 </div>
             </div>
             <div v-if="!fpform">
                 <password-input
-                    class="mt-3"
                     v-if="!fpform"
-                    label="Password"
                     v-model="password"
+                    class="mt-3"
+                    label="Password"
                     @input="clearErrors"
                 ></password-input>
                 <submit
                     class="mt-3"
-                    :isLoading="isLoading"
+                    :is-loading="isLoading"
                     :errors="errors"
-                    @click="login"
                     label="Sign In"
+                    @click="login"
                 />
             </div>
             <div v-else>
                 <submit
                     class="mt-3"
-                    :isLoading="isLoading"
+                    :is-loading="isLoading"
                     :errors="errors"
-                    @click="forgotPassword"
                     label="Send Password Reset Link"
+                    @click="forgotPassword"
                 />
             </div>
 
@@ -57,7 +83,15 @@
                 <span class="float-left">
                     <nuxt-link
                         to="/register"
-                        class="p-1 inline-flex justify-center rounded hover:underline outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
+                        class="
+                            p-1
+                            inline-flex
+                            justify-center
+                            rounded
+                            hover:underline
+                            outline-none
+                            focus:ring-2 focus:ring-offset-2 focus:ring-blue-400
+                        "
                     >
                         <span>Sign Up</span>
                     </nuxt-link>
@@ -66,7 +100,15 @@
                     <button
                         ref="fpButton"
                         type="submit"
-                        class="p-1 inline-flex justify-center rounded hover:underline outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
+                        class="
+                            p-1
+                            inline-flex
+                            justify-center
+                            rounded
+                            hover:underline
+                            outline-none
+                            focus:ring-2 focus:ring-offset-2 focus:ring-blue-400
+                        "
                         @click.prevent="fp"
                     >
                         <span v-if="!fpform">Forgot password?</span>
@@ -83,17 +125,24 @@ import FormPage from '@/components/FormPage'
 import PasswordInput from '@/components/PasswordInput'
 
 export default {
-    name: 'login',
+    name: 'Login',
     components: {
         submit: Submit,
         FormPage,
         'password-input': PasswordInput,
     },
+    beforeRouteLeave(to, from, next) {
+        // Reset internal state when leaving the page so avoid confusion
+        this.fpform = false
+        next()
+    },
     middleware: 'guest',
-    head() {
-        return this.$createSEOMeta({
-            title: 'Sign In to REPL Notes',
-        })
+    asyncData(context) {
+        return {
+            redirect: context.query.redirect
+                ? context.query.redirect
+                : '/dashboard',
+        }
     },
     data() {
         return {
@@ -106,22 +155,15 @@ export default {
             isLoading: false,
         }
     },
-    asyncData(context) {
-        return {
-            redirect: context.query.redirect
-                ? context.query.redirect
-                : '/dashboard',
-        }
+    head() {
+        return this.$createSEOMeta({
+            title: 'Sign In to REPL Notes',
+        })
     },
     computed: {
         hasErrors() {
             return this.errors.length > 0
         },
-    },
-    beforeRouteLeave(to, from, next) {
-        // Reset internal state when leaving the page so avoid confusion
-        this.fpform = false
-        next()
     },
     methods: {
         login() {
@@ -130,12 +172,7 @@ export default {
             this.$fire.auth
                 .signInWithEmailAndPassword(this.email, this.password)
                 .then((userCredential) => {
-                    this.$fire.analytics.logEvent(
-                        this.$analyticsEvents.LOGIN,
-                        userCredential.user.toJSON()
-                    )
                     this.$store.commit('SET_AUTH_STATE', userCredential.user)
-
                     this.$router.push(this.redirect)
                 })
                 .catch((error) => {
@@ -162,7 +199,7 @@ export default {
         fp() {
             this.fpform = !this.fpform
             this.errors = []
-            this.$refs['fpButton'].blur()
+            this.$refs.fpButton.blur()
         },
         clearErrors() {
             this.errors = []

@@ -1,8 +1,11 @@
 FROM node:14-alpine
 
 WORKDIR /app
-COPY . .
+COPY package*.json .
 RUN npm install
+
+COPY . .
+
 
 EXPOSE 8080
 ENV HOST=0.0.0.0

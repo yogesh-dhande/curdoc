@@ -1,4 +1,4 @@
-export default async ({ app }, inject) => {
+export default ({ app }, inject) => {
   inject("projectsCollection", app.$fire.firestore.collection("projects"));
   inject("usersCollection", app.$fire.firestore.collection("users"));
   inject("readonlyCollection", app.$fire.firestore.collection("readonly"));
@@ -8,7 +8,7 @@ export default async ({ app }, inject) => {
   inject("storageRef", storageRef);
 
   function uploadFile(formData, token) {
-    let url = "/uploadFile";
+    const url = "/uploadFile";
     return app.$axios.post(url, formData, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",

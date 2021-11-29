@@ -7,7 +7,6 @@ from bokeh.client.session import pull_session
 from bokeh.embed.server import server_document
 from pydantic import BaseModel
 from services.container import container_service
-from services.database import database
 
 from models.blob import Blob
 from models.user import User
@@ -17,32 +16,10 @@ with open("src/api/resources/default.py", "r") as file:
 
 
 class Project(BaseModel):
-    name: str
+    id: str
+    url: str
     user: User
     blob: Optional[List[Blob]] = []
-
-    @property
-    def id(self) -> str:
-        _id = self.__dict__.get("id")
-        if _id is None:
-            _id = database.get_project_id(self.user.name, self.name)
-            self.__dict__["id"] = _id
-        return _id
-
-    def create(self) -> None:
-        database.create_project(self.dict())
-        blob = Blob(relative_path="main.py", text=STARTER_CODE)
-        self.add_blob(blob)
-        return self
-
-    def get(self) -> "Project":  # TODO
-        # Get data from the project document in firestore
-        project = Project.parse_obj(database.get_project_json(self.id))
-        project.ensure_locally()
-        for blob in project.blob:
-            if blob.relative_path == "main.py":
-                blob.reload(project.id)
-        return project
 
     def get_blob(self, relative_path) -> Blob:
         blob = Blob(relative_path=relative_path)
@@ -52,20 +29,12 @@ class Project(BaseModel):
     def update_blob(self, blob: Blob):
         blob.save(self.id)
 
-    def add_blob(self, blob: Blob) -> None:
-        blob_json = blob.dict()
-        blob_json.pop("text", None)
-        database.add_blob_to_project(self.id, blob_json)
-        blob.save(self.id)
-        self.blob.append(blob)
-
     def ensure_locally(self) -> None:
         for blob in self.blob:
             blob.ensure_locally(self.id)
 
     def get_app_script(self) -> Optional[str]:
-        project = Project.parse_obj(database.get_project_json(self.id))
-        project.ensure_locally()
+        self.ensure_locally()
         container_session = container_service.get_container_session_for_project(self.id)
         self.wait_for_server_to_be_ready(container_session)
 
@@ -91,4 +60,4 @@ class Project(BaseModel):
                 if result:
                     break
             time.sleep(wait_period)
-            print(f"Waited {i*wait_period} seconds for Bokeh server to be ready")
+        print(f"Waited {i*wait_period} seconds for Bokeh server to be ready")

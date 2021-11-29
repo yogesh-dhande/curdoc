@@ -1,17 +1,24 @@
+import path from "path";
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
 const isDev = process.env.NODE_ENV === "development";
 
+require("dotenv").config({
+  path: path.resolve(__dirname, ".env"),
+});
+
 export default {
+  target: "static",
+  ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: "Broccolini",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { hid: "description", name: "description", content: "" }
+      { hid: "description", name: "description", content: "" },
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -22,7 +29,7 @@ export default {
     "~/plugins/firebaseConfig.js",
     "~/plugins/analytics.client.js",
     "~/plugins/editor.client.js",
-    "~/plugins/meta.js"
+    "~/plugins/meta.js",
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -33,7 +40,7 @@ export default {
     // https://go.nuxtjs.dev/eslint
     "@nuxtjs/eslint-module",
     // https://go.nuxtjs.dev/tailwindcss
-    "@nuxtjs/tailwindcss"
+    "@nuxtjs/tailwindcss",
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -42,7 +49,7 @@ export default {
     "@nuxtjs/axios",
     "@nuxtjs/firebase",
     // https://go.nuxtjs.dev/pwa
-    "@nuxtjs/pwa"
+    "@nuxtjs/pwa",
   ],
 
   firebase: {
@@ -53,35 +60,35 @@ export default {
       storageBucket: process.env.NUXT_ENV_STORAGE_BUCKET,
       messagingSenderId: process.env.NUXT_ENV_MESSAGING_SENDER_ID,
       appId: process.env.NUXT_ENV_ID,
-      measurementId: process.env.NUXT_ENV_MEASUREMENT_ID
+      measurementId: process.env.NUXT_ENV_MEASUREMENT_ID,
     },
     services: {
       auth: {
         persistence: "local", // default
         initialize: {
           onAuthStateChangedAction: "onAuthStateChangedAction",
-          subscribeManually: false
+          subscribeManually: false,
         },
-        ssr: true // default
+        ssr: true, // default
         // emulatorPort: isDev ? 10000 : undefined,
-        // emulatorHost: isDev ? 'http://localhost' : undefined,
+        // emulatorHost: isDev ? "http://localhost" : undefined,
       },
       functions: {
         location: "us-central1",
-        emulatorPort: isDev ? 10001 : undefined,
-        emulatorHost: isDev ? "localhost" : undefined
+        // emulatorPort: isDev ? 10001 : undefined,
+        // emulatorHost: isDev ? "localhost" : undefined,
       },
       firestore: {
         memoryOnly: false, // default
-        enablePersistence: !isDev
+        enablePersistence: !isDev,
         // emulatorPort: isDev ? 10002 : undefined,
-        // emulatorHost: isDev ? 'localhost' : undefined,
+        // emulatorHost: isDev ? "localhost" : undefined,
       },
       storage: true,
       analytics: {
-        collectionEnabled: true // default
-      }
-    }
+        collectionEnabled: true, // default
+      },
+    },
   },
   pwa: {
     // disable the modules you don't need
@@ -93,18 +100,18 @@ export default {
     workbox: {
       importScripts: [
         // ...
-        "/firebase-auth-sw.js"
+        "/firebase-auth-sw.js",
       ],
       // by default the workbox module will not install the service worker in dev environment to avoid conflicts with HMR
       // only set this true for testing and remember to always clear your browser cache in development
-      dev: false
-    }
+      dev: false,
+    },
   },
   axios: {
-    baseURL: process.env.NUXT_ENV_FIREBASE_FUNCTIONS_URL
+    baseURL: process.env.NUXT_ENV_FIREBASE_FUNCTIONS_URL,
   },
   alias: {
-    vscode: require.resolve("monaco-languageclient/lib/vscode-compatibility")
+    vscode: require.resolve("monaco-languageclient/lib/vscode-compatibility"),
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
@@ -112,9 +119,9 @@ export default {
     extend(config) {
       config.node = {
         setImmediate: true,
-        net: "empty"
+        net: "empty",
       };
       config.resolve.extensions.push(".js", ".json", ".ttf");
-    }
-  }
+    },
+  },
 };
