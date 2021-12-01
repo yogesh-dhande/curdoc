@@ -59,20 +59,22 @@ let editorModels = {};
 
 const editorService = {
   initialize(el) {
-    console.log("creating editor");
-    const editor = monaco.editor.create(el, {
-      model: null,
-      language: "python",
-      theme: "vs-dark",
-      minimap: false,
-      fontSize: 14,
-      readOnly: !this.canEdit,
-      automaticLayout: true,
-    });
-    MonacoServices.install(monaco);
-    connectToMonacoServer();
-    _editor = editor;
-    editorModels = {};
+    if (!_editor) {
+      console.log("creating editor");
+      const editor = monaco.editor.create(el, {
+        model: null,
+        language: "python",
+        theme: "vs-dark",
+        minimap: false,
+        fontSize: 14,
+        readOnly: !this.canEdit,
+        automaticLayout: true,
+      });
+      MonacoServices.install(monaco);
+      connectToMonacoServer();
+      _editor = editor;
+      editorModels = {};
+    }
   },
 
   setModel(key, text, readOnly) {

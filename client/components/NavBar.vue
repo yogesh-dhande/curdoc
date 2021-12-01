@@ -114,7 +114,7 @@
             /> -->
                         </nuxt-link>
                     </div>
-                    <toolbar />
+                    <toolbar class="hidden lg:block md:ml-6" />
                 </div>
 
                 <div class="flex items-center pr-2">

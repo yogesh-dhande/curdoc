@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import List
 from typing import Optional
 
+import requests
 from bokeh.client.session import pull_session
 from bokeh.embed.server import server_document
 from pydantic import BaseModel
@@ -17,7 +18,7 @@ with open("src/api/resources/default.py", "r") as file:
 
 class Project(BaseModel):
     id: str
-    url: str
+    slug: str
     user: User
     blob: Optional[List[Blob]] = []
 
@@ -46,7 +47,7 @@ class Project(BaseModel):
 
         def is_server_ready():
             try:
-                pull_session(url=url)
+                requests.get(url=url)
                 return True
             except Exception as e:
                 print(str(e))

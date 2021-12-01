@@ -9,9 +9,12 @@ export const state = () => ({
   isEmailVerified: null,
   readonly: {},
   project: {
-    id: null,
-    url: null,
-    user: {},
+    id: "",
+    slug: "",
+    user: {
+      id: "",
+      name: "",
+    },
     blob: [
       {
         fullPath: "initialPath",
@@ -30,12 +33,12 @@ export const getters = {
     }
     return state.currentUser.id === state.project.user.id;
   },
-  userProjectUrls(state) {
+  userprojectSlugs(state) {
     if (!state.currentUser.projects) {
       return [];
     }
     return Object.values(state.currentUser.projects).map((project) => {
-      return project.url;
+      return project.slug;
     });
   },
   loggedIn(state) {
@@ -44,17 +47,6 @@ export const getters = {
 };
 
 export const actions = {
-  nuxtServerInit({ commit }, { res }) {
-    if (res && res.locals && res.locals.user) {
-      const {
-        allClaims: claims,
-        idToken: token,
-        ...authUser
-      } = res.locals.user;
-      commit("SET_AUTH_STATE", authUser);
-    }
-  },
-
   onAuthStateChangedAction({ commit }, { authUser }) {
     commit("SET_AUTH_STATE", authUser || {});
 
@@ -79,7 +71,7 @@ export const actions = {
     }
   },
 
-  async createProject({ state }, url) {
+  async createProject({ state }, slug) {
     const projectRef = this.$projectsCollection.doc();
 
     const relativePath = "main.py";
@@ -92,7 +84,7 @@ export const actions = {
 
     const project = {
       id: projectRef.id,
-      url,
+      slug,
       created: this.$fireModule.firestore.FieldValue.serverTimestamp(),
       blob: [blob],
       user: {
@@ -103,17 +95,17 @@ export const actions = {
 
     await projectRef.set(project);
     console.log(project);
-    this.$router.push(`${project.user.name}/projects/${project.url}/code`);
+    this.$router.push(`${project.user.name}/projects/${project.slug}/code`);
   },
 
   async setProject({ commit }, payload) {
     console.log(
-      `getting project for ${payload.userName}/projects/${payload.projectUrl}`
+      `getting project for ${payload.userName}/projects/${payload.projectSlug}`
     );
 
     const querySnapshot = await this.$projectsCollection
       .where("user.name", "==", payload.userName)
-      .where("url", "==", payload.projectUrl)
+      .where("slug", "==", payload.projectSlug)
       .get();
 
     if (!querySnapshot.empty) {
@@ -134,12 +126,16 @@ export const actions = {
 
   async setAppScript({ state, commit }) {
     console.log("getting app script");
-    const res = await axios.post(
-      `http://localhost:5000/project`,
-      state.project
-    );
-    console.log(res.data);
-    commit("SET_APP_SCRIPT", res.data);
+    try {
+      const res = await axios.post(
+        `http://localhost:5000/project`,
+        state.project
+      );
+      console.log(res.data);
+      commit("SET_APP_SCRIPT", res.data);
+    } catch (error) {
+      console.log(error);
+    }
   },
 
   updateCode({ state, commit, dispatch }, payload) {
@@ -166,6 +162,7 @@ export const mutations = {
     state.readonly = data;
   },
   SET_PROJECT(state, project) {
+    console.log(`setting project`);
     state.project = project;
   },
   SET_APP_SCRIPT(state, script) {

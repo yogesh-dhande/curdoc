@@ -69,7 +69,7 @@ export default {
           onAuthStateChangedAction: "onAuthStateChangedAction",
           subscribeManually: false,
         },
-        ssr: true, // default
+        ssr: false, // default
         // emulatorPort: isDev ? 10000 : undefined,
         // emulatorHost: isDev ? "http://localhost" : undefined,
       },

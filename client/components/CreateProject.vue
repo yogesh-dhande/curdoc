@@ -1,12 +1,18 @@
 <template>
     <card
-        class="flex justify-center shadow bg-gray-900 bg-opacity-25 text-indigo-100"
+        class="
+            flex
+            justify-center
+            shadow
+            bg-gray-900 bg-opacity-25
+            text-indigo-100
+        "
     >
         <h2 class="mx-2 text-blue-300">New Project</h2>
 
         <div class="flex">
             <url-slug-input
-                v-model="url"
+                v-model="slug"
                 :prefix="baseUrl"
                 @focus="
                     urlErrors = []
@@ -34,7 +40,7 @@
             </button>
         </div>
 
-        <input-errors :errors="urlErrors"></input-errors>
+        <input-errors :errors="slugErrors"></input-errors>
     </card>
 </template>
 
@@ -54,15 +60,15 @@ export default {
     data() {
         return {
             projectRef: this.$projectsCollection.doc(),
-            url: '',
-            urlErrors: [],
+            slug: '',
+            slugErrors: [],
         }
     },
     computed: {
         ...mapState(['currentUser']),
-        ...mapGetters(['userProjectUrls']),
+        ...mapGetters(['userprojectSlugs']),
         allErrors() {
-            return this.urlErrors
+            return this.slugErrors
         },
         disabled() {
             if (this.allErrors.length > 0) {
@@ -78,28 +84,28 @@ export default {
         clearErrors() {
             this.errors = []
         },
-        validateUrl() {
-            this.urlErrors = []
-            if (!this.url || this.url.length === 0) {
-                this.urlErrors.push('Please enter a url for the post.')
-            } else if (!/^[0-9a-zA-Z_.-]+$/.test(this.url)) {
-                this.urlErrors.push('No spaces allowed in the project url.')
-            } else if (this.userProjectUrls.includes(this.url)) {
-                this.urlErrors.push(
-                    `A post at ${this.baseUrl}${this.url} already exists.` // TODO add a link to edit the existing post
+        validateSlug() {
+            this.slugErrors = []
+            if (!this.slug || this.slug.length === 0) {
+                this.slugErrors.push('Please enter a URL slug for the project.')
+            } else if (!/^[0-9a-zA-Z_.-]+$/.test(this.slug)) {
+                this.slugErrors.push('No spaces allowed in the project slug.')
+            } else if (this.userprojectSlugs.includes(this.slug)) {
+                this.slugErrors.push(
+                    `A project at ${this.baseUrl}${this.slug} already exists.` // TODO add a link to edit the existing project
                 )
             }
-        return this.urlErrors
+            return this.slugErrors
         },
         isFormValid() {
-            this.validateUrl()
+            this.validateSlug()
             return !this.disabled
         },
         createProject() {
             this.clearErrors()
             if (this.isFormValid()) {
                 try {
-                    this.$store.dispatch('createProject', this.url)
+                    this.$store.dispatch('createProject', this.slug)
                 } catch (error) {
                     console.log(error)
                 }

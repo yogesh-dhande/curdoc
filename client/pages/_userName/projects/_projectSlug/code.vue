@@ -6,7 +6,7 @@
             >
             to start creating your own projects for free.
         </h2>
-        <code-editor :project="project"></code-editor>
+        <code-editor :blob="blob" :can-edit="canEdit"></code-editor>
     </div>
 </template>
 
@@ -22,13 +22,13 @@ export default {
 
         next(async (vm) => {
             const params = to.params
-            if (params.userName && params.projectUrl) {
+            if (params.userName && params.projectSlug) {
                 const payload = {
                     userName: params.userName,
-                    projectUrl: params.projectUrl,
+                    projectSlug: params.projectSlug,
                 }
                 if (
-                    vm.project.url !== payload.projectUrl ||
+                    vm.project.slug !== payload.projectSlug ||
                     vm.project.user.name !== payload.userName
                 ) {
                     await vm.$store.dispatch('setProject', payload)
@@ -48,16 +48,35 @@ export default {
     asyncData(context) {
         const returnData = {
             userName: context.params.userName,
-            projectUrl: context.params.projectUrl,
+            projectSlug: context.params.projectSlug,
         }
         return returnData
+    },
+    data() {
+        return {
+            blob: {
+                fullPath: 'initialPath',
+                relativePath: 'app/main.py',
+                text: '',
+            },
+        }
     },
     computed: {
         ...mapState(['project']),
         ...mapGetters(['canEdit', 'loggedIn']),
     },
+    watch: {
+        project(newValue) {
+            this.setBlogFromProject(newValue)
+        },
+    },
     mounted() {
-        console.log('mounting code editor')
+        this.setBlogFromProject(this.project)
+    },
+    methods: {
+        setBlogFromProject(project) {
+            this.blob = project.blob.length > 0 ? project.blob[0] : null
+        },
     },
 }
 </script>

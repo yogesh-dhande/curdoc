@@ -1,7 +1,6 @@
 <template>
     <div>
         <monaco-editor
-            v-if="blob"
             :blob="blob"
             :can-edit="canEdit"
             @updateCode="updateCode"
@@ -11,38 +10,32 @@
 
 <script>
 import MonacoEditor from '@/components/MonacoEditor'
-import { mapGetters } from 'vuex'
 
 export default {
     components: {
         'monaco-editor': MonacoEditor,
     },
     props: {
-        project: {
+        blob: {
             type: Object,
             default: () => {
                 return {
-                    id: null,
-                    blob: [],
+                    fullPath: 'initialPath',
+                    relativePath: 'app/main.py',
+                    text: '',
                 }
             },
+        },
+        canEdit: {
+            type: Boolean,
+            default: true,
         },
     },
     data() {
         return {
-            editor: null,
             codeChanged: false,
             codeChangeCallback: null,
         }
-    },
-    computed: {
-        ...mapGetters(['canEdit']),
-        blob() {
-            if (this.project.blob.length > 0) {
-                return this.project.blob[0]
-            }
-            return null
-        },
     },
     methods: {
         updateCode(evt) {

@@ -4,13 +4,15 @@
             class="sticky top-0 z-50"
             :class="{ 'shadow-2xl': !view.atTopOfPage }"
         />
-        <Nuxt />
+        <Nuxt :nuxt-child-key="$route.name" keep-alive />
         <AppFooter />
     </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import NavBar from '@/components/NavBar'
+
 export default {
     components: {
         NavBar,
@@ -22,9 +24,13 @@ export default {
             },
         }
     },
+    computed: {
+        ...mapState(['project']),
+    },
 
     // a beforeMount call to add a listener to the window
     mounted() {
+        console.log(this.$route)
         window.addEventListener('scroll', this.handleScroll)
     },
 

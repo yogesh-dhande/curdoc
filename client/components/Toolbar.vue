@@ -66,10 +66,10 @@ export default {
     computed: {
         ...mapState(['project']),
         codeUrl() {
-            return `/${this.project.user.name}/projects/${this.project.url}/code`
+            return `/${this.project.user.name}/projects/${this.project.slug}/code`
         },
         appUrl() {
-            return `/${this.project.user.name}/projects/${this.project.url}`
+            return `/${this.project.user.name}/projects/${this.project.slug}`
         },
     },
 }

@@ -40,7 +40,7 @@ export default {
     asyncData(context) {
         const returnData = {
             userName: context.params.userName,
-            projectUrl: context.params.projectUrl,
+            projectSlug: context.params.projectSlug,
         }
         return returnData
     },
@@ -55,13 +55,13 @@ export default {
     },
     async mounted() {
         console.log(
-            `mounting app preview for ${this.userName} - ${this.projectUrl}`
+            `mounting app preview for ${this.userName} - ${this.projectSlug}`
         )
 
         if (!this.script) {
             const payload = {
                 userName: this.userName,
-                projectUrl: this.projectUrl,
+                projectSlug: this.projectSlug,
             }
             await this.$store.dispatch('setProject', payload)
             await this.$store.dispatch('setAppScript')

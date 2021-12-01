@@ -143,7 +143,7 @@ exports.updateUserWhenNewProjectCreated = functions.firestore
     let data = snap.data();
     try {
       await db.doc(`users/${userId}`).update(`projects.${projectId}`, {
-        url: data.url,
+        slug: data.slug,
         id: data.id,
       });
       await calculateStorageUsed(userId);
@@ -165,7 +165,7 @@ exports.updateUserWhenProjectUpdated = functions.firestore
       let snap = await db.doc(`projects/${projectId}`).get();
       let userId = snap.get("user.id");
       let patch = {
-        url: data.url,
+        slug: data.slug,
       };
 
       await db.doc(`users/${userId}`).update(`projects.${projectId}`, patch);
@@ -351,7 +351,7 @@ async function getAppRoutes() {
       routes.push(`/${user.name}`);
       routes.push(`/${user.name}/projects`);
       Object.values(user.projects).map((project) => {
-        routes.push(`/${user.name}/projects/${project.url}`);
+        routes.push(`/${user.name}/projects/${project.slug}`);
       });
     }
   });
