@@ -110,7 +110,7 @@
                             <!-- <img
                 class="inline h-8 md:h-10 lg:h-12 bg-gray-800"
                 src="./../static/logo.png"
-                alt="REPL Notes Logo"
+                alt="Broccolini Logo"
             /> -->
                         </nuxt-link>
                     </div>
