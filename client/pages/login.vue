@@ -157,7 +157,7 @@ export default {
     },
     head() {
         return this.$createSEOMeta({
-            title: 'Sign In to REPL Notes',
+            title: 'Sign In to Brocoolini',
         })
     },
     computed: {
