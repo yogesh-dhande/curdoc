@@ -51,8 +51,7 @@
                     </nuxt-link>
                 </div>
                 <div class="ml-3 inline-flex">
-                    <nuxt-link
-                        to="/demo"
+                    <button
                         class="
                             w-full
                             px-8
@@ -65,9 +64,10 @@
                             hover:bg-blue-300
                             md:py-4 md:text-lg md:px-10
                         "
+                        @click="createDemo"
                     >
                         See Demo
-                    </nuxt-link>
+                    </button>
                 </div>
             </div>
             <h2 class="mt-6 text-blue-100 font-medium text-xl">
@@ -82,8 +82,17 @@
 </template>
 
 <script>
+import { demo } from '@/store/demo'
 export default {
-    name: 'Landing',
+    methods: {
+        createDemo() {
+            this.$store.commit('SET_PROJECT', demo.project)
+            this.$store.commit('SET_USER', demo.user)
+            this.$router.push(
+                `/${demo.user.name}/projects/${demo.project.slug}`
+            )
+        },
+    },
 }
 </script>
 

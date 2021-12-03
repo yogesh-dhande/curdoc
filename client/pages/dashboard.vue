@@ -13,7 +13,7 @@
         "
     >
         <create-project class="shadow-2xl p-2"></create-project>
-        <div class="flex flex-col space-y-4 px-12 py-8 rounded">
+        <card class="flex flex-col space-y-4 px-12 py-8 rounded justify-center">
             <div
                 v-for="(project, projectId) in currentUser.projects"
                 :key="projectId"
@@ -30,7 +30,7 @@
                     >{{ project.slug }}/code</nuxt-link
                 >
             </div>
-        </div>
+        </card>
     </div>
 </template>
 

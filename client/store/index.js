@@ -1,5 +1,5 @@
 import * as axios from "axios";
-import { starterCode } from "./code";
+import { starterCode } from "./demo";
 
 export const state = () => ({
   authUserId: null,
@@ -19,7 +19,7 @@ export const state = () => ({
       {
         fullPath: "initialPath",
         relativePath: "app/main.py",
-        text: "",
+        text: starterCode,
       },
     ],
   },

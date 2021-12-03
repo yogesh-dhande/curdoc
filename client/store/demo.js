@@ -42,3 +42,33 @@ button.on_click(callback)
 # put the button and plot in a layout and add to the document
 curdoc().add_root(column(button, p))
 `;
+
+function generateId() {
+  return Math.random().toString(16).slice(2);
+}
+
+const demoProjectId = generateId();
+const demoUserId = generateId();
+
+const demoUser = {
+  id: demoUserId,
+  name: "guest",
+};
+
+const demoProject = {
+  id: demoProjectId,
+  slug: "demo",
+  user: demoUser,
+  blob: [
+    {
+      fullPath: `${demoUserId}/projects/${demoProjectId}/main.py`,
+      relativePath: "main.py",
+      text: starterCode,
+    },
+  ],
+};
+
+export const demo = {
+  user: demoUser,
+  project: demoProject,
+};

@@ -138,7 +138,7 @@
                                 >Dashboard</nuxt-link
                             >
 
-                            <div v-if="!currentUser.id" class="self-center">
+                            <div v-if="!loggedIn" class="self-center">
                                 <nuxt-link
                                     to="/login"
                                     class="
@@ -213,7 +213,7 @@
                     "
                     >Dashboard</nuxt-link
                 >
-                <div v-if="!currentUser.id">
+                <div v-if="!loggedIn">
                     <nuxt-link
                         to="/login"
                         class="
@@ -268,7 +268,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
     data() {
@@ -278,7 +278,8 @@ export default {
         }
     },
     computed: {
-        ...mapState(['currentUser', 'project']),
+        ...mapState(['project']),
+        ...mapGetters(['loggedIn']),
     },
     methods: {
         logout() {
