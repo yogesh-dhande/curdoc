@@ -60,11 +60,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 export default {
-    name: 'Toolbar',
+    props: {
+        project: {
+            type: Object,
+            default: () => {},
+        },
+    },
     computed: {
-        ...mapState(['project']),
         codeUrl() {
             return `/${this.project.user.name}/projects/${this.project.slug}/code`
         },

@@ -6,50 +6,33 @@
             >
             to start creating your own projects for free.
         </h2>
-        <code-editor :blob="blob" :can-edit="canEdit"></code-editor>
+        <monaco-editor
+            :blob="blob"
+            :can-edit="canEdit"
+            @updateCode="updateCode"
+        ></monaco-editor>
     </div>
 </template>
 
 <script>
-import CodeEditor from '@/components/CodeEditor.vue'
 import { mapState, mapGetters } from 'vuex'
 
 export default {
-    components: { CodeEditor },
-    beforeRouteEnter(to, from, next) {
-        console.log('entering project route')
-        console.log(to.params)
-
-        next(async (vm) => {
-            const params = to.params
-            if (params.userName && params.projectSlug) {
-                const payload = {
-                    userName: params.userName,
-                    projectSlug: params.projectSlug,
-                }
-                if (
-                    vm.project.slug !== payload.projectSlug ||
-                    vm.project.user.name !== payload.userName
-                ) {
-                    await vm.$store.dispatch('setProject', payload)
-                    await vm.$store.dispatch('setAppScript')
-                }
-            }
-        })
+    key(route) {
+        return route.name
     },
-    beforeRouteUpdate(to, from, next) {
-        console.log('updating project route')
-        next()
-    },
-    beforeRouteLeave(to, from, next) {
-        console.log('leaving project route')
-        next()
-    },
-    asyncData(context) {
+    async asyncData(context) {
         const returnData = {
             userName: context.params.userName,
             projectSlug: context.params.projectSlug,
         }
+        if (
+            context.store.state.project.slug !== returnData.projectSlug ||
+            context.store.state.project.user.name !== returnData.userName
+        ) {
+            await context.store.dispatch('setProject', returnData)
+        }
+
         return returnData
     },
     data() {
@@ -59,6 +42,8 @@ export default {
                 relativePath: 'app/main.py',
                 text: '',
             },
+            codeChanged: false,
+            codeChangeCallback: null,
         }
     },
     computed: {
@@ -67,15 +52,21 @@ export default {
     },
     watch: {
         project(newValue) {
-            this.setBlogFromProject(newValue)
+            this.setBlobFromProject(newValue)
         },
     },
     mounted() {
-        this.setBlogFromProject(this.project)
+        this.setBlobFromProject(this.project)
     },
     methods: {
-        setBlogFromProject(project) {
+        setBlobFromProject(project) {
             this.blob = project.blob.length > 0 ? project.blob[0] : null
+        },
+        updateCode(evt) {
+            this.$store.dispatch('updateCode', {
+                blob: this.blob,
+                text: evt.text,
+            })
         },
     },
 }

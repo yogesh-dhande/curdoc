@@ -20,6 +20,15 @@ export default {
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
   },
+  loading: {
+    color: "#60A5FA",
+    height: "5px",
+  },
+  loadingIndicator: {
+    name: "wandering-cubes",
+    color: "#60A5FA",
+    background: "#1F2937",
+  },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],

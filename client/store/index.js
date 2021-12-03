@@ -23,6 +23,7 @@ export const state = () => ({
       },
     ],
   },
+  codeChanged: false,
   appScript: null,
 });
 
@@ -138,10 +139,9 @@ export const actions = {
     }
   },
 
-  updateCode({ state, commit, dispatch }, payload) {
-    commit("UPDATE_CODE", payload); // not necessary?
-    this.$storageRef.child(payload.blob.fullPath).putString(payload.text);
-    dispatch("setAppScript", state.project);
+  async updateCode({ commit }, payload) {
+    commit("UPDATE_CODE", payload);
+    await this.$storageRef.child(payload.blob.fullPath).putString(payload.text);
   },
 };
 
@@ -164,9 +164,11 @@ export const mutations = {
   SET_PROJECT(state, project) {
     console.log(`setting project`);
     state.project = project;
+    state.codeChanged = true;
   },
   SET_APP_SCRIPT(state, script) {
     state.appScript = script;
+    state.codeChanged = false;
   },
   UPDATE_CODE(state, payload) {
     for (const blob of state.project.blob) {
@@ -174,5 +176,6 @@ export const mutations = {
         blob.text = payload.text;
       }
     }
+    state.codeChanged = true;
   },
 };

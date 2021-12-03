@@ -1,5 +1,7 @@
 <template>
-    <bokeh-app v-if="script" :key="script" :script="script"></bokeh-app>
+    <div class="min-h-screen bg-white">
+        <bokeh-app v-if="script" :key="script" :script="script"></bokeh-app>
+    </div>
 </template>
 
 <script>
@@ -7,23 +9,25 @@ import BokehApp from '@/components/BokehApp.vue'
 import { mapState } from 'vuex'
 
 export default {
-    name: 'App',
+    key(route) {
+        return route.name
+    },
     components: {
         'bokeh-app': BokehApp,
     },
     beforeRouteEnter(to, from, next) {
         console.log('entering app preview route')
-
         next((vm) => {
-            if (vm.appScript) {
+            setTimeout(() => {
                 vm.setScript()
-            } else {
-                vm.scriptWatcher = vm.$watch('appScript', () => {
-                    vm.setScript()
+            }, 500) // let the DOM load
+            vm.scriptWatcher = vm.$watch('appScript', () => {
+                vm.setScript()
+                if (vm.scriptWatcher) {
                     vm.scriptWatcher()
                     vm.scriptWatcher = null
-                })
-            }
+                }
+            })
         })
     },
     beforeRouteUpdate(to, from, next) {
@@ -37,10 +41,23 @@ export default {
         }
         next()
     },
-    asyncData(context) {
+    async asyncData(context) {
         const returnData = {
             userName: context.params.userName,
             projectSlug: context.params.projectSlug,
+        }
+        console.log('async data on app route called')
+        if (
+            context.store.state.project.slug !== returnData.projectSlug ||
+            context.store.state.project.user.name !== returnData.userName
+        ) {
+            await context.store.dispatch('setProject', returnData)
+        }
+
+        if (context.store.state.codeChanged) {
+            console.log('code was changed. getting new script tag')
+            await context.store.dispatch('setAppScript')
+            returnData.script = null
         }
         return returnData
     },
@@ -51,27 +68,24 @@ export default {
         }
     },
     computed: {
-        ...mapState(['appScript']),
+        ...mapState(['appScript', 'project']),
     },
-    async mounted() {
+    mounted() {
         console.log(
             `mounting app preview for ${this.userName} - ${this.projectSlug}`
         )
-
-        if (!this.script) {
-            const payload = {
-                userName: this.userName,
-                projectSlug: this.projectSlug,
-            }
-            await this.$store.dispatch('setProject', payload)
-            await this.$store.dispatch('setAppScript')
-        }
+        this.setScript()
+    },
+    updated() {
+        console.log('updated app route')
     },
     methods: {
         setScript() {
-            console.log('setting local script from state.appScript')
-            this.script = this.appScript
-            this.$store.commit('SET_APP_SCRIPT', null)
+            if (this.appScript) {
+                console.log('setting local script from state.appScript')
+                this.script = this.appScript
+                this.$store.commit('SET_APP_SCRIPT', null)
+            }
         },
     },
 }

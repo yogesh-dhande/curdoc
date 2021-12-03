@@ -2,9 +2,9 @@
     <div class="min-h-screen bg-gray-800">
         <NavBar
             class="sticky top-0 z-50"
-            :class="{ 'shadow-2xl': !view.atTopOfPage }"
+            :class="{ 'shadow-2xl bg-gray-800': !view.atTopOfPage }"
         />
-        <Nuxt :nuxt-child-key="$route.name" keep-alive />
+        <Nuxt keep-alive />
         <AppFooter />
     </div>
 </template>
@@ -30,7 +30,6 @@ export default {
 
     // a beforeMount call to add a listener to the window
     mounted() {
-        console.log(this.$route)
         window.addEventListener('scroll', this.handleScroll)
     },
 

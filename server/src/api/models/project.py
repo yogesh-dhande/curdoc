@@ -55,10 +55,13 @@ class Project(BaseModel):
 
         wait_period = 0.1
         for i in range(1, 151):  # Time out after 15 sec
+            
             with ThreadPoolExecutor() as executor:
                 future = executor.submit(is_server_ready)
                 result = future.result()
                 if result:
                     break
+
             time.sleep(wait_period)
+            
         print(f"Waited {i*wait_period} seconds for Bokeh server to be ready")

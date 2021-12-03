@@ -4,6 +4,7 @@ import threading
 import time
 from contextlib import closing
 from typing import Dict
+from typing import List
 
 import docker
 
@@ -29,7 +30,7 @@ def is_port_in_use(port):
 
 class ContainerSessionBase(object):
 
-    time_out_sec = 3 * 60
+    time_out_sec = 1 * 60
 
     def __init__(self, project_id) -> None:
         self.project_id = project_id
@@ -111,7 +112,7 @@ class ContainerSession(ContainerSessionBase):
                 
 
 class ContainerService(object):
-    container_sessions: Dict[str, ContainerSessionBase] = {}  # project.id to container_session mapping
+    container_sessions: List[ContainerSessionBase] = []  # project.id to container_session mapping
 
     def __init__(self, container_session_type: ContainerSessionBase=ContainerSession) -> None:
         self.container_session_type = container_session_type
@@ -133,28 +134,27 @@ class ContainerService(object):
     def start_container(self, project_id):
         container_session = self.container_session_type(project_id)
         container_session.start()
-        self.container_sessions[project_id] = container_session
+        self.container_sessions.append(container_session)
         return container_session
 
-    def stop_container(self, project_id):  # TODO make this function async
-        if project_id in self.container_sessions:
-            self.get_container_session_for_project(project_id).stop()
-            del self.container_sessions[project_id]
+    def stop_container(self, container_session: ContainerSessionBase):  # TODO make this function async
+        container_session.stop()
+        self.container_sessions.remove(container_session)
 
     def prune_containers(self):  # TODO make this function async
         while True:
             try:
-                for project_id, container_session in self.container_sessions.items():
+                for container_session in self.container_sessions:
                     container_age = time.time() - container_session.last_used
-                    print(f"Container for {project_id} has been running for {container_age} seconds")
+                    print(f"Container for {container_session.project_id} has been running for {container_age} seconds")
                     if container_age > container_session.time_out_sec:
-                        print(f"Stopping container for {project_id}")
-                        self.stop_container(project_id)
+                        print(f"Stopping container for {container_session.project_id}")
+                        self.stop_container(container_session)
             except RuntimeError:
                 # TODO stopping containers changes dict size during iteration, 
                 # fix by first retreiving the list to be stopped
                 pass
-            time.sleep(60)
+            time.sleep(10)
     
     def ensure_container_for_project(self, project_id):
         try:
@@ -167,8 +167,7 @@ class ContainerService(object):
             self.start_container(project_id)
 
     def get_container_session_for_project(self, project_id) -> ContainerSessionBase:
-        self.ensure_container_for_project(project_id)
-        container_session = self.container_sessions[project_id]
+        container_session = self.start_container(project_id)
         container_session.last_used = time.time()
         return container_session
 

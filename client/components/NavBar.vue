@@ -114,7 +114,10 @@
             /> -->
                         </nuxt-link>
                     </div>
-                    <toolbar class="hidden lg:block md:ml-6" />
+                    <toolbar
+                        :project="project"
+                        class="hidden lg:block md:ml-6"
+                    />
                 </div>
 
                 <div class="flex items-center pr-2">
@@ -260,7 +263,7 @@
                 </div>
             </div>
         </div>
-        <toolbar class="lg:hidden" />
+        <toolbar :key="project.id" :project="project" class="lg:hidden" />
     </nav>
 </template>
 
@@ -275,7 +278,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(['currentUser']),
+        ...mapState(['currentUser', 'project']),
     },
     methods: {
         logout() {
