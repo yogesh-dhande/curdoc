@@ -132,6 +132,8 @@ class ContainerService(object):
 
 
     def start_container(self, project_id):
+        if len(self.container_sessions) == len(allowed_ports):
+            self.container_sessions[0].stop()
         container_session = self.container_session_type(project_id)
         container_session.start()
         self.container_sessions.append(container_session)

@@ -24,9 +24,8 @@
                     "
                 >
                     Build and share
-                    <span class="block text-blue-400">
-                        Bokeh applications
-                    </span>
+                    <span class="block text-blue-400"> Bokeh and Panel </span
+                    >applications
                 </h1>
             </div>
             <div class="mt-8 flex justify-center">
@@ -66,7 +65,7 @@
                         "
                         @click="createDemo"
                     >
-                        See Demo
+                        Try a Demo
                     </button>
                 </div>
             </div>
