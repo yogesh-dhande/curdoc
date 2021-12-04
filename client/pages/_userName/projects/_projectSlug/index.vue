@@ -68,7 +68,14 @@ export default {
         }
     },
     computed: {
-        ...mapState(['appScript', 'project']),
+        ...mapState(['appScript', 'project', 'codeChanged']),
+    },
+    watch: {
+        codeChanged(newValue) {
+            if (newValue) {
+                this.script = null
+            }
+        },
     },
     mounted() {
         console.log(
