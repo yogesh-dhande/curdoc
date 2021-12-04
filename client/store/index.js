@@ -137,11 +137,16 @@ export const actions = {
     } catch (error) {
       console.log(error);
     }
+
+    return Promise.all(
+      state.project.blob.map((blob) =>
+        this.$storageRef.child(blob.fullPath).putString(blob.text)
+      )
+    );
   },
 
-  async updateCode({ commit }, payload) {
+  updateCode({ commit }, payload) {
     commit("UPDATE_CODE", payload);
-    await this.$storageRef.child(payload.blob.fullPath).putString(payload.text);
   },
 };
 
