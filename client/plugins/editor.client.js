@@ -36,7 +36,7 @@ function createLanguageClient(connection) {
 }
 
 function connectToMonacoServer() {
-  const webSocket = new WebSocket("ws://localhost:8000");
+  const webSocket = new WebSocket("ws://localhost:8081");
   listen({
     webSocket,
     onConnection: (connection) => {

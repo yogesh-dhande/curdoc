@@ -128,7 +128,7 @@ export const actions = {
   async setAppScript({ state, commit }, query) {
     console.log("getting app script");
     try {
-      const res = await axios.post(`http://localhost:5000/project`, {
+      const res = await axios.post(`http://localhost:5000/backend/project`, {
         project: state.project,
         new: state.codeChanged,
         query,

@@ -30,11 +30,11 @@ async def shutdown_event():
     container_service.stop_all_containers()
 
 
-@app.get("/")
+@app.get("/backend")
 async def root():
     return {"message": "Hello World"}
 
 
-@app.post("/project")
+@app.post("/backend/project")
 async def get_script(session: Session):
     return session.project.get_app_script(session.new, query=session.query)

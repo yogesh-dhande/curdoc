@@ -14,7 +14,7 @@ COPY . .
 
 RUN pip install python-language-server[all]
 
-ENV PORT=3000
+ENV PORT=8081
 EXPOSE $PORT
 
 ARG USER=lsp

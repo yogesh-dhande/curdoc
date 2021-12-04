@@ -111,7 +111,7 @@ class ContainerService(object):
             free_up_port(port)
 
     def stop_container_sessions(self, container_sessions: List[ContainerSessionBase]=None):
-        container_sessions = container_sessions if container_sessions else self.container_sessions.values()
+        container_sessions = container_sessions if container_sessions else []
         for container_session in container_sessions:
             self.stop_container(container_session)
 
