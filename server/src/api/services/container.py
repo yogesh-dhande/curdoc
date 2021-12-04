@@ -1,4 +1,3 @@
-import os
 import socket
 import subprocess
 import threading
@@ -26,9 +25,11 @@ def is_port_in_use(port):
         return s.connect_ex(('0.0.0.0', port)) == 0
 
 def free_up_port(port):
-    ps = subprocess.Popen(["lsof", "-ti", f"tcp:{port}"], stdout=subprocess.PIPE)
-    subprocess.check_output(['xargs', 'kill'], stdin=ps.stdout)
-    ps.wait()
+    print(f"killing process on port {port}")
+    proc1 = subprocess.Popen(["lsof", "-ti", f"tcp:{port}"], stdout=subprocess.PIPE)
+    proc2 = subprocess.Popen(['xargs', 'kill'], stdin=proc1.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc1.stdout.close() # Allow proc1 to receive a SIGPIPE if proc2 exits.
+    proc2.communicate()
 
 class ContainerSessionBase(object):
 
