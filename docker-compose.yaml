@@ -5,21 +5,13 @@ services:
     stdin_open: true
     tty: true
     ports:
-      - "8081:8081"
+      - "8081:8080"
     volumes:
       - /app/node_modules
       - /Users/yogesh/projects/bokeh-play/lsp:/app
-  # emulators:
-  #   build:
-  #     context: client
-  #     dockerfile: Dockerfile-emulators
-  #   ports:
-  #     - "10000-10004"
-  #   volumes:
-  #     - /app/node_modules
-  #     - /Users/yogesh/projects/bokeh-play/client:/app
   client:
-    build: client
+    build:
+      context: client
     stdin_open: true
     tty: true
     ports:
@@ -28,14 +20,15 @@ services:
       - /app/node_modules
       - /Users/yogesh/projects/bokeh-play/client:/app
     environment:
-      - VUE_APP_BACKEND_URL=http://localhost:5000
+      - NUXT_APP_BACKEND_URL=http://localhost:5000/backend
+      - NUXT_APP_LSP_URL=ws://localhost:8081
   server:
     build: server
     stdin_open: true
     tty: true
     ports:
       - "8000:8000"
-      - "5000:5000"
+      - "5000:8080"
       - "5001:5001"
       - "5002:5002"
       - "5003:5003"
@@ -50,3 +43,12 @@ services:
       - /Users/yogesh/projects/bokeh-play/server:/app
     environment:
       PROJECTS_DIR: /projects
+  # emulators:
+  #   build:
+  #     context: client
+  #     dockerfile: Dockerfile-emulators
+  #   ports:
+  #     - "10000-10004"
+  #   volumes:
+  #     - /app/node_modules
+  #     - /Users/yogesh/projects/bokeh-play/client:/app

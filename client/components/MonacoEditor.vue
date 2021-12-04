@@ -34,7 +34,7 @@ export default {
     },
     mounted() {
         console.log('mounting monaco editor')
-        this.$editor.initialize(this.$el)
+        this.$editor.initialize(this.$el, this.$config.lspUrl)
         this.$editor.setModel(this.blob.fullPath, this.blob.text, !this.canEdit)
         this.$editor.setCallback(this.updateCode)
     },

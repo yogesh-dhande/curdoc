@@ -12,7 +12,8 @@ COPY environment.yaml* /tmp/conda-tmp/
 RUN /opt/conda/bin/conda env update -n base -f /tmp/conda-tmp/environment.yaml \
     && rm -rf /tmp/conda-tmp
 
-ENV PORT=5000
+ARG PORT=8080
+ENV PORT=$PORT
 EXPOSE $PORT
 
 ARG USER=server

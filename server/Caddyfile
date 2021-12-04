@@ -1,5 +1,5 @@
 
-:5000 {
+:8080 {
     handle /5001/* {
         reverse_proxy http://localhost:5001
     }

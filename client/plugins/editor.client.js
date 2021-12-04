@@ -35,8 +35,8 @@ function createLanguageClient(connection) {
   });
 }
 
-function connectToMonacoServer() {
-  const webSocket = new WebSocket("ws://localhost:8081");
+function connectToMonacoServer(url) {
+  const webSocket = new WebSocket(url);
   listen({
     webSocket,
     onConnection: (connection) => {
@@ -58,7 +58,7 @@ let currentModel = {};
 let editorModels = {};
 
 const editorService = {
-  initialize(el) {
+  initialize(el, url) {
     if (!_editor) {
       console.log("creating editor");
       const editor = monaco.editor.create(el, {
@@ -71,7 +71,7 @@ const editorService = {
         automaticLayout: true,
       });
       MonacoServices.install(monaco);
-      connectToMonacoServer();
+      connectToMonacoServer(url);
       _editor = editor;
       editorModels = {};
     }
