@@ -1,16 +1,13 @@
 import os
 import socket
+import subprocess
 import threading
 import time
 from contextlib import closing
 from typing import Dict
 from typing import List
 
-import docker
-from models import project
-
 allowed_ports = range(5001, 5010)
-client = docker.from_env()
 
 
 def get_container_name_for_port(port):
@@ -28,6 +25,10 @@ def is_port_in_use(port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         return s.connect_ex(('0.0.0.0', port)) == 0
 
+def free_up_port(port):
+    ps = subprocess.Popen(["lsof", "-ti", f"tcp:{port}"], stdout=subprocess.PIPE)
+    subprocess.check_output(['xargs', 'kill'], stdin=ps.stdout)
+    ps.wait()
 
 class ContainerSessionBase(object):
 
@@ -40,7 +41,7 @@ class ContainerSessionBase(object):
         self.container = None
         self.port = None
 
-    def start(self):
+    def start(self, port):
         raise NotImplementedError
 
     def stop(self):
@@ -49,66 +50,39 @@ class ContainerSessionBase(object):
     def is_container_running(self):
         raise NotImplementedError
 
-    def _get_app_script(self):
-        raise NotImplementedError
-
-
-class MockContainerSession(ContainerSessionBase):
-    time_out_sec = 1
-
-    def start(self):
-        pass
-
-    def stop(self):
-        pass
-
-    def is_container_running(self):
-        return True
-
-
-class ContainerSession(ContainerSessionBase):
+class SubprocessContainerSession(ContainerSessionBase):
 
     def start(self, port):
+        # TODO need to know if bokeh server process ends
         container_name =  get_container_name_for_port(port)
-        self.container = client.containers.run(
-            name=container_name,
-            image=os.environ.get("SANDBOX_IMAGE"),
-            detach=True,
-            remove=True,
-            ports={5006: port},
-            network="bokeh-play_default",
-            volumes={
-                os.path.join(os.environ.get("PROJECTS_DIR"), self.project_id): {
-                    "bind": f"/app/workspace/{self.project_id}",
-                    "mode": "ro"
-                }
-            },
-            environment={
-                "PROJECT_ID": self.project_id
-            }
+        process = subprocess.Popen(
+            ["bash", "src/sandbox/start.sh", self.project_id, f"{port}"], 
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE
         )
+
+        while process.poll() is None:
+            time.sleep(0.1)
+        
+        if process.returncode != 0:
+            raise RuntimeError
+
         self.port = port
         self.container_name = container_name
         print(f"Started bokeh server on port {port} for {self.project_id}")
 
+    
     def stop(self):
-        if self.container:
-            print(f"Stopping container for {self.project_id}")
-            self.container.stop()
+        free_up_port(self.port)
 
     def is_container_running(self):
-        try:
-            client.containers.get(self.container_name)
-            return True
-        except Exception as e:
-            print(str(e))
-            return False
-                
+        print(f"Port {self.port} in use: {is_port_in_use(self.port)}")
+        return is_port_in_use(self.port)
 
 class ContainerService(object):
     container_sessions: Dict[int, ContainerSessionBase] = {}  # port to container_session mapping
 
-    def __init__(self, container_session_type: ContainerSessionBase=ContainerSession) -> None:
+    def __init__(self, container_session_type: ContainerSessionBase=SubprocessContainerSession) -> None:
         self.container_session_type = container_session_type
         thread = threading.Thread(target=self.prune_containers, daemon=True)
         thread.start()
@@ -133,11 +107,7 @@ class ContainerService(object):
 
     def stop_all_containers(self):
         for port in allowed_ports:
-            container_name = get_container_name_for_port(port)
-            try:
-                client.containers.get(container_name).stop()
-            except Exception as e:
-                pass
+            free_up_port(port)
 
     def stop_container_sessions(self, container_sessions: List[ContainerSessionBase]=None):
         container_sessions = container_sessions if container_sessions else self.container_sessions.values()
@@ -154,6 +124,7 @@ class ContainerService(object):
         for port in self.available_ports:
             try:
                 container_session.start(port)
+                print(f"adding container session port {container_session.port} to the dict")
                 self.container_sessions[container_session.port] = container_session
                 return container_session
                 

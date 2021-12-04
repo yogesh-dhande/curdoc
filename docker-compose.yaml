@@ -35,13 +35,17 @@ services:
     tty: true
     ports:
       - "5000:5000"
-      - "5001-5010"
+      - "5001:5001"
+      - "5002:5002"
+      - "5003:5003"
+      - "5004:5004"
+      - "5005:5005"
+      - "5006:5006"
+      - "5007:5007"
+      - "5008:5008"
+      - "5009:5009"
+      - "5010:5010"
     volumes:
       - /Users/yogesh/projects/bokeh-play/server:/app
-      - projects:/app/projects
-      - /Users/yogesh/projects/bokeh-play/server/projects:/projects
-      - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      PROJECTS_DIR: /Users/yogesh/projects/bokeh-play/server/projects
-volumes:
-  projects:
+      PROJECTS_DIR: /projects

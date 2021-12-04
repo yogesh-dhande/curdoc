@@ -1,37 +1,28 @@
 
-FROM python:3.8-buster
+FROM continuumio/anaconda3
 
-RUN apt-get update -y
-RUN apt-get install -y python-pip python-dev build-essential
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | tee /etc/apt/trusted.gpg.d/caddy-stable.asc \
+    && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list \
+    && apt update \
+    && apt install caddy
+    
+RUN apt-get install lsof
 
-RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] \
-    http://packages.cloud.google.com/apt cloud-sdk main" \
-    | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
-    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg \
-    | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - \
-    && apt-get update -y && apt-get install google-cloud-sdk -y \
-    && pip uninstall crcmod && pip install --no-cache-dir -U crcmod
-
-
-RUN curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh
-
-WORKDIR /app
-
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-COPY . .
+COPY environment.yaml* /tmp/conda-tmp/
+RUN /opt/conda/bin/conda env update -n base -f /tmp/conda-tmp/environment.yaml \
+    && rm -rf /tmp/conda-tmp
 
 ENV PORT=5000
 EXPOSE $PORT
 
-ENV SANDBOX_IMAGE=bokeh_play_sandbox
-
 ARG USER=server
-RUN useradd -s /bin/bash -m ${USER} -u 1000 -g 999 \
+RUN useradd -s /bin/bash -m ${USER} -u 1000 \
     && mkdir -p /projects && chown -R 1000 /projects
 
-# USER ${USER}
+USER ${USER}
 
+WORKDIR /app
+
+COPY . .
 
 CMD ["/bin/bash", "src/scripts/run.sh"]

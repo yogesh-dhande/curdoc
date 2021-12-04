@@ -41,7 +41,7 @@ class Project(BaseModel):
         return server_document(url=app_url, arguments=query)
 
     def wait_for_server_to_be_ready(self, container_session):
-        url = f"http://sandbox{container_session.port}:5006/{self.id}"
+        url =  f"http://localhost:{container_session.port}/{self.id}"
 
         def is_server_ready():
             try:
