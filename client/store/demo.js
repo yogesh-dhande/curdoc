@@ -1,4 +1,4 @@
-export const starterCode = `
+export const starterBokehCode = `
 from random import random
 
 from bokeh.layouts import column
@@ -43,11 +43,38 @@ button.on_click(callback)
 curdoc().add_root(column(button, p))
 `;
 
+export const starterPanelCode = `
+# Source: https://panel.holoviz.org/user_guide/APIs.html
+import hvplot.pandas
+import panel as pn
+from bokeh.sampledata.autompg import autompg
+import param
+
+columns = list(autompg.columns[:-2])
+
+def autompg_plot(x='mpg', y='hp', color='#058805'):
+    return autompg.hvplot.scatter(x, y, c=color, padding=0.1)
+
+
+class MPGExplorer(param.Parameterized):
+
+    x = param.Selector(objects=columns)
+    y = param.Selector(default='hp', objects=columns)
+    color = param.Color(default='#0f0f0f')
+    
+    @param.depends('x', 'y', 'color') # optional in this case
+    def plot(self):
+        return autompg_plot(self.x, self.y, self.color)
+
+explorer = MPGExplorer()
+
+pn.Row(explorer.param, explorer.plot).servable()
+`;
+
 function generateId() {
   return Math.random().toString(16).slice(2);
 }
 
-const demoProjectId = generateId();
 const demoUserId = generateId();
 
 const demoUser = {
@@ -55,20 +82,38 @@ const demoUser = {
   name: "guest",
 };
 
-const demoProject = {
-  id: demoProjectId,
-  slug: "demo",
+const bokehProjectId = generateId();
+
+const bokehProject = {
+  id: bokehProjectId,
+  slug: "bokeh",
   user: demoUser,
   blob: [
     {
-      fullPath: `${demoUserId}/projects/${demoProjectId}/main.py`,
+      fullPath: `${demoUserId}/projects/${bokehProjectId}/main.py`,
       relativePath: "main.py",
-      text: starterCode,
+      text: starterBokehCode,
     },
   ],
 };
 
-export const demo = {
+const panelProjectId = generateId();
+
+const panelProject = {
+  id: panelProjectId,
+  slug: "panel",
   user: demoUser,
-  project: demoProject,
+  blob: [
+    {
+      fullPath: `${demoUserId}/projects/${panelProjectId}/main.py`,
+      relativePath: "main.py",
+      text: starterPanelCode,
+    },
+  ],
+};
+
+export const demos = {
+  bokeh: bokehProject,
+  panel: panelProject,
+  user: demoUser,
 };

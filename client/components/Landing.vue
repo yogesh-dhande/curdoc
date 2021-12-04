@@ -63,9 +63,28 @@
                             hover:bg-blue-300
                             md:py-4 md:text-lg md:px-10
                         "
-                        @click="createDemo"
+                        @click="() => createDemo('bokeh')"
                     >
-                        Try a Demo
+                        Try Bokeh Demo
+                    </button>
+                </div>
+                <div class="ml-3 inline-flex">
+                    <button
+                        class="
+                            w-full
+                            px-8
+                            py-3
+                            border border-transparent
+                            font-bold
+                            rounded-md
+                            text-blue-700
+                            bg-blue-100
+                            hover:bg-blue-300
+                            md:py-4 md:text-lg md:px-10
+                        "
+                        @click="() => createDemo('panel')"
+                    >
+                        Try Panel Demo
                     </button>
                 </div>
             </div>
@@ -81,14 +100,15 @@
 </template>
 
 <script>
-import { demo } from '@/store/demo'
+import { demos } from '@/store/demo'
 export default {
     methods: {
-        createDemo() {
-            this.$store.commit('SET_PROJECT', demo.project)
-            this.$store.commit('SET_USER', demo.user)
+        createDemo(name) {
+            this.$store.commit('SET_PROJECT', demos[name])
+            this.$store.commit('SET_USER', demos.user)
+            this.$store.commit('SET_CODE_CHANGED', true)
             this.$router.push(
-                `/${demo.user.name}/projects/${demo.project.slug}`
+                `/${demos.user.name}/projects/${demos[name].slug}/code`
             )
         },
     },

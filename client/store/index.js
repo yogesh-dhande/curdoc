@@ -1,5 +1,5 @@
 import * as axios from "axios";
-import { starterCode } from "./demo";
+import { starterBokehCode } from "./demo";
 
 export const state = () => ({
   authUserId: null,
@@ -19,7 +19,7 @@ export const state = () => ({
       {
         fullPath: "initialPath",
         relativePath: "app/main.py",
-        text: starterCode,
+        text: starterBokehCode,
       },
     ],
   },
@@ -81,7 +81,7 @@ export const actions = {
       fullPath: `${state.currentUser.id}/projects/${projectRef.id}/${relativePath}`,
     };
 
-    await this.$storageRef.child(blob.fullPath).putString(starterCode);
+    await this.$storageRef.child(blob.fullPath).putString(starterBokehCode);
 
     const project = {
       id: projectRef.id,
@@ -182,5 +182,8 @@ export const mutations = {
       }
     }
     state.codeChanged = true;
+  },
+  SET_CODE_CHANGED(state, codeChanged) {
+    state.codeChanged = codeChanged;
   },
 };
