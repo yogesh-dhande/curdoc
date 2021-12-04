@@ -31,7 +31,7 @@ def is_port_in_use(port):
 
 class ContainerSessionBase(object):
 
-    time_out_sec = 1 * 60
+    time_out_sec = 3 * 60
 
     def __init__(self, project_id) -> None:
         self.project_id = project_id
@@ -132,9 +132,17 @@ class ContainerService(object):
             return container_sessions[0]
 
     def stop_all_containers(self):
-        for container_session in self.container_sessions.values():
-            container_session.stop()
+        for port in allowed_ports:
+            container_name = get_container_name_for_port(port)
+            try:
+                client.containers.get(container_name).stop()
+            except Exception as e:
+                pass
 
+    def stop_container_sessions(self, container_sessions: List[ContainerSessionBase]=None):
+        container_sessions = container_sessions if container_sessions else self.container_sessions.values()
+        for container_session in container_sessions:
+            self.stop_container(container_session)
 
     def start_container(self, project_id):
         if len(self.container_sessions) == len(allowed_ports):
@@ -162,15 +170,14 @@ class ContainerService(object):
     def prune_containers(self):  # TODO make this function async
         while True:
             try:
-                for port, container_session in self.container_sessions.items():
-                    container_age = time.time() - container_session.last_used
-                    print(f"Container for {container_session.project_id} has been running for {container_age} seconds on port {port}")
-                    if container_age > container_session.time_out_sec:
-                        self.stop_container(container_session)
+                stale_container_sessions = [
+                    container_session for container_session in self.container_sessions.values()
+                    if time.time() - container_session.last_used > container_session.time_out_sec
+                    ]
+                self.stop_container_sessions(stale_container_sessions)
             except RuntimeError:
-                # TODO stopping containers changes dict size during iteration, 
-                # fix by first retreiving the list to be stopped
                 pass
+            
             time.sleep(10)
     
     def ensure_container_for_project(self, project_id: str) -> ContainerSessionBase:

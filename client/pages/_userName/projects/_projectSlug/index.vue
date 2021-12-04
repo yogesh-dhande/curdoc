@@ -52,10 +52,10 @@ export default {
             context.store.state.project.user.name !== returnData.userName
         ) {
             await context.store.dispatch('setProject', returnData)
-            await context.store.dispatch('setAppScript')
+            await context.store.dispatch('setAppScript', context.query)
         } else if (context.store.state.codeChanged) {
             console.log('code was changed. getting new script tag')
-            await context.store.dispatch('setAppScript')
+            await context.store.dispatch('setAppScript', context.query)
         }
         return returnData
     },

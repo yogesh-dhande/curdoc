@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from fastapi import Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from models.session import Session
@@ -37,6 +36,5 @@ async def root():
 
 
 @app.post("/project")
-async def get_script(session: Session, request: Request):
-    print(request.client)
-    return session.project.get_app_script(session.new)
+async def get_script(session: Session):
+    return session.project.get_app_script(session.new, query=session.query)

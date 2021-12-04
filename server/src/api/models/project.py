@@ -4,7 +4,6 @@ from typing import List
 from typing import Optional
 
 import requests
-from bokeh.client.session import pull_session
 from bokeh.embed.server import server_document
 from pydantic import BaseModel
 from services.container import container_service
@@ -14,7 +13,6 @@ from models.user import User
 
 with open("src/api/resources/default.py", "r") as file:
     STARTER_CODE = file.read()
-
 
 class Project(BaseModel):
     id: str
@@ -34,13 +32,13 @@ class Project(BaseModel):
         for blob in self.blob:
             blob.ensure_locally(self.id, overwrite=overwrite)
 
-    def get_app_script(self, new=False) -> Optional[str]:
+    def get_app_script(self, new=False, query=None) -> Optional[str]:
         self.ensure_locally(overwrite=new)
         container_session = container_service.get_container_session_for_project(self.id, new=new)
         self.wait_for_server_to_be_ready(container_session)
-
         app_url = f"http://localhost:{container_session.port}/{self.id}"
-        return server_document(arguments={"project": self.id}, url=app_url)
+        
+        return server_document(url=app_url, arguments=query)
 
     def wait_for_server_to_be_ready(self, container_session):
         url = f"http://sandbox{container_session.port}:5006/{self.id}"
