@@ -7,6 +7,7 @@ from typing import Dict
 from typing import List
 
 import docker
+from models import project
 
 allowed_ports = range(5001, 5010)
 client = docker.from_env()
@@ -66,40 +67,33 @@ class MockContainerSession(ContainerSessionBase):
 
 
 class ContainerSession(ContainerSessionBase):
-    
-    def start(self):
-        print(f"starting bokeh container for {self.project_id}")
-        for p in allowed_ports:
-            container_name =  get_container_name_for_port(p)
-            try:
-                self.container = client.containers.run(
-                    name=container_name,
-                    image=os.environ.get("SANDBOX_IMAGE"),
-                    detach=True,
-                    remove=True,
-                    ports={5006: p},
-                    network="bokeh-play_default",
-                    volumes={
-                        os.path.join(os.environ.get("PROJECTS_DIR"), self.project_id): {
-                            "bind": f"/app/workspace/{self.project_id}",
-                            "mode": "ro"
-                        }
-                    },
-                    environment={
-                        "PROJECT_ID": self.project_id
-                    }
-                )
-                print(f"Started bokeh server on port {p} for {self.project_id}")
-                self.port = p
-                self.container_name = container_name
-                return
 
-            except Exception as e:
-                # Container name or port is already in use.
-                print(str(e))
+    def start(self, port):
+        container_name =  get_container_name_for_port(port)
+        self.container = client.containers.run(
+            name=container_name,
+            image=os.environ.get("SANDBOX_IMAGE"),
+            detach=True,
+            remove=True,
+            ports={5006: port},
+            network="bokeh-play_default",
+            volumes={
+                os.path.join(os.environ.get("PROJECTS_DIR"), self.project_id): {
+                    "bind": f"/app/workspace/{self.project_id}",
+                    "mode": "ro"
+                }
+            },
+            environment={
+                "PROJECT_ID": self.project_id
+            }
+        )
+        self.port = port
+        self.container_name = container_name
+        print(f"Started bokeh server on port {port} for {self.project_id}")
 
     def stop(self):
         if self.container:
+            print(f"Stopping container for {self.project_id}")
             self.container.stop()
 
     def is_container_running(self):
@@ -119,6 +113,10 @@ class ContainerService(object):
         thread = threading.Thread(target=self.prune_containers, daemon=True)
         thread.start()
 
+    @property
+    def available_ports(self):
+        return [port for port in allowed_ports if port not in self.container_sessions]
+
     def get_oldest_container_session(self):
         container_sessions = sorted(self.container_sessions.values(), key=lambda session: session.last_used)
         if container_sessions:
@@ -134,23 +132,27 @@ class ContainerService(object):
             return container_sessions[0]
 
     def stop_all_containers(self):
-        for port in allowed_ports:
-            container_name = get_container_name_for_port(port)
-            try:
-                container = client.containers.get(container_name)
-                print(container.name)
-                container.stop()
-            except Exception as e:
-                print(str(e))
+        for container_session in self.container_sessions.values():
+            container_session.stop()
 
 
     def start_container(self, project_id):
         if len(self.container_sessions) == len(allowed_ports):
             self.get_oldest_container_session().stop()
 
-        container_session = self.container_session_type(project_id)
-        container_session.start()
-        self.container_sessions[container_session.port] = container_session
+        print(f"starting bokeh container for {project_id}")
+        container_session: ContainerSessionBase = self.container_session_type(project_id)
+        
+        for port in self.available_ports:
+            try:
+                container_session.start(port)
+                self.container_sessions[container_session.port] = container_session
+                return container_session
+                
+            except Exception as e:
+                # Container name or port is already in use.
+                print(str(e))
+
         return container_session
 
     def stop_container(self, container_session: ContainerSessionBase):  # TODO make this function async
@@ -164,7 +166,6 @@ class ContainerService(object):
                     container_age = time.time() - container_session.last_used
                     print(f"Container for {container_session.project_id} has been running for {container_age} seconds on port {port}")
                     if container_age > container_session.time_out_sec:
-                        print(f"Stopping container for {container_session.project_id}")
                         self.stop_container(container_session)
             except RuntimeError:
                 # TODO stopping containers changes dict size during iteration, 
