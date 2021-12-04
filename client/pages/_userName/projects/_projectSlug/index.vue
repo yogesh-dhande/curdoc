@@ -20,7 +20,7 @@ export default {
         next((vm) => {
             setTimeout(() => {
                 vm.setScript()
-            }, 500) // let the DOM load
+            }, 1000) // let the DOM load
             vm.scriptWatcher = vm.$watch('appScript', () => {
                 vm.setScript()
                 if (vm.scriptWatcher) {
@@ -52,12 +52,10 @@ export default {
             context.store.state.project.user.name !== returnData.userName
         ) {
             await context.store.dispatch('setProject', returnData)
-        }
-
-        if (context.store.state.codeChanged) {
+            await context.store.dispatch('setAppScript')
+        } else if (context.store.state.codeChanged) {
             console.log('code was changed. getting new script tag')
             await context.store.dispatch('setAppScript')
-            returnData.script = null
         }
         return returnData
     },

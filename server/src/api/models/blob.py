@@ -23,5 +23,6 @@ class Blob(BaseModel):
     def exists_locally(self, project_id) -> bool:
         return storage_service.does_blob_exist_locally(project_id, self.relativePath)
 
-    def ensure_locally(self, project_id) -> None:
-        self.save(project_id)
+    def ensure_locally(self, project_id, overwrite=False) -> None:
+        if overwrite or not self.exists_locally(project_id):
+            self.save(project_id)

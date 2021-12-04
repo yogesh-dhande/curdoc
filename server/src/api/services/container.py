@@ -112,14 +112,27 @@ class ContainerSession(ContainerSessionBase):
                 
 
 class ContainerService(object):
-    container_sessions: List[ContainerSessionBase] = []  # project.id to container_session mapping
+    container_sessions: Dict[int, ContainerSessionBase] = {}  # port to container_session mapping
 
     def __init__(self, container_session_type: ContainerSessionBase=ContainerSession) -> None:
         self.container_session_type = container_session_type
         thread = threading.Thread(target=self.prune_containers, daemon=True)
         thread.start()
 
-    
+    def get_oldest_container_session(self):
+        container_sessions = sorted(self.container_sessions.values(), key=lambda session: session.last_used)
+        if container_sessions:
+            return container_sessions[0]
+
+    def get_recent_container_session_for_project(self, project_id):
+        # Return the most recent container
+        container_sessions = sorted([
+                container_session for container_session in self.container_sessions.values() 
+                if container_session.project_id == project_id
+            ], key=lambda session: session.last_used, reverse=True)
+        if container_sessions:
+            return container_sessions[0]
+
     def stop_all_containers(self):
         for port in allowed_ports:
             container_name = get_container_name_for_port(port)
@@ -133,22 +146,23 @@ class ContainerService(object):
 
     def start_container(self, project_id):
         if len(self.container_sessions) == len(allowed_ports):
-            self.container_sessions[0].stop()
+            self.get_oldest_container_session().stop()
+
         container_session = self.container_session_type(project_id)
         container_session.start()
-        self.container_sessions.append(container_session)
+        self.container_sessions[container_session.port] = container_session
         return container_session
 
     def stop_container(self, container_session: ContainerSessionBase):  # TODO make this function async
         container_session.stop()
-        self.container_sessions.remove(container_session)
+        del self.container_sessions[container_session.port]
 
     def prune_containers(self):  # TODO make this function async
         while True:
             try:
-                for container_session in self.container_sessions:
+                for port, container_session in self.container_sessions.items():
                     container_age = time.time() - container_session.last_used
-                    print(f"Container for {container_session.project_id} has been running for {container_age} seconds")
+                    print(f"Container for {container_session.project_id} has been running for {container_age} seconds on port {port}")
                     if container_age > container_session.time_out_sec:
                         print(f"Stopping container for {container_session.project_id}")
                         self.stop_container(container_session)
@@ -158,18 +172,26 @@ class ContainerService(object):
                 pass
             time.sleep(10)
     
-    def ensure_container_for_project(self, project_id):
+    def ensure_container_for_project(self, project_id: str) -> ContainerSessionBase:
         try:
-            container_session = self.container_sessions[project_id]
-            if not container_session.is_container_running():
-                print(f"container for {project_id} named {container_session.container_name} was not running")
-                self.container_sessions.pop(project_id)
-                raise KeyError
-        except KeyError:
-            self.start_container(project_id)
+            container_session = self.get_recent_container_session_for_project(project_id)
+            if container_session:
+                if container_session.is_container_running():
+                    return container_session
+                else:
+                    print(f"No running container session found for {project_id}")
+                    del self.container_sessions[container_session.port]
+            raise IndexError
 
-    def get_container_session_for_project(self, project_id) -> ContainerSessionBase:
-        container_session = self.start_container(project_id)
+        except IndexError:
+            return self.start_container(project_id)
+
+    def get_container_session_for_project(self, project_id, new=False) -> ContainerSessionBase:
+        if new:
+            container_session = self.start_container(project_id)
+        else:
+            container_session = self.ensure_container_for_project(project_id)
+
         container_session.last_used = time.time()
         return container_session
 

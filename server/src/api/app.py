@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi import Request
 from fastapi.middleware.cors import CORSMiddleware
 
-from models.project import Project
+from models.session import Session
 from services.container import container_service
 
 # from services.validation import register_exception_handlers
@@ -37,6 +37,6 @@ async def root():
 
 
 @app.post("/project")
-async def get_script(project: Project, request: Request):
+async def get_script(session: Session, request: Request):
     print(request.client)
-    return project.get_app_script()
+    return session.project.get_app_script(session.new)

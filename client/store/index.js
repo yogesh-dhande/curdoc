@@ -128,10 +128,10 @@ export const actions = {
   async setAppScript({ state, commit }) {
     console.log("getting app script");
     try {
-      const res = await axios.post(
-        `http://localhost:5000/project`,
-        state.project
-      );
+      const res = await axios.post(`http://localhost:5000/project`, {
+        project: state.project,
+        new: state.codeChanged,
+      });
       console.log(res.data);
       commit("SET_APP_SCRIPT", res.data);
     } catch (error) {
@@ -169,7 +169,6 @@ export const mutations = {
   SET_PROJECT(state, project) {
     console.log(`setting project`);
     state.project = project;
-    state.codeChanged = true;
   },
   SET_APP_SCRIPT(state, script) {
     state.appScript = script;

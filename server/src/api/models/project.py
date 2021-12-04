@@ -30,13 +30,13 @@ class Project(BaseModel):
     def update_blob(self, blob: Blob):
         blob.save(self.id)
 
-    def ensure_locally(self) -> None:
+    def ensure_locally(self, overwrite=False) -> None:
         for blob in self.blob:
-            blob.ensure_locally(self.id)
+            blob.ensure_locally(self.id, overwrite=overwrite)
 
-    def get_app_script(self) -> Optional[str]:
-        self.ensure_locally()
-        container_session = container_service.get_container_session_for_project(self.id)
+    def get_app_script(self, new=False) -> Optional[str]:
+        self.ensure_locally(overwrite=new)
+        container_session = container_service.get_container_session_for_project(self.id, new=new)
         self.wait_for_server_to_be_ready(container_session)
 
         app_url = f"http://localhost:{container_session.port}/{self.id}"
