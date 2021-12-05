@@ -1,0 +1,14 @@
+:8080 {
+    handle /sandbox/* {
+        reverse_proxy sandbox:8080
+    }
+    handle /lsp/* {
+        reverse_proxy lsp:8080
+    }
+
+    handle * {
+        reverse_proxy client:8080
+    }
+
+    file_server
+}

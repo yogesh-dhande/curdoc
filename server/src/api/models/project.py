@@ -37,12 +37,15 @@ class Project(BaseModel):
         self.ensure_locally(overwrite=new)
         container_session = container_service.get_container_session_for_project(self.id, new=new)
         self.wait_for_server_to_be_ready(container_session)
-        app_url = f"http://localhost:5000/{container_session.port}/{self.id}"
-        
+
+        # External link to the app
+        app_url = f"http://localhost:8080/sandbox/{container_session.port}/{self.id}"
+
         return server_document(url=app_url, arguments=query)
 
     def wait_for_server_to_be_ready(self, container_session: ContainerSessionBase):
-        url =  f"http://localhost:{container_session.port}/{container_session.port}/{self.id}"
+        # Internal link to the app
+        url =  f"http://localhost:{container_session.port}/sandbox/{container_session.port}/{self.id}"
 
         def is_server_ready():
             try:

@@ -1,50 +1,46 @@
 
 :8080 {
-    handle /5001/* {
+    handle /sandbox/5001/* {
         reverse_proxy http://localhost:5001
     }
 
-    handle /5002/* {
+    handle /sandbox/5002/* {
         reverse_proxy http://localhost:5002
     }
 
-    handle /5003/* {
+    handle /sandbox/5003/* {
         reverse_proxy http://localhost:5003
     }
 
-    handle /5004/* {
+    handle /sandbox/5004/* {
         reverse_proxy http://localhost:5004
     }
 
-    handle /5005/* {
+    handle /sandbox/5005/* {
         reverse_proxy http://localhost:5005
     }
 
-    handle /5006/* {
+    handle /sandbox/5006/* {
         reverse_proxy http://localhost:5006
     }
 
-    handle /5007/* {
+    handle /sandbox/5007/* {
         reverse_proxy http://localhost:5007
     }
 
-    handle /5008/* {
+    handle /sandbox/5008/* {
         reverse_proxy http://localhost:5008
     }
 
-    handle /5009/* {
+    handle /sandbox/5009/* {
         reverse_proxy http://localhost:5009
     }
 
-    handle /5010/* {
+    handle /sandbox/5010/* {
         reverse_proxy http://localhost:5010
     }
 
-    handle_path /test {
-        respond "test"
-    }
-
-    handle /backend/* {
+    handle /sandbox/* {
         reverse_proxy http://localhost:8000
     }
 

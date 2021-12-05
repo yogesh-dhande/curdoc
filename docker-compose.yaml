@@ -1,5 +1,9 @@
 version: "3.8"
 services:
+  caddy:
+    build: .
+    ports:
+      - "8080:8080"
   lsp:
     build: lsp
     stdin_open: true
@@ -15,17 +19,18 @@ services:
     stdin_open: true
     tty: true
     ports:
-      - "8080:8080"
+      - "8082:8080"
     volumes:
       - /app/node_modules
       - /Users/yogesh/projects/bokeh-play/client:/app
     environment:
-      - NUXT_APP_BACKEND_URL=http://localhost:5000/backend
+      - NUXT_APP_BACKEND_URL=http://localhost:8080/sandbox
       - NUXT_APP_LSP_URL=ws://localhost:8081
-  server:
+  sandbox:
     build: server
     stdin_open: true
     tty: true
+    restart: always
     ports:
       - "8000:8000"
       - "5000:8080"
