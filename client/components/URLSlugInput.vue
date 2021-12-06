@@ -5,13 +5,21 @@
         </label>
         <div class="flex rounded-md shadow-sm">
             <span
-                class="inline-flex items-center px-3 rounded-l-md bg-gray-900"
+                class="inline-flex items-center px-3 rounded-l-md bg-gray-700"
             >
                 {{ prefix }}
             </span>
             <input
                 type="text"
-                class="focus:ring-gray-500 focus:border-gray-500 flex-1 block w-full rounded-none rounded-r-md bg-gray-700 bg-opacity-25 p-2"
+                class="
+                    focus:ring-gray-500 focus:border-gray-500
+                    flex-1
+                    block
+                    w-full
+                    rounded-none rounded-r-md
+                    bg-gray-700 bg-opacity-25
+                    p-2
+                "
                 :placeholder="value"
                 :value="value"
                 @input="handleInput"

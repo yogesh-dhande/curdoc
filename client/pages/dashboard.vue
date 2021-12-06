@@ -1,36 +1,78 @@
 <template>
-    <div
-        class="
-            max-w-2xl
-            mx-auto
-            px-2
-            lg:px-12
-            py-2
-            lg:py-12
-            text-blue-100
-            bg-gray-800
-            min-h-screen
-        "
-    >
-        <create-project class="shadow-2xl p-2"></create-project>
-        <card class="flex flex-col space-y-4 px-12 py-8 rounded justify-center">
-            <div
+    <div class="max-w-lg mx-auto">
+        <div
+            class="
+                py-2
+                mx-2
+                lg:py-4
+                text-blue-100
+                bg-gray-800
+                min-h-screen
+                flex flex-col
+                space-y-4
+            "
+        >
+            <div class="px-4 py-5 border-b border-blue-200 sm:px-6">
+                <h3
+                    class="
+                        text-xl
+                        sm:text-2xl
+                        lg:text-4xl
+                        leading-6
+                        font-bold
+                        text-blue-300
+                    "
+                >
+                    Projects
+                </h3>
+            </div>
+            <create-project class="shadow-2xl"></create-project>
+            <card
                 v-for="(project, projectId) in currentUser.projects"
                 :key="projectId"
-                class="flex space-x-4"
+                class="
+                    px-2
+                    sm:px-6
+                    py-2
+                    rounded
+                    shadow
+                    bg-gray-900
+                    text-blue-100
+                "
             >
-                <nuxt-link
-                    class="text-blue-500 underline hover:text-blue-600"
-                    :to="`/${currentUser.name}/projects/${project.slug}`"
-                    >{{ project.slug }}/app</nuxt-link
-                >
-                <nuxt-link
-                    class="text-blue-500 underline hover:text-blue-600"
-                    :to="`/${currentUser.name}/projects/${project.slug}/code`"
-                    >{{ project.slug }}/code</nuxt-link
-                >
-            </div>
-        </card>
+                <div class="flex items-center space-x-8 justify-between">
+                    <div>{{ project.slug }}</div>
+                    <div class="flex flex-row space-x-2">
+                        <nuxt-link
+                            class="
+                                block
+                                text-blue-300
+                                hover:text-blue-400
+                                bg-gray-800
+                                rounded-xl
+                                px-3
+                                py-2
+                            "
+                            :to="`/${currentUser.name}/projects/${project.slug}`"
+                            >app</nuxt-link
+                        >
+                        <nuxt-link
+                            class="
+                                block
+                                text-blue-300
+                                hover:text-blue-400
+                                bg-gray-800
+                                rounded-xl
+                                px-3
+                                py-2
+                            "
+                            :to="`/${currentUser.name}/projects/${project.slug}/code`"
+                            >code</nuxt-link
+                        >
+                    </div>
+                </div>
+            </card>
+        </div>
     </div>
 </template>
 

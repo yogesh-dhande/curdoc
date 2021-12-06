@@ -8,7 +8,7 @@
                     whitespace-nowrap
                     items-center
                     justify-start
-                    h-16
+                    h-12
                 "
             >
                 <div
@@ -107,20 +107,11 @@
                     >
                         <nuxt-link to="/" class="italic">
                             Broccolini
-                            <!-- <img
-                class="inline h-8 md:h-10 lg:h-12 bg-gray-800"
-                src="./../static/logo.png"
-                alt="Broccolini Logo"
-            /> -->
                         </nuxt-link>
                     </div>
-                    <toolbar
-                        :project="project"
-                        class="hidden lg:block md:ml-6"
-                    />
                 </div>
 
-                <div class="flex items-center pr-2">
+                <div>
                     <div class="hidden lg:block md:ml-6">
                         <div class="flex space-x-4 items-center">
                             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
@@ -263,7 +254,6 @@
                 </div>
             </div>
         </div>
-        <toolbar :key="project.id" :project="project" class="lg:hidden" />
     </nav>
 </template>
 

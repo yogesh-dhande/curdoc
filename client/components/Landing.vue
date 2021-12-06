@@ -2,7 +2,9 @@
     <div class="bg-gray-800 min-h-screen">
         <div
             class="
-                max-w-4xl
+                max-w-sm
+                sm:max-w-lg
+                lg:max-w-4xl
                 mx-auto
                 text-center
                 py-12
@@ -28,65 +30,67 @@
                     >applications
                 </h1>
             </div>
-            <div class="mt-8 flex justify-center">
-                <div class="inline-flex rounded-md shadow">
-                    <nuxt-link
-                        to="/register"
-                        class="
-                            w-full
-                            px-8
-                            py-3
-                            border border-transparent
-                            font-bold
-                            rounded-md
-                            text-blue-50
-                            bg-blue-500
-                            hover:bg-blue-600
-                            border-none
-                            md:py-4 md:text-lg md:px-10
-                        "
-                    >
-                        Start Coding
-                    </nuxt-link>
-                </div>
-                <div class="ml-3 inline-flex">
-                    <button
-                        class="
-                            w-full
-                            px-8
-                            py-3
-                            border border-transparent
-                            font-bold
-                            rounded-md
-                            text-blue-700
-                            bg-blue-100
-                            hover:bg-blue-300
-                            md:py-4 md:text-lg md:px-10
-                        "
-                        @click="() => createDemo('bokeh')"
-                    >
-                        Try Bokeh Demo
-                    </button>
-                </div>
-                <div class="ml-3 inline-flex">
-                    <button
-                        class="
-                            w-full
-                            px-8
-                            py-3
-                            border border-transparent
-                            font-bold
-                            rounded-md
-                            text-blue-700
-                            bg-blue-100
-                            hover:bg-blue-300
-                            md:py-4 md:text-lg md:px-10
-                        "
-                        @click="() => createDemo('panel')"
-                    >
-                        Try Panel Demo
-                    </button>
-                </div>
+            <div
+                class="
+                    mt-8
+                    flex flex-col
+                    space-y-2
+                    lg:flex-row lg:justify-center lg:space-x-2 lg:space-y-0
+                "
+            >
+                <nuxt-link
+                    to="/register"
+                    class="
+                        block
+                        w-full
+                        px-8
+                        py-3
+                        border border-transparent
+                        font-bold
+                        rounded-md
+                        text-blue-50
+                        bg-blue-500
+                        hover:bg-blue-600
+                        border-none
+                        md:py-4 md:text-lg md:px-10
+                    "
+                >
+                    Start Coding
+                </nuxt-link>
+                <button
+                    class="
+                        w-full
+                        px-8
+                        py-3
+                        border border-transparent
+                        font-bold
+                        rounded-md
+                        text-blue-700
+                        bg-blue-100
+                        hover:bg-blue-300
+                        md:py-4 md:text-lg md:px-10
+                    "
+                    @click="() => createDemo('bokeh')"
+                >
+                    Bokeh Demo
+                </button>
+                <button
+                    class="
+                        w-full
+                        px-8
+                        py-3
+                        border border-transparent
+                        font-bold
+                        rounded-md
+                        text-blue-700
+                        bg-blue-100
+                        hover:bg-blue-300
+                        md:py-4 md:text-lg md:px-10
+                    "
+                    @click="() => createDemo('panel')"
+                >
+                    Panel Demo
+                </button>
             </div>
             <h2 class="mt-6 text-blue-100 font-medium text-xl">
                 Have questions? Ask them

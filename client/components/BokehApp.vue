@@ -1,7 +1,7 @@
 <template>
     <div
         ref="script-app"
-        class="bg-white flex justify-center min-h-screen pt-12"
+        class="bg-white flex justify-center min-h-screen pt-4"
     ></div>
 </template>
 

@@ -4,11 +4,14 @@
             flex
             justify-center
             shadow
-            bg-gray-900 bg-opacity-25
-            text-indigo-100
+            bg-gray-900
+            text-blue-100
+            px-2
+            pt-4
+            pb-8
         "
     >
-        <h2 class="mx-2 text-blue-300">New Project</h2>
+        <h2 class="text-blue-300 my-1">Create New</h2>
 
         <div class="flex">
             <url-slug-input
@@ -46,13 +49,10 @@
 
 <script>
 import URLSlugInput from '@/components/URLSlugInput'
-
 import Card from '@/components/Card'
-
 import { mapState, mapGetters } from 'vuex'
 
 export default {
-    name: 'CreateProject',
     components: {
         'url-slug-input': URLSlugInput,
         Card,

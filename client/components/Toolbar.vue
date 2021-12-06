@@ -1,6 +1,6 @@
 <template>
-    <div v-if="project.id" class="text-center">
-        <div class="inline-flex bg-gray-900 rounded shadow-2xl">
+    <div v-if="project.id">
+        <div class="flex justify-center bg-gray-900 rounded shadow-2xl">
             <nuxt-link
                 class="
                     block

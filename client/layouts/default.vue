@@ -1,8 +1,13 @@
 <template>
     <div class="min-h-screen bg-gray-800">
         <NavBar
-            class="sticky top-0 z-50"
-            :class="{ 'shadow-2xl bg-gray-800': !view.atTopOfPage }"
+            class="z-50"
+            :class="[view.atTopOfPage ? '' : 'shadow-2xl bg-gray-800']"
+        />
+        <toolbar
+            :key="project.id"
+            :project="project"
+            :class="{ 'sticky top-0 z-50': project.id }"
         />
         <Nuxt keep-alive />
         <AppFooter />
