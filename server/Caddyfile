@@ -1,5 +1,6 @@
 
 :8080 {
+
     handle /sandbox/5001/* {
         reverse_proxy http://localhost:5001
     }
@@ -40,12 +41,14 @@
         reverse_proxy http://localhost:5010
     }
 
+    handle /sandbox/static/* {
+        file_server 
+    }
+
     handle /sandbox/* {
         reverse_proxy http://localhost:8000
     }
 
     respond "hello world!"
-
-    file_server
 }
 

@@ -10,5 +10,4 @@
         reverse_proxy client:8080
     }
 
-    file_server
 }

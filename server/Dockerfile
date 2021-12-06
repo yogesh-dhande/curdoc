@@ -16,14 +16,16 @@ ARG PORT=8080
 ENV PORT=$PORT
 EXPOSE $PORT
 
+WORKDIR /app
+
+COPY . .
+
+RUN cd sandbox/static/envs && /opt/conda/bin/conda env export --name base > base.yaml
+
 ARG USER=server
 RUN useradd -s /bin/bash -m ${USER} -u 1000 \
     && mkdir -p /projects && chown -R 1000 /projects
 
 USER ${USER}
 
-WORKDIR /app
-
-COPY . .
-
-CMD ["/bin/bash", "src/scripts/run.sh"]
+CMD ["/bin/bash", "run.sh"]
