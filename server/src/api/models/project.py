@@ -12,8 +12,6 @@ from services.container import container_service
 from models.blob import Blob
 from models.user import User
 
-with open("src/api/resources/default.py", "r") as file:
-    STARTER_CODE = file.read()
 
 class Project(BaseModel):
     id: str

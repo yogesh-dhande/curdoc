@@ -1,4 +1,0 @@
-bokeh
-python-dotenv
-fastapi
-uvicorn
