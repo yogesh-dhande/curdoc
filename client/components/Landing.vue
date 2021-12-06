@@ -105,7 +105,6 @@ export default {
     methods: {
         createDemo(name) {
             this.$store.commit('SET_PROJECT', demos[name])
-            this.$store.commit('SET_USER', demos.user)
             this.$store.commit('SET_CODE_CHANGED', true)
             this.$router.push(
                 `/${demos.user.name}/projects/${demos[name].slug}/code`
