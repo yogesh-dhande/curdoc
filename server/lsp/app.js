@@ -29,14 +29,16 @@ process.on("uncaughtException", function (err) {
   }
 });
 
-const app = express();
-app.use(express.static(__dirname));
-
-app.get("/", (req, res) => {
+const router = express.Router();
+router.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-const server = app.listen(process.env.PORT, () => {
+const app = express();
+
+app.use("/sandbox/lsp", router);
+
+const server = app.listen(process.env.LSP_PORT, () => {
   console.log(`Example app listening ..`);
 });
 

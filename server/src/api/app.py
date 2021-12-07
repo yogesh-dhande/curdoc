@@ -1,3 +1,4 @@
+from fastapi import APIRouter
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -7,6 +8,8 @@ from services.container import container_service
 # from services.validation import register_exception_handlers
 
 app = FastAPI()
+
+router = APIRouter()
 
 origins = [
     "http://localhost:8080",
@@ -30,16 +33,19 @@ async def shutdown_event():
     container_service.stop_all_containers()
 
 
-@app.get("/sandbox")
+@router.get("/")
 async def root():
     return {"message": "Hello World"}
 
 
-@app.get("/sandbox/test")
+@router.get("/test")
 async def root():
     return {"message": "from sandbox"}
 
 
-@app.post("/sandbox/project")
+@router.post("/project")
 async def get_script(session: Session):
     return session.project.get_app_script(session.new, query=session.query)
+
+
+app.include_router(router, prefix="/sandbox")

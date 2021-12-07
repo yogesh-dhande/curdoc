@@ -5,16 +5,6 @@ services:
     container_name: caddy
     ports:
       - "8080:8080"
-  lsp:
-    build: lsp
-    container_name: lsp
-    stdin_open: true
-    tty: true
-    ports:
-      - "8081:8080"
-    volumes:
-      - /app/node_modules
-      - /Users/yogesh/projects/bokeh-play/lsp:/app
   client:
     build:
       context: client
@@ -28,7 +18,7 @@ services:
       - /Users/yogesh/projects/bokeh-play/client:/app
     environment:
       - NUXT_APP_BACKEND_URL=http://localhost:8080/sandbox
-      - NUXT_APP_LSP_URL=ws://localhost:8081
+      - NUXT_APP_LSP_URL=ws://localhost:8080/sandbox/lsp/
   sandbox:
     build: server
     container_name: sandbox
@@ -37,6 +27,7 @@ services:
     restart: always
     ports:
       - "8000:8000"
+      - "8081:8081"
       - "5000:8080"
       - "5001:5001"
       - "5002:5002"
@@ -51,7 +42,9 @@ services:
     volumes:
       - /Users/yogesh/projects/bokeh-play/server:/app
       - /app/sandbox/static/envs
+      - /app/lsp/node_modules
     environment:
+      LSP_PORT: 8081
       PROJECTS_DIR: /projects
   # emulators:
   #   build:

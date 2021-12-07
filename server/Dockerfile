@@ -12,11 +12,22 @@ COPY environment.yaml* /tmp/conda-tmp/
 RUN /opt/conda/bin/conda env update -n base -f /tmp/conda-tmp/environment.yaml \
     && rm -rf /tmp/conda-tmp
 
+RUN apt-get update -yq \
+    && apt-get install curl gnupg -yq \
+    && curl -sL https://deb.nodesource.com/setup_12.x | bash \
+    && apt-get install nodejs -yq
+
+WORKDIR /app
+
+RUN mkdir lsp
+COPY lsp/package*.json lsp
+RUN cd lsp && npm install
+
 ARG PORT=8080
 ENV PORT=$PORT
 EXPOSE $PORT
 
-WORKDIR /app
+
 
 COPY . .
 
