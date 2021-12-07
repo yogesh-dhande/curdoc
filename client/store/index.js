@@ -29,10 +29,18 @@ export const state = () => ({
 
 export const getters = {
   canEdit(state) {
-    if (!state.currentUser.id) {
-      return false;
+    try {
+      // Allow editing demo projects
+      if (state.project && state.project.demo) return true;
+      // Guests cannot edit any projects besides demo projects
+      else if (!state.currentUser.id) {
+        return false;
+      }
+      // Logged in users can edit their own projects
+      return state.currentUser.id === state.project.user.id;
+    } catch (error) {
+      console.log(error);
     }
-    return state.currentUser.id === state.project.user.id;
   },
   userprojectSlugs(state) {
     if (!state.currentUser.projects) {

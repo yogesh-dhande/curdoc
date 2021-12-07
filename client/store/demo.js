@@ -85,6 +85,7 @@ const demoUser = {
 const bokehProjectId = generateId();
 
 const bokehProject = {
+  demo: true,
   id: bokehProjectId,
   slug: "bokeh",
   user: demoUser,
@@ -100,6 +101,7 @@ const bokehProject = {
 const panelProjectId = generateId();
 
 const panelProject = {
+  demo: true,
   id: panelProjectId,
   slug: "panel",
   user: demoUser,

@@ -64,9 +64,6 @@ class SubprocessContainerSession(ContainerSessionBase):
 
         while process.poll() is None:
             time.sleep(0.1)
-        
-        if process.returncode != 0:
-            raise RuntimeError
 
         self.port = port
         self.container_name = container_name
