@@ -1,3 +1,4 @@
+import os
 import time
 from concurrent.futures import ThreadPoolExecutor
 from typing import List
@@ -37,8 +38,7 @@ class Project(BaseModel):
         self.wait_for_server_to_be_ready(container_session)
 
         # External link to the app
-        app_url = f"http://localhost:8080/sandbox/{container_session.port}/{self.id}"
-
+        app_url = f"http://{os.getenv('ORIGIN_DOMAIN')}/sandbox/{container_session.port}/{self.id}"
         return server_document(url=app_url, arguments=query)
 
     def wait_for_server_to_be_ready(self, container_session: ContainerSessionBase):

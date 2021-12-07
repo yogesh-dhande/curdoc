@@ -116,12 +116,9 @@ export default {
       dev: false,
     },
   },
-  axios: {
-    baseURL: process.env.NUXT_ENV_FIREBASE_FUNCTIONS_URL,
-  },
   publicRuntimeConfig: {
-    backendUrl: process.env.NUXT_APP_BACKEND_URL,
-    lspUrl: process.env.NUXT_APP_LSP_URL,
+    backendUrl: `${process.env.NUXT_APP_WEB_PROTOCOL}://${process.env.NUXT_APP_ORIGIN_DOMAIN}/sandbox`,
+    lspUrl: `ws://${process.env.NUXT_APP_DOMAIN}/sandbox/lsp/`,
   },
   alias: {
     vscode: require.resolve("monaco-languageclient/lib/vscode-compatibility"),

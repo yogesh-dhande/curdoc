@@ -1,3 +1,5 @@
+import os
+
 from fastapi import APIRouter
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,8 +14,7 @@ app = FastAPI()
 router = APIRouter()
 
 origins = [
-    "http://localhost:8080",
-    "http://localhost",
+    f"http://{os.getenv('ORIGIN_DOMAIN')}",
 ]
 
 app.add_middleware(
@@ -35,12 +36,12 @@ async def shutdown_event():
 
 @router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "from sandbox"}
 
 
 @router.get("/test")
 async def root():
-    return {"message": "from sandbox"}
+    return {"message": "from sandbox/test"}
 
 
 @router.post("/project")
