@@ -15,7 +15,7 @@ RUN /opt/conda/bin/conda env update -n base -f /tmp/conda-tmp/environment.yaml \
 RUN apt-get update -yq \
     && apt-get install curl gnupg -yq \
     && curl -sL https://deb.nodesource.com/setup_12.x | bash \
-    && apt-get install nodejs -yq
+    && apt-get install nodejs -yq && apt-get autoclean
 
 WORKDIR /app
 
@@ -33,7 +33,7 @@ COPY . .
 
 RUN cd sandbox/static/envs && /opt/conda/bin/conda env export --name base > base.yaml
 
-ARG USER=server
+ARG USER=sandbox
 RUN useradd -s /bin/bash -m ${USER} -u 1000 \
     && mkdir -p /projects && chown -R 1000 /projects
 

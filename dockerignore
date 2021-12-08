@@ -6,3 +6,4 @@ Dockerfile
 docker-debian.sh
 .github
 .nuxt
+server/*-service-account-key.json

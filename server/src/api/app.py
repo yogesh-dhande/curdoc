@@ -3,11 +3,12 @@ import os
 from fastapi import APIRouter
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.params import Depends
 
 from models.session import Session
+from services.auth import JWTBearer
 from services.container import container_service
-
-# from services.validation import register_exception_handlers
+from services.validation import register_exception_handlers
 
 app = FastAPI()
 
@@ -25,7 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# register_exception_handlers(app)
+register_exception_handlers(app)
 
 
 @app.on_event("shutdown")
@@ -35,17 +36,17 @@ async def shutdown_event():
 
 
 @router.get("/")
-async def root():
+async def root(_: str = Depends(JWTBearer())):
     return {"message": "from sandbox"}
 
 
 @router.get("/test")
-async def root():
+async def root(_: str = Depends(JWTBearer())):
     return {"message": "from sandbox/test"}
 
 
 @router.post("/project")
-async def get_script(session: Session):
+async def get_script(session: Session, _: str = Depends(JWTBearer())):
     return session.project.get_app_script(session.new, query=session.query)
 
 

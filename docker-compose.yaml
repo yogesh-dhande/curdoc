@@ -17,6 +17,7 @@ services:
     environment:
       - NUXT_APP_WEB_PROTOCOL=http
       - NUXT_APP_ORIGIN_DOMAIN=localhost:8080
+      - DEPLOY_TARGET=development
   sandbox:
     build: server
     container_name: sandbox
@@ -31,6 +32,7 @@ services:
       - LSP_PORT=8081
       - ORIGIN_DOMAIN=localhost:8080
       - PROJECTS_DIR=/projects
+      - DEPLOY_TARGET=staging
   # emulators:
   #   build:
   #     context: client

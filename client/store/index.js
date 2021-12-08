@@ -136,11 +136,19 @@ export const actions = {
   async setAppScript({ state, commit }, query) {
     console.log("getting app script");
     try {
-      const res = await axios.post(`${this.$config.backendUrl}/project`, {
-        project: state.project,
-        new: state.codeChanged,
-        query,
-      });
+      const res = await axios.post(
+        `${this.$config.backendUrl}/project`,
+        {
+          project: state.project,
+          new: state.codeChanged,
+          query,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${state.token}`,
+          },
+        }
+      );
       console.log(res.data);
       commit("SET_APP_SCRIPT", res.data);
     } catch (error) {
