@@ -105,16 +105,20 @@
 
 <script>
 import { demos } from '@/store/demo'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+
 export default {
     methods: {
         createDemo(name) {
             this.$store.commit('SET_PROJECT', demos[name])
             this.$store.commit('SET_CODE_CHANGED', true)
-            this.$fire.auth
-                .signInWithEmailAndPassword('demo@curdoc.io', 'demo@curdoc.io')
-                .then((userCredential) => {
-                    this.$store.commit('SET_AUTH_STATE', userCredential.user)
-                })
+            signInWithEmailAndPassword(
+                this.$firebase.auth,
+                'demo@curdoc.io',
+                'demo@curdoc.io'
+            ).then((userCredential) => {
+                this.$store.commit('SET_AUTH_STATE', userCredential.user)
+            })
             this.$router.push(
                 `/${demos.user.name}/projects/${demos[name].slug}/code`
             )

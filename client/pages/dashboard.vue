@@ -107,37 +107,7 @@ export default {
             return this.formatBytes(0, 1)
         },
     },
-    watch: {
-        currentUser() {
-            this.detachListeners()
-            this.attachListerners()
-        },
-    },
-    mounted() {
-        this.attachListerners()
-    },
-    beforeDestroy() {
-        this.detachListeners()
-    },
     methods: {
-        attachListerners() {
-            if (this.currentUser.id) {
-                const listener = this.$projectsCollection
-                    .where('user.id', '==', this.currentUser.id)
-                    .onSnapshot((querySnapshot) => {
-                        this.posts = []
-                        querySnapshot.forEach((doc) => {
-                            this.posts.push(doc.data())
-                        })
-                    })
-                this.listeners.push(listener)
-            }
-        },
-        detachListeners() {
-            if (this.listeners) {
-                this.listeners.forEach((listener) => listener())
-            }
-        },
         formatBytes(bytes, decimals = 2) {
             const k = 1024
             const dm = decimals < 0 ? 0 : decimals

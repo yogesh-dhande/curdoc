@@ -2,13 +2,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId} {
-    	allow read;
-      allow update: if request.auth != null && request.auth.uid == userId
-      allow create: false
+      allow read, update: if request.auth != null && request.auth.uid == userId
+      allow create: if false
     }
     match /projects/{postId} {
       allow read;
-      allow write: if request.auth != null && request.resource.data.user.id == request.auth.uid && request.resource.data.user.name == get(/databases/$(database)/documents/users/$(request.auth.uid)).data.name
+      allow create, update: if request.auth != null && request.resource.data.user.id == request.auth.uid && request.resource.data.user.name == get(/databases/$(database)/documents/users/$(request.auth.uid)).data.name
       allow delete: if request.auth != null && resource.data.user.id == request.auth.uid
     }
     match /readonly/{userId} {
@@ -16,7 +15,7 @@ service cloud.firestore {
       allow write: if false
     }
     match /feedback/{messageId} {
-      allow read: false
+      allow read: if false
     	allow write;
     }
   }

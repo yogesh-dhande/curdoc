@@ -1,4 +1,15 @@
-import * as axios from "axios";
+import { get, post } from "axios";
+import {
+  collection,
+  doc,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
+// eslint-disable-next-line import/order
+import { join } from "path";
 import { starterBokehCode } from "./demo";
 
 export const state = () => ({
@@ -65,15 +76,14 @@ export const actions = {
       commit("SET_TOKEN", null);
     } else {
       authUser.getIdToken(/* forceRefresh */ true).then((token) => {
-        this.$fire.analytics.setUserId(authUser.uid);
         commit("SET_TOKEN", token);
         commit("SET_EMAIL_VERIFIED", authUser.emailVerified);
 
-        this.$usersCollection.doc(authUser.uid).onSnapshot((snap) => {
+        onSnapshot(doc(this.$firebase.db, "users", authUser.uid), (snap) => {
           commit("SET_USER", snap.data() || {});
         });
 
-        this.$readonlyCollection.doc(authUser.uid).onSnapshot((snap) => {
+        onSnapshot(doc(this.$firebase.db, "readonly", authUser.uid), (snap) => {
           commit("SET_READONLY_DATA", snap.data() || {});
         });
       });
@@ -81,7 +91,7 @@ export const actions = {
   },
 
   async createProject({ state }, slug) {
-    const projectRef = this.$projectsCollection.doc();
+    const projectRef = doc(this.$firebase.db, "projects");
 
     const relativePath = "main.py";
     const blob = {
@@ -89,7 +99,10 @@ export const actions = {
       fullPath: `${state.currentUser.id}/projects/${projectRef.id}/${relativePath}`,
     };
 
-    await this.$storageRef.child(blob.fullPath).putString(starterBokehCode);
+    await uploadString(
+      ref(this.$firebase.storage, blob.fullPath),
+      starterBokehCode
+    );
 
     const project = {
       id: projectRef.id,
@@ -112,19 +125,23 @@ export const actions = {
       `getting project for ${payload.userName}/projects/${payload.projectSlug}`
     );
 
-    const querySnapshot = await this.$projectsCollection
-      .where("user.name", "==", payload.userName)
-      .where("slug", "==", payload.projectSlug)
-      .get();
+    const querySnapshot = await getDocs(
+      query(
+        collection(this.$firebase.db, "projects"),
+        where("user.name", "==", payload.userName),
+        where("slug", "==", payload.projectSlug)
+      )
+    );
 
     if (!querySnapshot.empty) {
       const project = querySnapshot.docs[0].data();
 
       for (const blob of project.blob) {
-        const url = await this.$storageRef
-          .child(blob.fullPath)
-          .getDownloadURL();
-        const res = await axios.get(url);
+        const url = await getDownloadURL(
+          ref(this.$firebase.storage, join("users", blob.fullPath))
+        );
+        console.log(url);
+        const res = await get(url);
 
         blob.text = res.data;
       }
@@ -136,7 +153,7 @@ export const actions = {
   async setAppScript({ state, commit }, query) {
     console.log("getting app script");
     try {
-      const res = await axios.post(
+      const res = await post(
         `${this.$config.backendUrl}/project`,
         {
           project: state.project,
@@ -155,11 +172,17 @@ export const actions = {
       console.log(error);
     }
 
-    return Promise.all(
-      state.project.blob.map((blob) =>
-        this.$storageRef.child(blob.fullPath).putString(blob.text)
-      )
-    );
+    if (this.codeChanged) {
+      return Promise.all(
+        state.project.blob.map(
+          async (blob) =>
+            await uploadString(
+              ref(this.$firebase.storage, blob.fullPath),
+              blob.text
+            )
+        )
+      );
+    }
   },
 
   updateCode({ commit }, payload) {

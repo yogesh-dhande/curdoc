@@ -1,17 +1,33 @@
 <template>
     <form-page>
         <h1
-            class="text-center text-2xl tracking-tight font-extrabold text-blue-100 sm:text-3xl md:text-5xl"
+            class="
+                text-center text-2xl
+                tracking-tight
+                font-extrabold
+                text-blue-100
+                sm:text-3xl
+                md:text-5xl
+            "
         >
             Build and share
             <span class="block text-blue-400"> Bokeh applications </span>
         </h1>
         <form
-            class="max-w-lg m-4 pt-6 pb-12 px-10 bg-gray-900 bg-opacity-25 rounded-lg shadow-xl"
+            class="
+                max-w-lg
+                m-4
+                pt-6
+                pb-12
+                px-10
+                bg-gray-900 bg-opacity-25
+                rounded-lg
+                shadow-xl
+            "
         >
             <url-slug-input
-                :prefix="BASE_URL"
                 v-model="name"
+                :prefix="BASE_URL"
                 label="Username"
                 @focus="
                     nameErrors = []
@@ -28,13 +44,23 @@
                 <div class="mt-1">
                     <input
                         id="email"
+                        v-model="email"
                         name="email"
                         type="email"
                         autocomplete="email"
                         required
                         rows="3"
-                        class="shadow-sm focus:ring-gray-500 focus:border-gray-500 mt-1 p-2 block w-full text-sm bg-gray-800 rounded-md"
-                        v-model="email"
+                        class="
+                            shadow-sm
+                            focus:ring-gray-500 focus:border-gray-500
+                            mt-1
+                            p-2
+                            block
+                            w-full
+                            text-sm
+                            bg-gray-800
+                            rounded-md
+                        "
                         @focus="
                             emailErrors = []
                             errors = []
@@ -46,9 +72,9 @@
             <input-errors :errors="emailErrors"></input-errors>
 
             <password-input
+                v-model="password"
                 class="mt-3"
                 label="Password"
-                v-model="password"
                 @focus="
                     passwordErrors = []
                     errors = []
@@ -58,9 +84,9 @@
             <input-errors :errors="passwordErrors"></input-errors>
 
             <password-input
+                v-model="passwordConfirmation"
                 class="mt-3"
                 label="Confirm Password"
-                v-model="passwordConfirmation"
                 @focus="
                     passwordConfirmationErrors = []
                     errors = []
@@ -71,17 +97,25 @@
 
             <submit
                 class="mt-3"
-                :isLoading="isLoading"
+                :is-loading="isLoading"
                 :errors="errors"
                 :disabled="disabled"
-                @click="register"
                 label="Sign Up"
+                @click="register"
             />
             <div class="py-1 sm:px-6 text-md font-medium">
                 <span class="float-right">
                     <nuxt-link
                         to="/login"
-                        class="p-1 inline-flex justify-center rounded hover:underline outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
+                        class="
+                            p-1
+                            inline-flex
+                            justify-center
+                            rounded
+                            hover:underline
+                            outline-none
+                            focus:ring-2 focus:ring-offset-2 focus:ring-blue-400
+                        "
                     >
                         <span>Sign In</span>
                     </nuxt-link>
@@ -98,9 +132,10 @@ import FormPage from '@/components/FormPage'
 import PasswordInput from '@/components/PasswordInput'
 import URLSlugInput from '@/components/URLSlugInput'
 import axios from 'axios'
+import { signInWithEmailAndPassword } from 'firebase/auth'
 
 export default {
-    name: 'sign-up',
+    name: 'SignUp',
     components: {
         submit: Submit,
         InputErrors,
@@ -109,11 +144,6 @@ export default {
         'url-slug-input': URLSlugInput,
     },
     middleware: 'guest',
-    head() {
-        return this.$createSEOMeta({
-            title: 'Join Broccolini',
-        })
-    },
     data() {
         return {
             BASE_URL: `${process.env.NUXT_ENV_DISPLAY_URL}/`,
@@ -129,6 +159,11 @@ export default {
             errors: [],
             otherErrors: [],
         }
+    },
+    head() {
+        return this.$createSEOMeta({
+            title: 'Join Broccolini',
+        })
     },
     computed: {
         allErrors() {
@@ -164,17 +199,14 @@ export default {
                             passwordConfirmation: this.passwordConfirmation,
                         }
                     )
-                    let userCredential = await this.$fire.auth.signInWithEmailAndPassword(
+                    const userCredential = await signInWithEmailAndPassword(
+                        this.$firebase.auth,
                         this.email,
                         this.password
                     )
                     userCredential.user.sendEmailVerification({
                         url: `${process.env.NUXT_ENV_BASE_URL}/dashboard`,
                     })
-                    this.$fire.analytics.logEvent(
-                        this.$analyticsEvents.SIGN_UP,
-                        userCredential.user.toJSON()
-                    )
 
                     this.$router.push('/dashboard')
                 } catch (error) {
@@ -188,10 +220,10 @@ export default {
         },
         isEmpty() {
             if (
-                this.name.length == 0 ||
-                this.email.length == 0 ||
-                this.password.length == 0 ||
-                this.passwordConfirmation.length == 0
+                this.name.length === 0 ||
+                this.email.length === 0 ||
+                this.password.length === 0 ||
+                this.passwordConfirmation.length === 0
             ) {
                 return true
             }
@@ -210,14 +242,14 @@ export default {
             }
         },
         validateUsername() {
-            if (!this.name || this.name.length == 0) {
+            if (!this.name || this.name.length === 0) {
                 this.nameErrors.push('Please enter a username.')
             } else if (!/^[0-9a-zA-Z_@.-]+$/.test(this.name)) {
                 this.nameErrors.push('No spaces allowed in the username.')
             }
         },
         validateEmail() {
-            if (!this.email || this.email.length == 0) {
+            if (!this.email || this.email.length === 0) {
                 this.emailErrors.push('Please enter an email.')
             } else if (!/^[0-9a-zA-Z_.-@]+$/.test(this.email)) {
                 this.emailErrors.push('No spaces allowed in the email.')

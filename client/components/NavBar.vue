@@ -259,6 +259,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import { signOut } from 'firebase/auth'
 
 export default {
     data() {
@@ -273,7 +274,7 @@ export default {
     },
     methods: {
         logout() {
-            this.$fire.auth.signOut().finally(() => {
+            signOut(this.$firebase.auth).finally(() => {
                 this.$store.commit('SET_USER', {})
                 this.$router.go()
             })

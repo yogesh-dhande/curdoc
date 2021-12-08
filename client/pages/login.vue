@@ -123,9 +123,12 @@
 import Submit from '@/components/Submit'
 import FormPage from '@/components/FormPage'
 import PasswordInput from '@/components/PasswordInput'
+import {
+    sendPasswordResetEmail,
+    signInWithEmailAndPassword,
+} from 'firebase/auth'
 
 export default {
-    name: 'Login',
     components: {
         submit: Submit,
         FormPage,
@@ -151,7 +154,6 @@ export default {
             fpform: false,
             errors: [],
             loading: false,
-            usersRef: this.$usersCollection,
             isLoading: false,
         }
     },
@@ -169,8 +171,11 @@ export default {
         login() {
             this.errors = []
             this.isLoading = true
-            this.$fire.auth
-                .signInWithEmailAndPassword(this.email, this.password)
+            signInWithEmailAndPassword(
+                this.$firebase.auth,
+                this.email,
+                this.password
+            )
                 .then((userCredential) => {
                     this.$store.commit('SET_AUTH_STATE', userCredential.user)
                     this.$router.push(this.redirect)
@@ -184,8 +189,7 @@ export default {
         forgotPassword() {
             this.errors = []
             this.isLoading = true
-            this.$fire.auth
-                .sendPasswordResetEmail(this.email)
+            sendPasswordResetEmail(this.$firebase.auth, this.email)
                 .then(() => {
                     this.fpform = false
                     alert('Check your email for password reset link')

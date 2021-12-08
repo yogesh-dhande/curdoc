@@ -33,10 +33,10 @@ import { mapState } from 'vuex'
 import TextInput from '@/components/TextInput'
 import TextAreaInput from '@/components/TextAreaInput'
 import FormPage from '@/components/FormPage'
+import { doc, setDoc } from 'firebase/firestore'
 import CustomButton from '../components/CustomButton.vue'
 
 export default {
-    name: 'FeedbackForm',
     components: {
         TextInput,
         TextAreaInput,
@@ -60,8 +60,8 @@ export default {
         ...mapState(['currentUser']),
     },
     methods: {
-        saveFeedback() {
-            this.$feedbackCollection.doc().set({
+        async saveFeedback() {
+            await setDoc(doc(this.$firebase.db, 'feedback'), {
                 email: this.currentUser.email
                     ? this.currentUser.email
                     : this.feedback.email,

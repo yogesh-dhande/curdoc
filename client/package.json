@@ -15,15 +15,14 @@
     "deploy:prod": "npm run prod && DEPLOY_TARGET=production npm run build && firebase deploy",
     "deploy:prod:functions": "npm run prod && DEPLOY_TARGET=production firebase deploy --only=functions",
     "deploy:prod:hosting": "npm run prod && DEPLOY_TARGET=production npm run build && firebase deploy --only=hosting",
-    "test": "firebase emulators:exec 'jest --env=node'",
+    "test:firebase": "firebase emulators:exec 'jest --env=node'",
+    "test": "jest",
     "reinstall": "rm package-lock.json && rm -rf node_modules && npm i"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.1",
-    "@nuxtjs/firebase": "^7.5.0",
-    "@nuxtjs/pwa": "^3.3.5",
     "core-js": "^3.9.1",
-    "firebase": "^8.2.4",
+    "firebase": "^9.6.0",
     "monaco-editor": "^0.24.0",
     "monaco-languageclient": "next",
     "nuxt": "^2.15.3",
@@ -31,6 +30,7 @@
     "vscode-ws-jsonrpc": "^0.2.0"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "1.2.2",
     "@nuxtjs/eslint-config": "^6.0.0",
     "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/tailwindcss": "^4.0.1",

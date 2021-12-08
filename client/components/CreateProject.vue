@@ -59,7 +59,6 @@ export default {
     },
     data() {
         return {
-            projectRef: this.$projectsCollection.doc(),
             slug: '',
             slugErrors: [],
         }
