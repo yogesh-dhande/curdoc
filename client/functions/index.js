@@ -8,12 +8,12 @@ const BusBoy = require("busboy");
 const spawn = require("child-process-promise").spawn;
 const { reservedNames } = require("./validation");
 
-const cors = require("cors")({ origin: true });
+const cors = require("cors")({ origin: ["http://localhost:8080"] });
 
 const adminConfig = JSON.parse(process.env.FIREBASE_CONFIG);
 
 const serviceAccount = !(
-  process.env.FUNCTIONS_EMULATOR || adminConfig.projectId == "staging-2cacb"
+  process.env.FUNCTIONS_EMULATOR || adminConfig.projectId == "databrowser-ykd"
 )
   ? require("./serviceKey.prod.json")
   : require("./serviceKey.staging.json");

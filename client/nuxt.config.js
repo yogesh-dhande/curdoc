@@ -57,8 +57,18 @@ export default {
     // https://go.nuxtjs.dev/pwa
   ],
   publicRuntimeConfig: {
+    baseUrl: process.env.NUXT_ENV_BASE_URL,
     backendUrl: `${process.env.NUXT_APP_WEB_PROTOCOL}://${process.env.NUXT_APP_ORIGIN_DOMAIN}/sandbox`,
     lspUrl: `ws://${process.env.NUXT_APP_ORIGIN_DOMAIN}/sandbox/lsp/`,
+    apiKey: process.env.NUXT_ENV_FIREBASE_CONFIG_API_KEY,
+    authDomain: process.env.NUXT_ENV_FIREBASE_CONFIG_AUTH_DOMAIN,
+    projectId: process.env.NUXT_ENV_FIREBASE_CONFIG_PROJECT_ID,
+    storageBucket: process.env.NUXT_ENV_STORAGE_BUCKET,
+    messagingSenderId: process.env.NUXT_ENV_MESSAGING_SENDER_ID,
+    appId: process.env.NUXT_ENV_ID,
+    measurementId: process.env.NUXT_ENV_MEASUREMENT_ID,
+    functionsUrl: process.env.NUXT_ENV_FIREBASE_FUNCTIONS_URL,
+    useFirebaseEmulators: process.env.NUXT_ENV_MEASUREMENT_ID || true,
   },
   alias: {
     vscode: require.resolve("monaco-languageclient/lib/vscode-compatibility"),

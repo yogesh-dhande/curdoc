@@ -17,7 +17,7 @@ export const state = () => ({
   showFeedbackModal: false,
   token: null,
   currentUser: {},
-  isEmailVerified: null,
+  isEmailVerified: false,
   readonly: {},
   project: {
     id: "",
@@ -67,17 +67,21 @@ export const getters = {
 };
 
 export const actions = {
-  onAuthStateChangedAction({ commit }, { authUser }) {
+  onAuthStateChangedAction({ commit, dispatch }, { authUser }) {
     commit("SET_AUTH_STATE", authUser || {});
 
     if (!authUser) {
       // remove state
       commit("SET_USER", {});
       commit("SET_TOKEN", null);
+      commit("SET_EMAIL_VERIFIED", false);
     } else {
       authUser.getIdToken(/* forceRefresh */ true).then((token) => {
         commit("SET_TOKEN", token);
         commit("SET_EMAIL_VERIFIED", authUser.emailVerified);
+        if (!authUser.emailVerified) {
+          this.$firebase.sendVerificationEmail(authUser);
+        }
 
         onSnapshot(doc(this.$firebase.db, "users", authUser.uid), (snap) => {
           commit("SET_USER", snap.data() || {});

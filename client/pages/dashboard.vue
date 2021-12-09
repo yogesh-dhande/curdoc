@@ -1,6 +1,7 @@
 <template>
     <div class="max-w-lg mx-auto">
         <div
+            v-if="isEmailVerified"
             class="
                 py-2
                 mx-2
@@ -73,6 +74,7 @@
                 </div>
             </card>
         </div>
+        <verify-email v-else />
     </div>
 </template>
 
@@ -81,7 +83,6 @@ import { mapState } from 'vuex'
 import CreateProject from '@/components/CreateProject'
 
 export default {
-    name: 'Dashboard',
     middleware: 'auth',
     componets: {
         CreateProject,
@@ -99,7 +100,7 @@ export default {
         })
     },
     computed: {
-        ...mapState(['currentUser', 'readonly']),
+        ...mapState(['currentUser', 'readonly', 'isEmailVerified']),
         storageUsed() {
             if (this.readonly) {
                 return this.formatBytes(this.readonly.totalStorageUsed, 1)

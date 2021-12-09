@@ -275,7 +275,6 @@ export default {
     methods: {
         logout() {
             signOut(this.$firebase.auth).finally(() => {
-                this.$store.commit('SET_USER', {})
                 this.$router.go()
             })
         },

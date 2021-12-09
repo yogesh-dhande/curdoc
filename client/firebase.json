@@ -31,7 +31,7 @@
     },
     "functions": {
       "port": 10001,
-      "enabled": false
+      "enabled": true
     },
     "firestore": {
       "port": 10002,
@@ -39,11 +39,15 @@
     },
     "hosting": {
       "port": 10003,
-      "enabled": false
+      "enabled": true
     },
     "ui": {
       "enabled": true,
       "port": 10004
+    },
+    "storage": {
+      "enabled": true,
+      "port": 10005
     }
   },
   "remoteconfig": {

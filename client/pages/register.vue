@@ -190,26 +190,23 @@ export default {
                 // set loading class to true
                 this.isLoading = true
                 try {
-                    await axios.post(
-                        `${process.env.NUXT_ENV_FIREBASE_FUNCTIONS_URL}/signUp`,
-                        {
-                            name: this.name,
-                            email: this.email,
-                            password: this.password,
-                            passwordConfirmation: this.passwordConfirmation,
-                        }
-                    )
+                    await axios.post(`${this.$config.functionsUrl}/signUp`, {
+                        name: this.name,
+                        email: this.email,
+                        password: this.password,
+                        passwordConfirmation: this.passwordConfirmation,
+                    })
                     const userCredential = await signInWithEmailAndPassword(
                         this.$firebase.auth,
                         this.email,
                         this.password
                     )
-                    userCredential.user.sendEmailVerification({
-                        url: `${process.env.NUXT_ENV_BASE_URL}/dashboard`,
-                    })
+
+                    this.$firebase.sendVerificationEmail(userCredential.user)
 
                     this.$router.push('/dashboard')
                 } catch (error) {
+                    console.log(error)
                     if (error.response && error.response.data.message) {
                         this.errors.push(error.response.data.message)
                     }
