@@ -36,7 +36,7 @@ async def shutdown_event():
 
 
 @router.get("/")
-async def root(_: str = Depends(JWTBearer())):
+async def root():
     return {"message": "from sandbox"}
 
 

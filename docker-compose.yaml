@@ -14,10 +14,8 @@ services:
     volumes:
       - /app/node_modules
       - /Users/yogesh/projects/bokeh-play/client:/app
-    environment:
-      - NUXT_APP_WEB_PROTOCOL=http
-      - NUXT_APP_ORIGIN_DOMAIN=localhost:8080
-      - DEPLOY_TARGET=development
+    env_file:
+      - client/envs/.env.development.local
   sandbox:
     build: server
     container_name: sandbox
