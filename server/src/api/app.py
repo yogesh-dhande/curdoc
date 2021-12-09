@@ -46,7 +46,7 @@ async def root(_: str = Depends(JWTBearer())):
 
 
 @router.post("/project")
-async def get_script(session: Session, _: str = Depends(JWTBearer())):
+async def get_script(session: Session):
     return session.project.get_app_script(session.new, query=session.query)
 
 

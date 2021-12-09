@@ -21,6 +21,8 @@ services:
   sandbox:
     build: server
     container_name: sandbox
+    ports:
+      - "5000:8080"
     stdin_open: true
     tty: true
     restart: always

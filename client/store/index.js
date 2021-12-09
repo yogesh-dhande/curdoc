@@ -5,6 +5,8 @@ import {
   getDocs,
   onSnapshot,
   query,
+  serverTimestamp,
+  setDoc,
   where,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
@@ -95,7 +97,7 @@ export const actions = {
   },
 
   async createProject({ state }, slug) {
-    const projectRef = doc(this.$firebase.db, "projects");
+    const projectRef = doc(collection(this.$firebase.db, "projects"));
 
     const relativePath = "main.py";
     const blob = {
@@ -104,14 +106,14 @@ export const actions = {
     };
 
     await uploadString(
-      ref(this.$firebase.storage, blob.fullPath),
+      ref(this.$firebase.storage, join("users", blob.fullPath)),
       starterBokehCode
     );
 
     const project = {
       id: projectRef.id,
       slug,
-      created: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+      created: serverTimestamp(),
       blob: [blob],
       user: {
         id: state.currentUser.id,
@@ -119,7 +121,7 @@ export const actions = {
       },
     };
 
-    await projectRef.set(project);
+    await setDoc(projectRef, project);
     console.log(project);
     this.$router.push(`${project.user.name}/projects/${project.slug}/code`);
   },
@@ -144,7 +146,6 @@ export const actions = {
         const url = await getDownloadURL(
           ref(this.$firebase.storage, join("users", blob.fullPath))
         );
-        console.log(url);
         const res = await get(url);
 
         blob.text = res.data;
@@ -170,22 +171,20 @@ export const actions = {
           },
         }
       );
-      console.log(res.data);
+
+      if (state.codeChanged) {
+        console.log("uploading code");
+        state.project.blob.map((blob) =>
+          uploadString(
+            ref(this.$firebase.storage, join("users", blob.fullPath)),
+            blob.text
+          )
+        );
+      }
+
       commit("SET_APP_SCRIPT", res.data);
     } catch (error) {
       console.log(error);
-    }
-
-    if (this.codeChanged) {
-      return Promise.all(
-        state.project.blob.map(
-          async (blob) =>
-            await uploadString(
-              ref(this.$firebase.storage, blob.fullPath),
-              blob.text
-            )
-        )
-      );
     }
   },
 
