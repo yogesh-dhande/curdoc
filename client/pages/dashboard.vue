@@ -1,7 +1,8 @@
 <template>
     <div class="max-w-lg mx-auto">
+        <verify-email v-if="loggedIn && !isEmailVerified" />
         <div
-            v-if="isEmailVerified"
+            v-else
             class="
                 py-2
                 mx-2
@@ -74,19 +75,14 @@
                 </div>
             </card>
         </div>
-        <verify-email v-else />
     </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import CreateProject from '@/components/CreateProject'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
     middleware: 'auth',
-    componets: {
-        CreateProject,
-    },
     data() {
         return {
             posts: [],
@@ -101,6 +97,7 @@ export default {
     },
     computed: {
         ...mapState(['currentUser', 'readonly', 'isEmailVerified']),
+        ...mapGetters(['loggedIn']),
         storageUsed() {
             if (this.readonly) {
                 return this.formatBytes(this.readonly.totalStorageUsed, 1)
