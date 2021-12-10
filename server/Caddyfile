@@ -46,6 +46,7 @@
     }
 
     handle /{$SERVICE_NAME}/static/* {
+        uri strip_prefix /{$SERVICE_NAME}
         file_server 
     }
 

@@ -55,6 +55,33 @@
                     />
                 </svg>
             </nuxt-link>
+            <nuxt-link
+                class="
+                    block
+                    px-3
+                    py-2
+                    rounded-lg
+                    hover:bg-gray-700
+                    text-blue-100
+                    hover:text-blue-300
+                "
+                :to="envUrl"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
+                    />
+                </svg>
+            </nuxt-link>
         </div>
     </div>
 </template>
@@ -73,6 +100,9 @@ export default {
         },
         appUrl() {
             return `/${this.project.user.name}/projects/${this.project.slug}`
+        },
+        envUrl() {
+            return `/${this.project.user.name}/projects/${this.project.slug}/environment`
         },
     },
 }
