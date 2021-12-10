@@ -158,21 +158,19 @@ export const actions = {
   async setAppScript({ state, commit }, query) {
     console.log("getting app script");
     try {
-      const res = await post(
-        `${this.$config.backendUrl}/project`,
-        {
-          project: state.project,
-          new: state.codeChanged,
-          query,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${state.token}`,
-          },
-        }
-      );
+      const res = await post(`${this.$config.functionsUrl}/getAppScript`, {
+        project: state.project,
+        new: state.codeChanged,
+        query,
+      });
 
-      if (state.codeChanged) {
+      commit("SET_APP_SCRIPT", res.data);
+
+      if (
+        state.codeChanged &&
+        state.project.user &&
+        state.project.user.name !== "guest"
+      ) {
         console.log("uploading code");
         state.project.blob.map((blob) =>
           uploadString(
@@ -181,8 +179,6 @@ export const actions = {
           )
         );
       }
-
-      commit("SET_APP_SCRIPT", res.data);
     } catch (error) {
       console.log(error);
     }

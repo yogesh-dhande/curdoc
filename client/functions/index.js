@@ -1,3 +1,4 @@
+const axios = require("axios");
 const { join } = require("path");
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
@@ -23,6 +24,19 @@ admin.initializeApp(adminConfig);
 
 const db = admin.firestore();
 const bucket = admin.storage().bucket();
+
+const SANDBOX_URLS = [
+  "http://localhost:8080/sandbox1/project",
+  "http://localhost:8080/sandbox2/project",
+];
+
+const sandboxes = SANDBOX_URLS.map((url) => {
+  return {
+    url,
+    lastUsed: null,
+    projectId: null,
+  };
+});
 
 const plans = {
   free: {
@@ -71,6 +85,13 @@ function isEmpty(obj) {
     Object.keys(obj).length === 0 &&
     obj.constructor === Object
   );
+}
+
+async function getUIDFromRequest(req) {
+  let decodedToken = await admin
+    .auth()
+    .verifyIdToken(req.get("authorization").replace("Bearer ", ""));
+  return decodedToken.uid;
 }
 
 exports.signUp = functions.https.onRequest(async (req, res) => {
@@ -130,6 +151,42 @@ exports.signUp = functions.https.onRequest(async (req, res) => {
         return res.status(200).send(newUser);
       }
     } catch (error) {
+      res.status(400).json(error);
+    }
+  });
+});
+
+exports.getAppScript = functions.https.onRequest(async (req, res) => {
+  return cors(req, res, async () => {
+    try {
+      let sandboxUrl;
+      let usedSandbox;
+      const projectId = req.body.project.id;
+
+      // Find unused sandbox service
+      for (let sandbox of sandboxes) {
+        if (!sandbox.lastUsed || sandbox.projectId === projectId) {
+          usedSandbox = sandbox;
+          sandboxUrl = usedSandbox.url;
+          break;
+        }
+      }
+
+      // If no used sandbox service, use the oldest used first
+      if (!sandboxUrl) {
+        // Oldest first
+        usedSandbox = sandboxes.sort(
+          (a, b) => a.lastUsed.seconds - b.lastUsed.seconds
+        )[0];
+        sandboxUrl = usedSandbox.url;
+      }
+
+      const response = await axios.post(sandboxUrl, req.body);
+      usedSandbox.lastUsed = Date.now();
+      usedSandbox.projectId = projectId;
+      return res.status(200).send(response.data);
+    } catch (error) {
+      console.log(error.message);
       res.status(400).json(error);
     }
   });
@@ -234,13 +291,6 @@ exports.updateProjectsWhenUserUpdated = functions.firestore
     }
     return null;
   });
-
-async function getUIDFromRequest(req) {
-  let decodedToken = await admin
-    .auth()
-    .verifyIdToken(req.get("authorization").replace("Bearer ", ""));
-  return decodedToken.uid;
-}
 
 function getTempFilepath(extension) {
   return path.join(

@@ -50,4 +50,4 @@ async def get_script(session: Session):
     return session.project.get_app_script(session.new, query=session.query)
 
 
-app.include_router(router, prefix="/sandbox")
+app.include_router(router, prefix=f"/{os.getenv('SERVICE_NAME')}")

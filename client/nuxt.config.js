@@ -59,7 +59,7 @@ export default {
   publicRuntimeConfig: {
     baseUrl: process.env.NUXT_ENV_BASE_URL,
     backendUrl: `${process.env.NUXT_APP_WEB_PROTOCOL}://${process.env.NUXT_APP_ORIGIN_DOMAIN}/sandbox`,
-    lspUrl: `ws://${process.env.NUXT_APP_ORIGIN_DOMAIN}/sandbox/lsp/`,
+    lspUrl: `ws://${process.env.NUXT_APP_ORIGIN_DOMAIN}/sandbox1/lsp/`,
     apiKey: process.env.NUXT_ENV_FIREBASE_CONFIG_API_KEY,
     authDomain: process.env.NUXT_ENV_FIREBASE_CONFIG_AUTH_DOMAIN,
     projectId: process.env.NUXT_ENV_FIREBASE_CONFIG_PROJECT_ID,

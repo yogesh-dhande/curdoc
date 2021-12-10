@@ -16,9 +16,9 @@ services:
       - /Users/yogesh/projects/bokeh-play/client:/app
     env_file:
       - client/envs/.env.development.local
-  sandbox:
+  sandbox1:
     build: server
-    container_name: sandbox
+    container_name: sandbox1
     ports:
       - "5000:8080"
     stdin_open: true
@@ -28,11 +28,26 @@ services:
       - /Users/yogesh/projects/bokeh-play/server:/app
       - /app/sandbox/static/envs
       - /app/lsp/node_modules
+    env_file:
+      - server/envs/.env.development.local
     environment:
-      - LSP_PORT=8081
-      - ORIGIN_DOMAIN=localhost:8080
-      - PROJECTS_DIR=/projects
-      - DEPLOY_TARGET=staging
+      - SERVICE_NAME=sandbox1
+  sandbox2:
+    build: server
+    container_name: sandbox2
+    ports:
+      - "5001:8080"
+    stdin_open: true
+    tty: true
+    restart: always
+    volumes:
+      - /Users/yogesh/projects/bokeh-play/server:/app
+      - /app/sandbox/static/envs
+      - /app/lsp/node_modules
+    env_file:
+      - server/envs/.env.development.local
+    environment:
+      - SERVICE_NAME=sandbox2
   # emulators:
   #   build:
   #     context: client

@@ -1,55 +1,55 @@
 
 :8080 {
 
-    handle /sandbox/lsp/* {
+    handle /{$SERVICE_NAME}/lsp/* {
         reverse_proxy http://localhost:8081
     }
 
-    handle /sandbox/5001/* {
+    handle /{$SERVICE_NAME}/5001/* {
         reverse_proxy http://localhost:5001
     }
 
-    handle /sandbox/5002/* {
+    handle /{$SERVICE_NAME}/5002/* {
         reverse_proxy http://localhost:5002
     }
 
-    handle /sandbox/5003/* {
+    handle /{$SERVICE_NAME}/5003/* {
         reverse_proxy http://localhost:5003
     }
 
-    handle /sandbox/5004/* {
+    handle /{$SERVICE_NAME}/5004/* {
         reverse_proxy http://localhost:5004
     }
 
-    handle /sandbox/5005/* {
+    handle /{$SERVICE_NAME}/5005/* {
         reverse_proxy http://localhost:5005
     }
 
-    handle /sandbox/5006/* {
+    handle /{$SERVICE_NAME}/5006/* {
         reverse_proxy http://localhost:5006
     }
 
-    handle /sandbox/5007/* {
+    handle /{$SERVICE_NAME}/5007/* {
         reverse_proxy http://localhost:5007
     }
 
-    handle /sandbox/5008/* {
+    handle /{$SERVICE_NAME}/5008/* {
         reverse_proxy http://localhost:5008
     }
 
-    handle /sandbox/5009/* {
+    handle /{$SERVICE_NAME}/5009/* {
         reverse_proxy http://localhost:5009
     }
 
-    handle /sandbox/5010/* {
+    handle /{$SERVICE_NAME}/5010/* {
         reverse_proxy http://localhost:5010
     }
 
-    handle /sandbox/static/* {
+    handle /{$SERVICE_NAME}/static/* {
         file_server 
     }
 
-    handle /sandbox/* {
+    handle /{$SERVICE_NAME}/* {
         reverse_proxy http://localhost:8000
     }
 
