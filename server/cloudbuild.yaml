@@ -7,10 +7,11 @@ steps:
     args: ["push", "gcr.io/$PROJECT_ID/sandbox"]
   # Deploy container image to Cloud Run
   - name: "gcr.io/cloud-builders/gcloud"
-    args: [
+    args:
+      [
         "run",
         "deploy",
-        "sandbox", # change to your service name
+        "sandbox1", # change to your service name
         "--image",
         "gcr.io/$PROJECT_ID/sandbox",
         "--max-instances",
@@ -23,6 +24,27 @@ steps:
         "us-central1",
         "--platform",
         "managed",
+        "--allow-unauthenticated",
+      ]
+      # Deploy container image to Cloud Run
+  - name: "gcr.io/cloud-builders/gcloud"
+    args: [
+        "run",
+        "deploy",
+        "sandbox2", # change to your service name
+        "--image",
+        "gcr.io/$PROJECT_ID/sandbox",
+        "--max-instances",
+        "1",
+        "--memory",
+        "1024M",
+        "--concurrency",
+        "10",
+        "--region",
+        "us-central1",
+        "--platform",
+        "managed",
+        "--allow-unauthenticated",
       ]
 images:
   - gcr.io/$PROJECT_ID/sandbox

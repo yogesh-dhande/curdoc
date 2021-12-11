@@ -27,9 +27,12 @@ ARG PORT=8080
 ENV PORT=$PORT
 EXPOSE $PORT
 
+RUN /opt/conda/bin/conda env export --name base > base.yaml
+
+
 COPY . .
 
-RUN cd static && /opt/conda/bin/conda env export --name base > base.yaml
+RUN cp base.yaml static/base.yaml
 
 ARG USER=sandbox
 RUN useradd -s /bin/bash -m ${USER} -u 1000 \
