@@ -1,5 +1,6 @@
 !.env.sample
 **.env.*local
+**.runtimeconfig.json
 **serviceKey**
 server/node_modules
 client/node_modules

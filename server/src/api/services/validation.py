@@ -64,6 +64,13 @@ class BlobNotFoundError(CustomHTTPException):
     def get_message(self):
         return f"File at location {self.relative_path} was not found for project {self.project_id}."
 
+class InvalidAPIKey(CustomHTTPException):
+    status_code = status.HTTP_403_FORBIDDEN
+    def __init__(self, api_key: str) -> None:
+        self.api_key = api_key
+
+    def get_message(self):
+        return f"Invalid api key {self.api_key}"
 
 def register_exception_handlers(app: FastAPI):
     for exception_type in CustomHTTPException.__subclasses__():

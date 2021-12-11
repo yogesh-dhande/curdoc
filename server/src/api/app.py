@@ -2,12 +2,14 @@ import os
 
 from fastapi import APIRouter
 from fastapi import FastAPI
+from fastapi import Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.params import Depends
 
 from models.session import Session
 from services.auth import JWTBearer
 from services.container import container_service
+from services.validation import InvalidAPIKey
 from services.validation import register_exception_handlers
 
 app = FastAPI()
@@ -46,7 +48,9 @@ async def root(_: str = Depends(JWTBearer())):
 
 
 @router.post("/project")
-async def get_script(session: Session):
+async def get_script(session: Session, api_key: str=Header(None)):
+    if api_key != os.getenv("SANDBOX_API_KEY"):
+        raise InvalidAPIKey(api_key=api_key)
     return session.project.get_app_script(session.new, query=session.query)
 
 

@@ -35,7 +35,11 @@ exports.getAppScript = functions.https.onRequest(async (req, res) => {
         sandboxUrl = usedSandbox.url;
       }
 
-      const response = await axios.post(sandboxUrl, req.body);
+      const response = await axios.post(sandboxUrl, req.body, {
+        headers: {
+          "api-key": functions.config().sandbox.api.key,
+        },
+      });
       usedSandbox.lastUsed = Date.now();
       usedSandbox.projectId = projectId;
       return res.status(200).send(response.data);
