@@ -4,10 +4,8 @@ from fastapi import APIRouter
 from fastapi import FastAPI
 from fastapi import Header
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.params import Depends
 
 from models.session import Session
-from services.auth import JWTBearer
 from services.container import container_service
 from services.validation import InvalidAPIKey
 from services.validation import register_exception_handlers
@@ -43,7 +41,7 @@ async def root():
 
 
 @router.get("/test")
-async def root(_: str = Depends(JWTBearer())):
+async def root():
     return {"message": "from sandbox/test"}
 
 

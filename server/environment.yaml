@@ -7,4 +7,3 @@ dependencies:
       - uvicorn
       - panel
       - hvplot
-      - firebase-admin

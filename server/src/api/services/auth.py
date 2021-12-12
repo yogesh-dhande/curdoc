@@ -1,15 +1,7 @@
-import os
-
-import firebase_admin
 from fastapi import HTTPException
 from fastapi import Request
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi.security import HTTPBearer
-from firebase_admin import auth
-from firebase_admin import credentials
-
-cred = credentials.Certificate(f"{os.getenv('DEPLOY_TARGET')}-service-account-key.json")
-firebase_admin.initialize_app(cred)
 
 
 class JWTBearer(HTTPBearer):
@@ -32,7 +24,4 @@ class JWTBearer(HTTPBearer):
             raise HTTPException(status_code=403, detail="Invalid authorization code.")
 
     def verify_jwt(self, jwtoken: str) -> bool:
-        try:
-            return auth.verify_id_token(jwtoken)
-        except Exception:
-            return None
+        return jwtoken

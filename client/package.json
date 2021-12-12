@@ -15,7 +15,7 @@
     "deploy:prod": "npm run prod && DEPLOY_TARGET=production npm run build && firebase deploy",
     "deploy:prod:functions": "npm run prod && DEPLOY_TARGET=production firebase deploy --only=functions",
     "deploy:prod:hosting": "npm run prod && DEPLOY_TARGET=production npm run build && firebase deploy --only=hosting",
-    "test:firebase": "firebase emulators:exec 'jest --env=node'",
+    "test:firebase": "firebase emulators:exec 'jest --env=node --detectOpenHandles --watch test/firebase/*'",
     "test": "jest",
     "reinstall": "rm package-lock.json && rm -rf node_modules && npm i"
   },
@@ -31,7 +31,7 @@
     "vscode-ws-jsonrpc": "^0.2.0"
   },
   "devDependencies": {
-    "@firebase/rules-unit-testing": "1.2.2",
+    "@firebase/rules-unit-testing": "~2.0.1",
     "@nuxtjs/eslint-config": "^6.0.0",
     "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/tailwindcss": "^4.0.1",

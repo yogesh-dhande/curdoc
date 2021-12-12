@@ -16,7 +16,6 @@ if (process.env.FUNCTIONS_EMULATOR) {
 } else {
   // prod
   // TODO: change domain to custom domain
-  domain = "https://curdoc.io";
   sandboxUrls = [`${domain}/sandbox1/project`, `${domain}/sandbox2/project`];
   serviceAccount = require("./../serviceKey.prod.json");
 }
