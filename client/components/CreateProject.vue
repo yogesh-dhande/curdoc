@@ -81,7 +81,7 @@ export default {
     },
     methods: {
         clearErrors() {
-            this.errors = []
+            this.slugErrors = []
         },
         validateSlug() {
             this.slugErrors = []
@@ -98,6 +98,7 @@ export default {
         },
         isFormValid() {
             this.validateSlug()
+            this.$splitbee.track('Error', { errors: this.allErrors })
             return !this.disabled
         },
         createProject() {

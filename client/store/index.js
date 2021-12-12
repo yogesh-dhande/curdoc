@@ -122,7 +122,7 @@ export const actions = {
     };
 
     await setDoc(projectRef, project);
-    console.log(project);
+    this.$splitbee.track("createProject", project);
     this.$router.push(`${project.user.name}/projects/${project.slug}/code`);
   },
 
@@ -165,6 +165,7 @@ export const actions = {
       });
 
       commit("SET_APP_SCRIPT", res.data);
+      this.$splitbee.track("getAppScript");
 
       if (
         state.codeChanged &&
@@ -180,7 +181,12 @@ export const actions = {
         );
       }
     } catch (error) {
-      console.log(error);
+      if (error.response) {
+        commit("SET_APP_SCRIPT", error.response.data.message);
+        this.$splitbee.track("Error", {
+          errors: [error.response.data.message],
+        });
+      }
     }
   },
 

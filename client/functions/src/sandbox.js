@@ -44,8 +44,13 @@ exports.getAppScript = functions.https.onRequest(async (req, res) => {
       usedSandbox.projectId = projectId;
       return res.status(200).send(response.data);
     } catch (error) {
-      console.log(error.message);
-      res.status(400).json(error);
+      if (error.response) {
+        console.log(error.response.data.message);
+        res.status(error.response.status).json(error.response.data);
+      } else {
+        console.log(error);
+        res.status(400).json(error);
+      }
     }
   });
 });

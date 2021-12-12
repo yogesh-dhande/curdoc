@@ -61,14 +61,16 @@ export default {
     },
     methods: {
         async saveFeedback() {
-            await setDoc(doc(this.$firebase.db, 'feedback'), {
+            const feedback = {
                 email: this.currentUser.email
                     ? this.currentUser.email
                     : this.feedback.email,
                 message: this.feedback.message,
-            })
+            }
+            await setDoc(doc(this.$firebase.db, 'feedback'), feedback)
 
             this.feedback.message = ''
+            this.$splitbee.track('Feedback', feedback)
             this.$router.push('/dashboard')
         },
     },

@@ -177,11 +177,13 @@ export default {
                 this.password
             )
                 .then((userCredential) => {
+                    this.$splitbee.track('Log In')
                     this.$store.commit('SET_AUTH_STATE', userCredential.user)
                     this.$router.push(this.redirect)
                 })
                 .catch((error) => {
                     this.errors.push(error.message)
+                    this.$splitbee.track('Error', { errors: this.errors })
                 })
                 .finally(() => (this.isLoading = false))
         },

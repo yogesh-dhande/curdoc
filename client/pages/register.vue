@@ -203,6 +203,7 @@ export default {
                     )
 
                     this.$firebase.sendVerificationEmail(userCredential.user)
+                    this.$splitbee.track('Sign Up')
 
                     this.$router.push('/dashboard')
                 } catch (error) {
@@ -210,6 +211,7 @@ export default {
                     if (error.response && error.response.data.message) {
                         this.errors.push(error.response.data.message)
                     }
+                    this.$splitbee.track('Error', { errors: this.errors })
                 } finally {
                     this.isLoading = false
                 }
