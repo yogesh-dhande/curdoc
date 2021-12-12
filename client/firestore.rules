@@ -2,10 +2,10 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId} {
-      allow read, update: if request.auth.uid == request.resource.data.id
+      allow read, update: if request.auth.uid == resource.data.id
       allow create, delete: if false
     }
-    match /projects/{postId} {
+    match /projects/{projectId} {
       allow read;
       allow create, update: if request.auth != null && request.resource.data.user.id == request.auth.uid && request.resource.data.user.name == get(/databases/$(database)/documents/users/$(request.auth.uid)).data.name
       allow delete: if request.auth != null && resource.data.user.id == request.auth.uid

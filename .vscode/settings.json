@@ -25,7 +25,6 @@
   "python.envFile": "${workspaceFolder}/server-pysheets/environment.yml",
   "python.testing.pytestArgs": ["--ignore=client", "-v"],
   "python.testing.unittestEnabled": false,
-  "python.testing.nosetestsEnabled": false,
   "python.testing.pytestEnabled": true,
   "git.ignoreLimitWarning": true,
   "vetur.format.defaultFormatter.html": "prettier",
