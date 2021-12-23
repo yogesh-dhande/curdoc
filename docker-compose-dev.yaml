@@ -5,12 +5,12 @@ services:
       context: .
       dockerfile: Dockerfile-dev
     container_name: caddy
-    command: "caddy run --config Caddyfile-dev"
     ports:
       - "8080:8080"
   client:
     build:
       context: client
+      dockerfile: Dockerfile-dev
     container_name: client
     stdin_open: true
     tty: true

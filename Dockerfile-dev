@@ -4,4 +4,4 @@ WORKDIR /app
 
 ADD Caddyfile-dev .
 
-CMD ["caddy", "run"]
+CMD ["caddy", "run", "--config", "Caddyfile-dev"]

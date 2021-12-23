@@ -1,19 +1,19 @@
-FROM node:14-alpine
+FROM node:14-alpine as builder
+
+ARG DEPLOY_TARGET=staging
+WORKDIR /app
+ADD package*.json ./
+RUN npm install
+COPY . ./
+ENV DEPLOY_TARGET=$DEPLOY_TARGET
+RUN npm run build
+
+FROM caddy
 
 WORKDIR /app
-COPY package*.json .
-RUN npm install
 
-COPY . .
+COPY --from=builder ./app/dist ./dist/
 
+ADD Caddyfile .
 
-EXPOSE 8080
-ENV HOST=0.0.0.0
-ENV PORT=8080
-
-ARG NUXT_APP_BACKEND_URL
-ENV NUXT_APP_BACKEND_URL=$NUXT_APP_BACKEND_URL
-ARG NUXT_APP_LSP_URL
-ENV NUXT_APP_LSP_URL=$NUXT_APP_LSP_URL
-
-CMD ["npm", "run", "dev"]
+CMD ["caddy", "run"]
