@@ -32,7 +32,9 @@ export default ({ app, store }, inject) => {
   const auth = getAuth(firebaseApp);
   const functions = getFunctions(firebaseApp);
 
+  console.log(app.$config.useFirebaseEmulators);
   if (app.$config.useFirebaseEmulators) {
+    console.log("using firebase emulators");
     connectAuthEmulator(auth, "http://localhost:10000");
     connectFunctionsEmulator(functions, "localhost", 10001);
     connectFirestoreEmulator(db, "localhost", 10002);

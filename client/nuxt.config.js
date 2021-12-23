@@ -1,8 +1,11 @@
 import path from "path";
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
+const deployTarget = process.env.DEPLOY_TARGET || "staging";
+console.log("deploy target: ", deployTarget);
+
 require("dotenv").config({
-  path: path.resolve(__dirname, ".env"),
+  path: path.resolve(__dirname, `envs/.env.${deployTarget}.local`),
 });
 
 export default {
@@ -59,7 +62,7 @@ export default {
   publicRuntimeConfig: {
     baseUrl: process.env.NUXT_ENV_BASE_URL,
     backendUrl: `${process.env.NUXT_APP_WEB_PROTOCOL}://${process.env.NUXT_APP_ORIGIN_DOMAIN}/sandbox1`,
-    lspUrl: `ws://${process.env.NUXT_APP_ORIGIN_DOMAIN}/sandbox1/lsp/`,
+    lspUrl: `ws://${process.env.NUXT_APP_ORIGIN_DOMAIN}/lsp/`,
     apiKey: process.env.NUXT_ENV_FIREBASE_CONFIG_API_KEY,
     authDomain: process.env.NUXT_ENV_FIREBASE_CONFIG_AUTH_DOMAIN,
     projectId: process.env.NUXT_ENV_FIREBASE_CONFIG_PROJECT_ID,
@@ -68,7 +71,7 @@ export default {
     appId: process.env.NUXT_ENV_ID,
     measurementId: process.env.NUXT_ENV_MEASUREMENT_ID,
     functionsUrl: process.env.NUXT_ENV_FIREBASE_FUNCTIONS_URL,
-    useFirebaseEmulators: process.env.NUXT_ENV_MEASUREMENT_ID || true,
+    useFirebaseEmulators: deployTarget === "development",
   },
   alias: {
     vscode: require.resolve("monaco-languageclient/lib/vscode-compatibility"),

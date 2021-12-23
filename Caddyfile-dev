@@ -11,7 +11,8 @@
         reverse_proxy lsp:8080
     }
 
-    root dist
-    file_server
+    handle * {
+        reverse_proxy client:8080
+    }
     
 }

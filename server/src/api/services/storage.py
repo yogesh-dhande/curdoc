@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-PROJECTS_DIR = os.getenv("PROJECTS_DIR", "/projects")
+PROJECTS_DIR = "/projects"
 
 
 def ensure_dir_recursive(dir_path):

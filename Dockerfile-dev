@@ -2,8 +2,6 @@ FROM caddy
 
 WORKDIR /app
 
-ADD client/dist dist
-
-ADD Caddyfile .
+ADD Caddyfile-dev .
 
 CMD ["caddy", "run"]

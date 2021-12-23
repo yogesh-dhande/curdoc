@@ -5,55 +5,28 @@ services:
     container_name: caddy
     ports:
       - "8080:8080"
-  client:
-    build:
-      context: client
-    container_name: client
+  lsp:
+    build: lsp
+    container_name: lsp
     stdin_open: true
     tty: true
-    volumes:
-      - /app/node_modules
-      - /Users/yogesh/projects/bokeh-play/client:/app
-    env_file:
-      - client/envs/.env.development.local
   sandbox1:
     build: server
     container_name: sandbox1
-    ports:
-      - "5000:8080"
     stdin_open: true
     tty: true
     restart: always
-    volumes:
-      - /Users/yogesh/projects/bokeh-play/server:/app
-      - /app/static
-      - /app/lsp/node_modules
     env_file:
-      - server/envs/.env.development.local
+      - server/envs/.env.staging.local
     environment:
       - SERVICE_NAME=sandbox1
   sandbox2:
-    build: server
+    image: bokeh-play_sandbox1
     container_name: sandbox2
-    ports:
-      - "5001:8080"
     stdin_open: true
     tty: true
     restart: always
-    volumes:
-      - /Users/yogesh/projects/bokeh-play/server:/app
-      - /app/static
-      - /app/lsp/node_modules
     env_file:
-      - server/envs/.env.development.local
+      - server/envs/.env.staging.local
     environment:
       - SERVICE_NAME=sandbox2
-  # emulators:
-  #   build:
-  #     context: client
-  #     dockerfile: Dockerfile-emulators
-  #   ports:
-  #     - "10000-10004"
-  #   volumes:
-  #     - /app/node_modules
-  #     - /Users/yogesh/projects/bokeh-play/client:/app
