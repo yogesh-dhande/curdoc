@@ -2,16 +2,16 @@
     <form-page>
         <h1
             class="
-                text-center text-2xl
+                text-center text-4xl
                 tracking-tight
                 font-extrabold
                 text-blue-100
-                sm:text-3xl
-                md:text-5xl
+                sm:text-5xl
             "
         >
-            Build and share
-            <span class="block text-blue-400"> Bokeh applications </span>
+            Start coding
+            <span class="block text-blue-400"> Bokeh and Panel </span
+            >applications
         </h1>
         <form
             class="
