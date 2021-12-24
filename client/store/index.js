@@ -64,7 +64,7 @@ export const getters = {
     });
   },
   loggedIn(state) {
-    return state.authUserId;
+    return state.authUserId && state.currentUser.name !== "demo";
   },
 };
 
@@ -81,7 +81,7 @@ export const actions = {
       authUser.getIdToken(/* forceRefresh */ true).then((token) => {
         commit("SET_TOKEN", token);
         commit("SET_EMAIL_VERIFIED", authUser.emailVerified);
-
+        console.log(authUser.uid);
         onSnapshot(doc(this.$firebase.db, "users", authUser.uid), (snap) => {
           console.log("setting user data");
           commit("SET_USER", snap.data() || {});

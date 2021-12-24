@@ -127,6 +127,7 @@ import {
     sendPasswordResetEmail,
     signInWithEmailAndPassword,
 } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
 
 export default {
     components: {
@@ -168,24 +169,35 @@ export default {
         },
     },
     methods: {
-        login() {
+        async login() {
             this.errors = []
             this.isLoading = true
-            signInWithEmailAndPassword(
-                this.$firebase.auth,
-                this.email,
-                this.password
-            )
-                .then((userCredential) => {
-                    this.$splitbee.track('Log In')
-                    this.$store.commit('SET_AUTH_STATE', userCredential.user)
-                    this.$router.push(this.redirect)
-                })
-                .catch((error) => {
-                    this.errors.push(error.message)
-                    this.$splitbee.track('Error', { errors: this.errors })
-                })
-                .finally(() => (this.isLoading = false))
+            try {
+                const userCredential = await signInWithEmailAndPassword(
+                    this.$firebase.auth,
+                    this.email,
+                    this.password
+                )
+                this.$splitbee.track('Log In')
+
+                console.log(userCredential)
+                console.log(userCredential.user)
+                console.log(userCredential.user.uid)
+                this.$store.commit('SET_AUTH_STATE', userCredential.user)
+
+                const snap = await getDoc(
+                    doc(this.$firebase.db, 'users', userCredential.user.uid)
+                )
+                console.log('setting user data')
+                console.log(snap.data())
+                this.$store.commit('SET_USER', snap.data() || {})
+                this.$router.push(this.redirect)
+            } catch (error) {
+                this.errors.push(error.message)
+                this.$splitbee.track('Error', { errors: this.errors })
+            } finally {
+                this.isLoading = false
+            }
         },
 
         forgotPassword() {

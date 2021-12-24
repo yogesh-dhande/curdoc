@@ -113,17 +113,15 @@ export default {
         ...mapGetters(['loggedIn']),
     },
     methods: {
-        createDemo(name) {
+        async createDemo(name) {
             this.$store.commit('SET_PROJECT', demos[name])
             this.$store.commit('SET_CODE_CHANGED', true)
             if (!this.loggedIn) {
-                signInWithEmailAndPassword(
+                await signInWithEmailAndPassword(
                     this.$firebase.auth,
                     'demo@curdoc.io',
                     'demo@curdoc.io'
-                ).then((userCredential) => {
-                    this.$store.commit('SET_AUTH_STATE', userCredential.user)
-                })
+                )
             }
 
             this.$router.push(
