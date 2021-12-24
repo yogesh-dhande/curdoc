@@ -8,7 +8,7 @@
                 aria-label="Footer"
             >
                 <nuxt-link
-                    to="/blog"
+                    to="/"
                     class="
                         text-blue-100
                         hover:text-blue-400
@@ -19,10 +19,10 @@
                         border-transparent
                     "
                     @click.native="scrollToTop"
-                    >About</nuxt-link
+                    >Broccolini</nuxt-link
                 >
                 <nuxt-link
-                    to="/blog/posts"
+                    to="/dashboard"
                     class="
                         text-blue-100
                         hover:text-blue-400
@@ -33,38 +33,10 @@
                         border-transparent
                     "
                     @click.native="scrollToTop"
-                    >Blog</nuxt-link
+                    >Dashboard</nuxt-link
                 >
                 <nuxt-link
-                    to="/demo"
-                    class="
-                        text-blue-100
-                        hover:text-blue-400
-                        px-3
-                        py-2
-                        text-lg
-                        font-bold
-                        border-transparent
-                    "
-                    @click.native="scrollToTop"
-                    >Demo</nuxt-link
-                >
-                <nuxt-link
-                    to="/discover"
-                    class="
-                        text-blue-100
-                        hover:text-blue-400
-                        px-3
-                        py-2
-                        text-lg
-                        font-bold
-                        border-transparent
-                    "
-                    @click.native="scrollToTop"
-                    >Discover</nuxt-link
-                >
-                <nuxt-link
-                    to="/feedback"
+                    to="/contact"
                     class="
                         text-blue-100
                         hover:text-blue-400
@@ -107,11 +79,6 @@
                     @click.native="scrollToTop"
                     >Sign Up</nuxt-link
                 >
-                <!-- <nuxt-link
-                    to="#"
-                    class="text-blue-100 hover:text-blue-400 px-3 py-2 text-lg font-bold border-transparent"
-                    >FAQs</nuxt-link
-                > -->
             </nav>
 
             <p class="mt-8 text-center text-base text-gray-400">
