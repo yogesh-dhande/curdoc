@@ -6,7 +6,17 @@
         <div class="mt-1">
             <textarea
                 rows="3"
-                class="p-3 shadow-sm focus:ring-gray-500 focus:border-gray-500 mt-1 block w-full sm:text-sm bg-gray-800 rounded-md"
+                class="
+                    p-3
+                    shadow-sm
+                    focus:ring-gray-500 focus:border-gray-500
+                    mt-1
+                    block
+                    w-full
+                    sm:text-sm
+                    bg-gray-800
+                    rounded-md
+                "
                 :placeholder="localValue"
                 :value="localValue"
                 @input="handleInput"

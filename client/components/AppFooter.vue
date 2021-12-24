@@ -82,7 +82,8 @@
             </nav>
 
             <p class="mt-8 text-center text-base text-gray-400">
-                &copy; 2021 Broccolini, All rights reserved.
+                &copy; {{ new Date().getFullYear() }} Broccolini. All rights
+                reserved.
             </p>
         </div>
     </footer>

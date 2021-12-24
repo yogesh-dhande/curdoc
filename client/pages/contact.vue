@@ -6,7 +6,7 @@
                 m-4
                 py-6
                 px-10
-                bg-gray-900 bg-opacity-25
+                bg-gray-900 bg-opacity-50
                 rounded-lg
                 shadow-xl
             "

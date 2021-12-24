@@ -94,7 +94,7 @@
             </div>
             <h2 class="mt-6 text-blue-100 font-medium text-xl">
                 Have questions? Ask them
-                <nuxt-link to="/feedback" class="text-blue-400 italic"
+                <nuxt-link to="/contact" class="text-blue-400 italic"
                     >here!</nuxt-link
                 >
             </h2>
