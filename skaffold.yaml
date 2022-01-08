@@ -1,0 +1,31 @@
+apiVersion: skaffold/v2beta25
+kind: Config
+metadata:
+  name: bokeh-play
+build:
+  artifacts:
+    - image: frontend
+      context: client
+      docker:
+        dockerfile: Dockerfile
+        buildArgs:
+          DEPLOY_TARGET: staging
+    - image: lsp
+      context: lsp
+      docker:
+        dockerfile: Dockerfile
+    - image: sandbox
+      context: server
+      docker:
+        dockerfile: Dockerfile
+  tagPolicy:
+    sha256: {}
+deploy:
+  kubectl:
+    manifests:
+      - kubernates-manifests/frontend-deployment.yaml
+      - kubernates-manifests/frontend-service.yaml
+      - kubernates-manifests/lsp-deployment.yaml
+      - kubernates-manifests/lsp-service.yaml
+      - kubernates-manifests/sandbox-deployment.yaml
+      - kubernates-manifests/sandbox-service.yaml

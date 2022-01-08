@@ -2,27 +2,46 @@ version: "3.8"
 services:
   caddy:
     build:
-      context: client
-      args: DEPLOY_TARGET=${DEPLOY_TARGET}
+      context: .
+      dockerfile: Dockerfile-dev
     container_name: caddy
     ports:
       - "8080:8080"
+  client:
+    build:
+      context: client
+      dockerfile: Dockerfile-dev
+    container_name: client
+    ports:
+      - "8081:8080"
+    stdin_open: true
+    tty: true
+    volumes:
+      - /app/node_modules
+      - /Users/yogesh/projects/bokeh-play/client:/app
+    env_file:
+      - client/envs/.env.development.local
+    environment:
+      - NUXT_APP_ORIGIN_DOMAIN=localhost:8080
   lsp:
     build: lsp
     container_name: lsp
-  sandbox1:
+    ports:
+      - "8082:8080"
+    stdin_open: true
+    tty: true
+    volumes:
+      - /app/node_modules
+      - /Users/yogesh/projects/bokeh-play/lsp:/app
+  sandbox:
     build: server
-    container_name: sandbox1
+    container_name: sandbox
+    stdin_open: true
+    tty: true
     restart: always
-    env_file:
-      - server/envs/.env.${DEPLOY_TARGET}.local
+    volumes:
+      - /app/public
+      - /Users/yogesh/projects/bokeh-play/server:/app
     environment:
-      - SERVICE_NAME=sandbox1
-  sandbox2:
-    image: bokeh-play_sandbox1
-    container_name: sandbox2
-    restart: always
-    env_file:
-      - server/envs/.env.${DEPLOY_TARGET}.local
-    environment:
-      - SERVICE_NAME=sandbox2
+      - ORIGIN_DOMAIN=localhost:8080
+      - DEPLOY_TARGET=dev

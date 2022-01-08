@@ -1,8 +1,9 @@
-export default async ({ route }, inject) => {
+export default ({ route, app }, inject) => {
+  console.log(app.$config)
   function createSEOMeta(data) {
-    let pageUrl = process.env.NUXT_ENV_BASE_URL + route.fullPath;
+    const pageUrl = process.env.NUXT_ENV_BASE_URL + route.fullPath;
 
-    let meta = {
+    const meta = {
       title: data.title,
       meta: [
         { hid: "og:title", property: "og:title", content: data.title },

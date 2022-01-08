@@ -14,15 +14,11 @@ RUN /opt/conda/bin/conda env update -n base -f /tmp/conda-tmp/environment.yaml \
 
 WORKDIR /app
 
-ARG PORT=8080
-ENV PORT=$PORT
-EXPOSE $PORT
+EXPOSE 8080
 
-RUN /opt/conda/bin/conda env export --name base > base.yaml
+COPY . ./
 
-COPY . .
-
-RUN cp base.yaml static/base.yaml
+RUN /opt/conda/bin/conda env export --name base > public/base.yaml
 
 ARG USER=sandbox
 RUN useradd -s /bin/bash -m ${USER} -u 1000 \

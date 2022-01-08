@@ -10,8 +10,7 @@
             "
         >
             Start coding
-            <span class="block text-blue-400"> Bokeh and Panel </span
-            >applications
+            <span class="block text-blue-400">Bokeh and Panel</span>applications
         </h1>
         <form
             class="
@@ -146,7 +145,7 @@ export default {
     middleware: 'guest',
     data() {
         return {
-            BASE_URL: `${process.env.NUXT_ENV_DISPLAY_URL}/`,
+            BASE_URL: this.$config.baseUrl,
             name: '',
             nameErrors: [],
             email: '',

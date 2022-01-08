@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lsp
+  labels:
+    app: lsp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lsp
+  template:
+    metadata:
+      labels:
+        app: lsp
+    spec:
+      containers:
+        - name: lsp
+          image: lsp:latest

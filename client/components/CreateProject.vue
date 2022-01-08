@@ -76,7 +76,7 @@ export default {
             return false
         },
         baseUrl() {
-            return `${process.env.NUXT_ENV_DISPLAY_URL}/${this.currentUser.name}/projects/`
+            return this.$config.baseUrl
         },
     },
     methods: {

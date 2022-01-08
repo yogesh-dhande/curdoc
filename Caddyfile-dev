@@ -1,18 +1,14 @@
 :8080 {
-    handle /sandbox1/* {
-        reverse_proxy sandbox1:8080
-    }
-
-    handle /sandbox2/* {
-        reverse_proxy sandbox2:8080
+    handle /sandbox/* {
+        reverse_proxy http://sandbox:8080
     }
     
     handle /lsp/* {
-        reverse_proxy lsp:8080
+        reverse_proxy http://lsp:8080
     }
 
     handle * {
-        reverse_proxy client:8080
+        reverse_proxy http://client:8080
     }
     
 }

@@ -156,7 +156,7 @@ export const actions = {
   async setAppScript({ state, commit }, query) {
     console.log("getting app script");
     try {
-      const res = await post(`${this.$config.functionsUrl}/getAppScript`, {
+      const res = await post(`/sandbox/project`, {
         project: state.project,
         new: state.codeChanged,
         query,

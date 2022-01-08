@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sandbox
+  labels:
+    app: sandbox
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sandbox
+  template:
+    metadata:
+      labels:
+        app: sandbox
+    spec:
+      containers:
+        - name: sandbox
+          image: sandbox:latest
+          env:
+            - name: ORIGIN_DOMAIN
+              value: "127.0.0.1:4503"
