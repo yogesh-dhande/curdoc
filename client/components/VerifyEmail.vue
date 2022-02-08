@@ -70,7 +70,6 @@ export default {
     mounted() {
         this.verificationInterval = setInterval(async () => {
             if (this.loggedIn) {
-                console.log('reloading authuser')
                 await reload(this.authUser)
                 if (this.authUser.emailVerified) {
                     clearInterval(this.verificationInterval)

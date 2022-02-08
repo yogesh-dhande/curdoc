@@ -2,21 +2,21 @@ import { getApps, initializeApp } from "firebase/app";
 import {
   connectAuthEmulator,
   getAuth,
-  sendEmailVerification,
+  sendEmailVerification
 } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 import { connectStorageEmulator, getStorage } from "firebase/storage";
 
-export default ({ app, store }, inject) => {
+export default ({ store, env }, inject) => {
   const firebaseConfig = {
-    apiKey: app.$config.apiKey,
-    authDomain: app.$config.authDomain,
-    projectId: app.$config.projectId,
-    storageBucket: app.$config.storageBucket,
-    messagingSenderId: app.$config.messagingSenderId,
-    appId: app.$config.appId,
-    measurementId: app.$config.measurementId,
+    apiKey: env.NUXT_ENV_FIREBASE_CONFIG_API_KEY,
+    authDomain: env.NUXT_ENV_FIREBASE_CONFIG_AUTH_DOMAIN,
+    projectId: env.NUXT_ENV_FIREBASE_CONFIG_PROJECT_ID,
+    storageBucket: env.NUXT_ENV_STORAGE_BUCKET,
+    messagingSenderId: env.NUXT_ENV_MESSAGING_SENDER_ID,
+    appId: env.NUXT_ENV_ID,
+    measurementId: env.NUXT_ENV_MEASUREMENT_ID,
   };
 
   let firebaseApp;
@@ -32,9 +32,7 @@ export default ({ app, store }, inject) => {
   const auth = getAuth(firebaseApp);
   const functions = getFunctions(firebaseApp);
 
-  console.log(app.$config.useFirebaseEmulators);
-  if (app.$config.useFirebaseEmulators) {
-    console.log("using firebase emulators");
+  if (env.useFirebaseEmulators) {
     connectAuthEmulator(auth, "http://localhost:10000");
     connectFunctionsEmulator(functions, "localhost", 10001);
     connectFirestoreEmulator(db, "localhost", 10002);
@@ -43,7 +41,7 @@ export default ({ app, store }, inject) => {
 
   const sendVerificationEmail = (authUser) => {
     sendEmailVerification(authUser, {
-      url: `${app.$config.baseUrl}/dashboard`,
+      url: `${env.baseUrl}/dashboard`,
     });
   };
 
@@ -57,7 +55,6 @@ export default ({ app, store }, inject) => {
 
   return new Promise((resolve, reject) => {
     auth.onAuthStateChanged(async (user) => {
-      console.log("calling on auth changed");
       await store.dispatch("onAuthStateChangedAction", { authUser: user });
       return resolve();
     });

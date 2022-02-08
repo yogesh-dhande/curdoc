@@ -60,7 +60,6 @@ let editorModels = {};
 const editorService = {
   initialize(el, url) {
     if (!_editor) {
-      console.log("creating editor");
       const editor = monaco.editor.create(el, {
         model: null,
         language: "python",
@@ -84,20 +83,17 @@ const editorService = {
       currentModel.model === _editor.getModel() &&
       currentModel.key in editorModels
     ) {
-      console.log("saving editor state of the current model");
       // editorModels[currentModel.key].state = _editor.saveViewState();
     }
 
     // create a new model if one does not already exist
     if (!editorModels[key]) {
-      console.log("editor model key not found", key);
       editorModels[key] = {
         model: monaco.editor.createModel(text, "python"),
         state: null,
         key,
       };
     }
-    console.log("setting editor model");
     _editor.updateOptions({ readOnly });
     _editor.setModel(editorModels[key].model);
     // _editor.restoreViewState(editorModels[key].state);

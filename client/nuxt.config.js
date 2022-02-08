@@ -10,6 +10,19 @@ require("dotenv").config({
 
 export default {
   target: "static",
+  env: {
+    baseUrl: `${process.env.NUXT_APP_WEB_PROTOCOL}://${process.env.NUXT_APP_ORIGIN_DOMAIN}`,
+    lspUrl: `${process.env.NUXT_APP_WEBSOCKET_PROTOCOL}://${process.env.NUXT_APP_ORIGIN_DOMAIN}/lsp/`,
+    useFirebaseEmulators: deployTarget === "development",
+    functionsUrl: process.env.NUXT_ENV_FIREBASE_FUNCTIONS_URL,
+    apiKey: process.env.NUXT_ENV_FIREBASE_CONFIG_API_KEY,
+    authDomain: process.env.NUXT_ENV_FIREBASE_CONFIG_AUTH_DOMAIN,
+    projectId: process.env.NUXT_ENV_FIREBASE_CONFIG_PROJECT_ID,
+    storageBucket: process.env.NUXT_ENV_STORAGE_BUCKET,
+    messagingSenderId: process.env.NUXT_ENV_MESSAGING_SENDER_ID,
+    appId: process.env.NUXT_ENV_ID,
+    measurementId: process.env.NUXT_ENV_MEASUREMENT_ID,
+  },
   ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -60,17 +73,6 @@ export default {
     // https://go.nuxtjs.dev/pwa
   ],
   publicRuntimeConfig: {
-    baseUrl: `${process.env.NUXT_APP_WEB_PROTOCOL}://${process.env.NUXT_APP_ORIGIN_DOMAIN}`,
-    lspUrl: `${process.env.NUXT_APP_WEBSOCKET_PROTOCOL}://${process.env.NUXT_APP_ORIGIN_DOMAIN}/lsp/`,
-    apiKey: process.env.NUXT_ENV_FIREBASE_CONFIG_API_KEY,
-    authDomain: process.env.NUXT_ENV_FIREBASE_CONFIG_AUTH_DOMAIN,
-    projectId: process.env.NUXT_ENV_FIREBASE_CONFIG_PROJECT_ID,
-    storageBucket: process.env.NUXT_ENV_STORAGE_BUCKET,
-    messagingSenderId: process.env.NUXT_ENV_MESSAGING_SENDER_ID,
-    appId: process.env.NUXT_ENV_ID,
-    measurementId: process.env.NUXT_ENV_MEASUREMENT_ID,
-    functionsUrl: process.env.NUXT_ENV_FIREBASE_FUNCTIONS_URL,
-    useFirebaseEmulators: deployTarget === "development",
   },
   alias: {
     vscode: require.resolve("monaco-languageclient/lib/vscode-compatibility"),

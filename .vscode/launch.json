@@ -8,7 +8,8 @@
       "watch": true,
       "cleanUp": true,
       "portForward": true,
-      "internalConsoleOptions": "neverOpen"
+      "internalConsoleOptions": "neverOpen",
+      "imageRegistry": "gcr.io/databrowser-ykd"
     },
     {
       "type": "chrome",

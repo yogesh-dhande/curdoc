@@ -180,16 +180,11 @@ export default {
                 )
                 this.$splitbee.track('Log In')
 
-                console.log(userCredential)
-                console.log(userCredential.user)
-                console.log(userCredential.user.uid)
                 this.$store.commit('SET_AUTH_STATE', userCredential.user)
 
                 const snap = await getDoc(
                     doc(this.$firebase.db, 'users', userCredential.user.uid)
                 )
-                console.log('setting user data')
-                console.log(snap.data())
                 this.$store.commit('SET_USER', snap.data() || {})
                 this.$router.push(this.redirect)
             } catch (error) {
@@ -226,8 +221,4 @@ export default {
 }
 </script>
 <style>
-.btn,
-.jumbotron {
-    border-radius: 0px;
-}
 </style>

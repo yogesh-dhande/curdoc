@@ -16,7 +16,6 @@ export default {
         },
     },
     mounted() {
-        console.log('mounting bokeh app')
         postscribe(this.$refs['script-app'], this.script)
     },
 }

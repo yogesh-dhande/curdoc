@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile-dev
     container_name: caddy
     ports:
-      - "8080:8080"
+      - "4503:8080"
   client:
     build:
       context: client
@@ -21,8 +21,6 @@ services:
       - /Users/yogesh/projects/bokeh-play/client:/app
     env_file:
       - client/envs/.env.development.local
-    environment:
-      - NUXT_APP_ORIGIN_DOMAIN=localhost:8080
   lsp:
     build: lsp
     container_name: lsp
@@ -43,5 +41,5 @@ services:
       - /app/public
       - /Users/yogesh/projects/bokeh-play/server:/app
     environment:
-      - ORIGIN_DOMAIN=localhost:8080
+      - ORIGIN_DOMAIN=127.0.0.1:4503
       - DEPLOY_TARGET=dev

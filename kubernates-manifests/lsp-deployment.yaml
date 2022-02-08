@@ -17,3 +17,10 @@ spec:
       containers:
         - name: lsp
           image: lsp:latest
+          resources:
+            limits:
+              cpu: "0.1"
+              memory: "200Mi"
+            requests:
+              cpu: "0.1"
+              memory: "200Mi"

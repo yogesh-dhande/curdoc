@@ -23,6 +23,7 @@ if (process.env.FUNCTIONS_EMULATOR) {
 adminConfig.credential = admin.credential.cert(serviceAccount);
 admin.initializeApp(adminConfig);
 
+exports.admin = admin;
 exports.db = admin.firestore();
 exports.bucket = admin.storage().bucket();
 exports.auth = admin.auth();

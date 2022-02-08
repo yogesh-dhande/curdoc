@@ -21,7 +21,6 @@ export default {
     },
     watch: {
         'blob.fullPath'() {
-            console.log('watching to update')
             this.$editor.setModel(
                 this.blob.fullPath,
                 this.blob.text,
@@ -33,8 +32,7 @@ export default {
         },
     },
     mounted() {
-        console.log('mounting monaco editor')
-        this.$editor.initialize(this.$el, this.$config.lspUrl)
+        this.$editor.initialize(this.$el, process.env.lspUrl)
         this.$editor.setModel(this.blob.fullPath, this.blob.text, !this.canEdit)
         this.$editor.setCallback(this.updateCode)
     },

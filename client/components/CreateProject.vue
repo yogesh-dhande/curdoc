@@ -76,7 +76,7 @@ export default {
             return false
         },
         baseUrl() {
-            return this.$config.baseUrl
+            return process.env.baseUrl
         },
     },
     methods: {

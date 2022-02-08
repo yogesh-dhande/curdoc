@@ -81,9 +81,7 @@ export const actions = {
       authUser.getIdToken(/* forceRefresh */ true).then((token) => {
         commit("SET_TOKEN", token);
         commit("SET_EMAIL_VERIFIED", authUser.emailVerified);
-        console.log(authUser.uid);
         onSnapshot(doc(this.$firebase.db, "users", authUser.uid), (snap) => {
-          console.log("setting user data");
           commit("SET_USER", snap.data() || {});
         });
 
@@ -154,7 +152,6 @@ export const actions = {
   },
 
   async setAppScript({ state, commit }, query) {
-    console.log("getting app script");
     try {
       const res = await post(`/sandbox/project`, {
         project: state.project,
@@ -170,7 +167,6 @@ export const actions = {
         state.project.user &&
         state.project.user.name !== "guest"
       ) {
-        console.log("uploading code");
         state.project.blob.map((blob) =>
           uploadString(
             ref(this.$firebase.storage, join("users", blob.fullPath)),
@@ -210,7 +206,6 @@ export const mutations = {
     state.readonly = data;
   },
   SET_PROJECT(state, project) {
-    console.log(`setting project`);
     state.project = project;
   },
   SET_APP_SCRIPT(state, script) {

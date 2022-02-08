@@ -9,5 +9,7 @@
 
     root dist
     file_server
-    
+    handle * {
+        reverse_proxy /index.html
+    }
 }

@@ -145,7 +145,7 @@ export default {
     middleware: 'guest',
     data() {
         return {
-            BASE_URL: this.$config.baseUrl,
+            BASE_URL: process.env.baseUrl,
             name: '',
             nameErrors: [],
             email: '',
@@ -189,12 +189,15 @@ export default {
                 // set loading class to true
                 this.isLoading = true
                 try {
-                    await axios.post(`${this.$config.functionsUrl}/signUp`, {
-                        name: this.name,
-                        email: this.email,
-                        password: this.password,
-                        passwordConfirmation: this.passwordConfirmation,
-                    })
+                    await axios.post(
+                        `${process.env.NUXT_ENV_FIREBASE_FUNCTIONS_URL}/signUp`,
+                        {
+                            name: this.name,
+                            email: this.email,
+                            password: this.password,
+                            passwordConfirmation: this.passwordConfirmation,
+                        }
+                    )
                     const userCredential = await signInWithEmailAndPassword(
                         this.$firebase.auth,
                         this.email,
@@ -206,7 +209,6 @@ export default {
 
                     this.$router.push('/dashboard')
                 } catch (error) {
-                    console.log(error)
                     if (error.response && error.response.data.message) {
                         this.errors.push(error.response.data.message)
                     }

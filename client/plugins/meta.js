@@ -1,5 +1,4 @@
 export default ({ route, app }, inject) => {
-  console.log(app.$config)
   function createSEOMeta(data) {
     const pageUrl = process.env.NUXT_ENV_BASE_URL + route.fullPath;
 
