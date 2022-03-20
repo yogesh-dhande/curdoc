@@ -2,7 +2,7 @@ import { getApps, initializeApp } from "firebase/app";
 import {
   connectAuthEmulator,
   getAuth,
-  sendEmailVerification
+  sendEmailVerification,
 } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import { connectFunctionsEmulator, getFunctions } from "firebase/functions";

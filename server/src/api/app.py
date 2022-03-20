@@ -15,7 +15,7 @@ app = FastAPI()
 router = APIRouter()
 
 origins = [
-    f"http://{os.getenv('ORIGIN_DOMAIN')}",
+    f"{os.getenv('ORIGIN_PROTOCOL')}://{os.getenv('ORIGIN_DOMAIN')}",
 ]
 
 app.add_middleware(

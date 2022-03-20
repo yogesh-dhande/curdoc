@@ -9,7 +9,7 @@ build:
       docker:
         dockerfile: Dockerfile
         buildArgs:
-          DEPLOY_TARGET: development
+          DEPLOY_TARGET: staging
     - image: lsp
       context: lsp
       docker:

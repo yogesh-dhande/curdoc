@@ -1,8 +1,9 @@
-import path from "path";
-const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
+const path = require("path");
 
 const deployTarget = process.env.DEPLOY_TARGET || "staging";
 console.log("deploy target: ", deployTarget);
+
+const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
 require("dotenv").config({
   path: path.resolve(__dirname, `envs/.env.${deployTarget}.local`),
@@ -13,7 +14,7 @@ export default {
   env: {
     baseUrl: `${process.env.NUXT_APP_WEB_PROTOCOL}://${process.env.NUXT_APP_ORIGIN_DOMAIN}`,
     lspUrl: `${process.env.NUXT_APP_WEBSOCKET_PROTOCOL}://${process.env.NUXT_APP_ORIGIN_DOMAIN}/lsp/`,
-    useFirebaseEmulators: deployTarget === "development",
+    useFirebaseEmulators: process.env.USE_FIREBASE_EMULATORS,
     functionsUrl: process.env.NUXT_ENV_FIREBASE_FUNCTIONS_URL,
     apiKey: process.env.NUXT_ENV_FIREBASE_CONFIG_API_KEY,
     authDomain: process.env.NUXT_ENV_FIREBASE_CONFIG_AUTH_DOMAIN,
@@ -72,8 +73,7 @@ export default {
     "@nuxtjs/axios",
     // https://go.nuxtjs.dev/pwa
   ],
-  publicRuntimeConfig: {
-  },
+  publicRuntimeConfig: {},
   alias: {
     vscode: require.resolve("monaco-languageclient/lib/vscode-compatibility"),
   },

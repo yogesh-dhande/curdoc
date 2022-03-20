@@ -5,8 +5,8 @@
       "type": "cloudcode.kubernetes",
       "request": "launch",
       "skaffoldConfig": "${workspaceFolder}/skaffold.yaml",
-      "watch": true,
-      "cleanUp": true,
+      "watch": false,
+      "cleanUp": false,
       "portForward": true,
       "internalConsoleOptions": "neverOpen",
       "imageRegistry": "gcr.io/databrowser-ykd"

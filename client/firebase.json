@@ -9,20 +9,6 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
-        "source": "/sandbox1/**",
-        "run": {
-          "serviceId": "sandbox1",
-          "region": "us-central1"
-        }
-      },
-      {
-        "source": "/sandbox2/**",
-        "run": {
-          "serviceId": "sandbox2",
-          "region": "us-central1"
-        }
-      },
-      {
         "source": "**",
         "destination": "/index.html"
       }

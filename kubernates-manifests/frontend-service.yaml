@@ -5,9 +5,34 @@ metadata:
   labels:
     app: frontend
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
-    - port: 80
+    - protocol: TCP
+      port: 80
       targetPort: 8080
   selector:
     app: frontend
+---
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: curdoc-ssl
+spec:
+  domains:
+    - curdoc.dev
+    - www.curdoc.dev
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: curdoc-ip
+    networking.gke.io/managed-certificates: curdoc-ssl
+    kubernetes.io/ingress.class: "gce"
+spec:
+  defaultBackend:
+    service:
+      name: frontend
+      port:
+        number: 80

@@ -1,0 +1,47 @@
+steps:
+  # Build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/$PROJECT_ID/frontend",
+        "--cache-from",
+        "gcr.io/$PROJECT_ID/frontend:latest",
+        "client",
+      ]
+  # Push the container image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/frontend"]
+  # Build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/$PROJECT_ID/lsp",
+        "--cache-from",
+        "gcr.io/$PROJECT_ID/lsp:latest",
+        "lsp",
+      ]
+  # Push the container image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/lsp"]
+  # Build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/$PROJECT_ID/sandbox",
+        "--cache-from",
+        "gcr.io/$PROJECT_ID/sandbox:latest",
+        "server",
+      ]
+  # Push the container image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/sandbox"]
+images:
+  - gcr.io/$PROJECT_ID/frontend
+  - gcr.io/$PROJECT_ID/lsp
+  - gcr.io/$PROJECT_ID/sandbox
