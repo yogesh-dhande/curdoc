@@ -20,12 +20,19 @@ build:
         dockerfile: Dockerfile
   tagPolicy:
     sha256: {}
-deploy:
-  kubectl:
-    manifests:
-      - kubernates-manifests/frontend-deployment.yaml
-      - kubernates-manifests/frontend-service.yaml
-      - kubernates-manifests/lsp-deployment.yaml
-      - kubernates-manifests/lsp-service.yaml
-      - kubernates-manifests/sandbox-deployment.yaml
-      - kubernates-manifests/sandbox-service.yaml
+profiles:
+  - name: minikube
+    deploy:
+      kubectl:
+        manifests:
+          - kubernates-manifests/common/*.yaml
+          - kubernates-manifests/dev/*.yaml
+  - name: staging
+    build:
+      googleCloudBuild:
+        projectId: databrowser-ykd
+    deploy:
+      kubectl:
+        manifests:
+          - kubernates-manifests/common/*.yaml
+          - kubernates-manifests/stagin/*.yaml

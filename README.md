@@ -2,11 +2,13 @@
 
 A playground for building and deploying bokeh apps
 
-## Develop on the local machine
+## Develop locally using docker compose
 
 - `docker compose up --build`
 
-## Develop locally on minikube
+---
+
+## Develop locally using kubernates on minikube
 
 - `minikube start`
 - Update `.env.staging.local`
@@ -20,15 +22,8 @@ A playground for building and deploying bokeh apps
     value: http
 - From the command palette, select `Run on Kubernates` and select minikube as the context.
 
+---
+
 ## Deploy to staging
 
-- Update `DEPLOY_TARGET` in `skaffold.yaml` to `staging`.
-- Update `.env.staging.local`
-  - NUXT_APP_ORIGIN_DOMAIN=curdoc.dev
-  - NUXT_APP_WEB_PROTOCOL=https
-  - NUXT_APP_WEBSOCKET_PROTOCOL=wss
-- Update `sandbox-deployment.yaml`
-  - name: ORIGIN_DOMAIN
-    value: "curdoc.dev"
-  - name: ORIGIN_PROTOCOL
-    value: https
+- `./deploy.sh`

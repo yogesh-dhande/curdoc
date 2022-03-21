@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  emulators:
+    build:
+      context: client
+      dockerfile: Dockerfile-emulators
+    container_name: firebase-emulators
+    ports:
+      - "10000-10005"
+    stdin_open: true
+    tty: true
+    volumes:
+      - /app/node_modules
+      - /Users/yogesh/projects/bokeh-play/client:/app
+    env_file:
+      - client/envs/.env.development.local

@@ -6,6 +6,7 @@ steps:
       - --cache=true
       - --dockerfile=./client/Dockerfile
       - --context=dir://client
+      - --build-arg=DEPLOY_TARGET=production
   # Build the LSP image
   - name: "gcr.io/kaniko-project/executor:latest"
     args:

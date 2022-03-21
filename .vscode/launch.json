@@ -5,11 +5,12 @@
       "type": "cloudcode.kubernetes",
       "request": "launch",
       "skaffoldConfig": "${workspaceFolder}/skaffold.yaml",
-      "watch": false,
+      "watch": true,
       "cleanUp": false,
       "portForward": true,
       "internalConsoleOptions": "neverOpen",
-      "imageRegistry": "gcr.io/databrowser-ykd"
+      "imageRegistry": "gcr.io/databrowser-ykd",
+      "profile": "minikube"
     },
     {
       "type": "chrome",
