@@ -41,7 +41,7 @@ export default ({ store, env }, inject) => {
 
   const sendVerificationEmail = (authUser) => {
     sendEmailVerification(authUser, {
-      url: `${env.baseUrl}/dashboard`,
+      url: `${env.baseUrl}dashboard`,
     });
   };
 

@@ -35,4 +35,4 @@ profiles:
       kubectl:
         manifests:
           - kubernates-manifests/common/*.yaml
-          - kubernates-manifests/stagin/*.yaml
+          - kubernates-manifests/staging/*.yaml

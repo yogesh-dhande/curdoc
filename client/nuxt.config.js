@@ -12,7 +12,7 @@ require("dotenv").config({
 export default {
   target: "static",
   env: {
-    baseUrl: `${process.env.NUXT_APP_WEB_PROTOCOL}://${process.env.NUXT_APP_ORIGIN_DOMAIN}`,
+    baseUrl: `${process.env.NUXT_APP_WEB_PROTOCOL}://${process.env.NUXT_APP_ORIGIN_DOMAIN}/`,
     lspUrl: `${process.env.NUXT_APP_WEBSOCKET_PROTOCOL}://${process.env.NUXT_APP_ORIGIN_DOMAIN}/lsp/`,
     useFirebaseEmulators: process.env.USE_FIREBASE_EMULATORS,
     functionsUrl: process.env.NUXT_ENV_FIREBASE_FUNCTIONS_URL,
@@ -27,7 +27,7 @@ export default {
   ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: "Broccolini",
+    title: "Curdoc",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },

@@ -33,7 +33,7 @@ def free_up_port(port):
 
 class ContainerSessionBase(object):
 
-    time_out_sec = 3 * 60
+    time_out_sec = 5 * 60
 
     def __init__(self, project_id) -> None:
         self.project_id = project_id
