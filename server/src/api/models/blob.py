@@ -11,7 +11,9 @@ class Blob(BaseModel):
 
     def reload(self, project_id):
         if not self.text:
-            self.text = storage_service.get_text_from_blob(project_id, self.relativePath)
+            self.text = storage_service.get_text_from_blob(
+                project_id, self.relativePath
+            )
         return self
 
     def save(self, project_id) -> None:

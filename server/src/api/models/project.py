@@ -34,7 +34,9 @@ class Project(BaseModel):
 
     def get_app_script(self, new=False, query=None) -> Optional[str]:
         self.ensure_locally(overwrite=new)
-        container_session = container_service.get_container_session_for_project(self.id, new=new)
+        container_session = container_service.get_container_session_for_project(
+            self.id, new=new
+        )
         self.wait_for_server_to_be_ready(container_session)
 
         # External link to the app
@@ -55,7 +57,7 @@ class Project(BaseModel):
 
         wait_period = 0.1
         for i in range(1, 151):  # Time out after 15 sec
-            
+
             with ThreadPoolExecutor() as executor:
                 future = executor.submit(is_server_ready)
                 result = future.result()
@@ -63,5 +65,5 @@ class Project(BaseModel):
                     break
 
             time.sleep(wait_period)
-            
+
         print(f"Waited {i*wait_period} seconds for Bokeh server to be ready")

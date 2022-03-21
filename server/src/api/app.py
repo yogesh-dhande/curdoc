@@ -7,7 +7,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from models.session import Session
 from services.container import container_service
-from services.validation import InvalidAPIKey
 from services.validation import register_exception_handlers
 
 app = FastAPI()
@@ -41,15 +40,15 @@ async def root():
 
 
 @router.get("/test")
-async def root():
+async def test():
     return {"message": "from sandbox/test"}
 
 
 @router.post("/project")
-async def get_script(session: Session, api_key: str=Header(None)):
+async def get_script(session: Session, api_key: str = Header(None)):
     # if api_key != os.getenv("SANDBOX_API_KEY"):
     #     raise InvalidAPIKey(api_key=api_key)
     return session.project.get_app_script(session.new, query=session.query)
 
 
-app.include_router(router, prefix=f"/sandbox")
+app.include_router(router, prefix="/sandbox")

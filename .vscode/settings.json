@@ -16,11 +16,7 @@
     "--force-grid-wrap=0",
     "--use-parentheses"
   ],
-  "python.linting.flake8Args": [
-    "--max-line-length=120",
-    "--ignore=E402",
-    "--exclude .git,__pycache__,docs/source/conf.py,old,build,dist"
-  ],
+  "python.linting.flake8Args": ["--max-line-length=120", "--ignore=E402"],
   "python.analysis.extraPaths": ["server/src/api"],
   "python.envFile": "${workspaceFolder}/server-pysheets/environment.yml",
   "python.testing.pytestArgs": ["--ignore=client", "-v"],
