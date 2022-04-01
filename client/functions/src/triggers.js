@@ -37,7 +37,7 @@ exports.updateUserWhenProjectUpdated = functions.firestore
       console.log(`Updated project ${projectId} for the user ${userId}`);
     } catch (error) {
       console.log(
-        `Error updating post ${projectId} for user ${userId}: ${error}`
+        `Error updating project ${projectId} for user ${userId}: ${error}`
       );
     }
     return null;
@@ -52,7 +52,7 @@ exports.handleProjectDeleted = functions.firestore
     try {
       await db
         .doc(`users/${userId}`)
-        .update(`projects.${postId}`, admin.firestore.FieldValue.delete());
+        .update(`projects.${projectId}`, admin.firestore.FieldValue.delete());
 
       let storageUrl = join("users", userId, "projects", projectId);
       await bucket.deleteFiles({
