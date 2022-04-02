@@ -2,7 +2,7 @@ steps:
   # Build the frontend image
   - name: "gcr.io/kaniko-project/executor:latest"
     args:
-      - --destination=gcr.io/$PROJECT_ID/frontend
+      - --destination=us-docker.pkg.dev/$PROJECT_ID/gcr.io/frontend
       - --cache=true
       - --dockerfile=./client/Dockerfile
       - --context=dir://client
@@ -10,14 +10,14 @@ steps:
   # Build the LSP image
   - name: "gcr.io/kaniko-project/executor:latest"
     args:
-      - --destination=gcr.io/$PROJECT_ID/lsp
+      - --destination=us-docker.pkg.dev/$PROJECT_ID/gcr.io/lsp
       - --cache=true
       - --dockerfile=./lsp/Dockerfile
       - --context=dir://lsp
   # Build the sandbox image
   - name: "gcr.io/kaniko-project/executor:latest"
     args:
-      - --destination=gcr.io/$PROJECT_ID/sandbox
+      - --destination=us-docker.pkg.dev/$PROJECT_ID/gcr.io/sandbox
       - --cache=true
       - --dockerfile=./server/Dockerfile
       - --context=dir://server
