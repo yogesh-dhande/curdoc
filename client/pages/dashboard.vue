@@ -142,7 +142,7 @@ export default {
     },
     head() {
         return this.$createSEOMeta({
-            title: 'Dashboard. Broccolini',
+            title: 'Dashboard. Curdoc',
             noIndex: true,
         })
     },

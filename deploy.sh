@@ -1,10 +1,12 @@
 #!/bin/bash
 
-gcloud builds submit --timeout=1200s
-
 PROJECT_ID=$(gcloud config get-value project)
 
 echo $PROJECT_ID
+
+gcloud deploy apply --file clouddeploy.yaml --region=us-central1 --project=$PROJECT_ID
+
+# gcloud builds submit --timeout=1200s
 
 gcloud deploy apply --file clouddeploy.yaml --region=us-central1 --project=$PROJECT_ID
 

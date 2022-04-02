@@ -19,7 +19,7 @@
                         border-transparent
                     "
                     @click.native="scrollToTop"
-                    >Broccolini</nuxt-link
+                    >Curdoc</nuxt-link
                 >
                 <nuxt-link
                     to="/dashboard"
@@ -82,7 +82,7 @@
             </nav>
 
             <p class="mt-8 text-center text-base text-gray-400">
-                &copy; {{ new Date().getFullYear() }} Broccolini. All rights
+                &copy; {{ new Date().getFullYear() }} Curdoc. All rights
                 reserved.
             </p>
         </div>

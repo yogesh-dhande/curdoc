@@ -24,4 +24,4 @@ metadata:
   name: prod
 description: production cluster
 gke:
-  cluster: projects/databrowser-ykd/locations/us-central1/clusters/prod-cluster-1
+  cluster: projects/databrowser-ykd/locations/us-central1/clusters/prod-autopilot-cluster-1

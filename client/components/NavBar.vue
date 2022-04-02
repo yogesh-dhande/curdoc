@@ -105,9 +105,7 @@
                             border-transparent
                         "
                     >
-                        <nuxt-link to="/" class="italic">
-                            Broccolini
-                        </nuxt-link>
+                        <nuxt-link to="/" class="italic"> Curdoc </nuxt-link>
                     </div>
                 </div>
 

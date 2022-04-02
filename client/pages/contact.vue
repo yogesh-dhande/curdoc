@@ -53,7 +53,7 @@ export default {
     },
     head() {
         return this.$createSEOMeta({
-            title: 'Provide Feedback on Broccolini',
+            title: 'Provide Feedback on Curdoc',
         })
     },
     computed: {

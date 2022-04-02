@@ -161,7 +161,7 @@ export default {
     },
     head() {
         return this.$createSEOMeta({
-            title: 'Join Broccolini',
+            title: 'Join Curdoc',
         })
     },
     computed: {

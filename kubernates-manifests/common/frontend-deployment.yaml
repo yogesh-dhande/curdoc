@@ -19,8 +19,8 @@ spec:
           image: frontend:latest
           resources:
             limits:
-              cpu: "250m"
-              memory: "500Mi"
+              cpu: "400m"
+              memory: "400Mi"
             requests:
-              cpu: "100m"
+              cpu: "250m"
               memory: "250Mi"

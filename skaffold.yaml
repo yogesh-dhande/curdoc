@@ -1,7 +1,7 @@
 apiVersion: skaffold/v2beta25
 kind: Config
 metadata:
-  name: bokeh-play
+  name: curdc
 build:
   artifacts:
     - image: frontend
