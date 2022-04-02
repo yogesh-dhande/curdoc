@@ -104,7 +104,7 @@
                                 bg-gray-800
                                 rounded-xl
                                 px-3
-                                py-2
+                                py-1
                             "
                             :errors="errors"
                             @click="() => deleteProject(projectId)"
