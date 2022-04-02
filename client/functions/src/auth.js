@@ -35,6 +35,7 @@ exports.signUp = functions.https.onRequest(async (req, res) => {
           email: newUser.email,
           password: newUser.password,
           emailVerified: false,
+          displayName: newUser.name,
         });
 
         let userDoc = {
