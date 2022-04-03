@@ -10,13 +10,10 @@ if (process.env.FUNCTIONS_EMULATOR) {
   // dev
   domain = "http://localhost:8080";
   sandboxUrls = [`${domain}/sandbox1/project`, `${domain}/sandbox2/project`];
-} else if (adminConfig.projectId == "databrowser-ykd") {
-  // staging
-  sandboxUrls = [`${domain}/sandbox1/project`, `${domain}/sandbox2/project`];
 } else {
   // prod
   // TODO: change domain to custom domain
-  sandboxUrls = [`${domain}/sandbox1/project`, `${domain}/sandbox2/project`];
+  domain = "https://curdoc.dev";
   serviceAccount = require("./../serviceKey.prod.json");
 }
 
