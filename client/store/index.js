@@ -82,7 +82,14 @@ export const actions = {
         commit("SET_TOKEN", token);
         commit("SET_EMAIL_VERIFIED", authUser.emailVerified);
         onSnapshot(doc(this.$firebase.db, "users", authUser.uid), (snap) => {
-          commit("SET_USER", snap.data() || {});
+          const userData = snap.data();
+
+          commit("SET_USER", userData || {});
+          this.$splitbee.user.set({
+            email: userData.email,
+            name: userData.name,
+            userId: userData.id,
+          });
         });
 
         onSnapshot(doc(this.$firebase.db, "readonly", authUser.uid), (snap) => {
@@ -167,11 +174,12 @@ export const actions = {
         state.project.user &&
         state.project.user.name !== "guest"
       ) {
-        state.project.blob.map((blob) =>
-          uploadString(
-            ref(this.$firebase.storage, join("users", blob.fullPath)),
-            blob.text
-          )
+        state.project.blob.map(
+          async (blob) =>
+            await uploadString(
+              ref(this.$firebase.storage, join("users", blob.fullPath)),
+              blob.text
+            )
         );
       }
     } catch (error) {
