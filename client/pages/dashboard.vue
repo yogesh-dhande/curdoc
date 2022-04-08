@@ -55,7 +55,7 @@
                                 px-3
                                 py-2
                             "
-                            :to="`/${currentUser.name}/projects/${project.slug}`"
+                            :to="`/${currentUser.name}/projects/${project.slug}/code`"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -81,7 +81,7 @@
                                 px-3
                                 py-2
                             "
-                            :to="`/${currentUser.name}/projects/${project.slug}/code`"
+                            :to="`/${currentUser.name}/projects/${project.slug}`"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"

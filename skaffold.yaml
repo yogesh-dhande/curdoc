@@ -21,16 +21,16 @@ build:
   tagPolicy:
     sha256: {}
 profiles:
-  - name: minikube
+  - name: staging
     deploy:
       kubectl:
         manifests:
           - kubernates-manifests/common/*.yaml
           - kubernates-manifests/dev/*.yaml
-  - name: staging
+  - name: production
     build:
       googleCloudBuild:
-        projectId: databrowser-ykd
+        projectId: bokeh-gcp-deploy
     deploy:
       kubectl:
         manifests:

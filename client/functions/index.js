@@ -1,5 +1,4 @@
 const { signUp } = require("./src/auth");
-const { getAppScript } = require("./src/sandbox");
 const {
   updateUserWhenNewProjectCreated,
   updateUserWhenProjectUpdated,
@@ -9,7 +8,6 @@ const {
 
 module.exports = {
   signUp,
-  getAppScript,
   updateUserWhenNewProjectCreated,
   updateUserWhenProjectUpdated,
   handleProjectDeleted,

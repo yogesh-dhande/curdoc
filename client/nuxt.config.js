@@ -22,7 +22,6 @@ export default {
     storageBucket: process.env.NUXT_ENV_STORAGE_BUCKET,
     messagingSenderId: process.env.NUXT_ENV_MESSAGING_SENDER_ID,
     appId: process.env.NUXT_ENV_ID,
-    measurementId: process.env.NUXT_ENV_MEASUREMENT_ID,
   },
   ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head

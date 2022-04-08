@@ -119,7 +119,7 @@ export const actions = {
 
     await setDoc(projectRef, project);
     this.$splitbee.track("createProject", project);
-    this.$router.push(`${project.user.name}/projects/${project.slug}/code`);
+    this.$router.push(`/${project.user.name}/projects/${project.slug}/code`);
   },
 
   async setProject({ commit }, payload) {

@@ -12,6 +12,6 @@ gcloud deploy releases create 'rel-$DATE-$TIME' \
   --project=$PROJECT_ID \
   --region=us-central1 \
   --delivery-pipeline=curdoc-deployment \
-  --images=frontend=gcr.io/$PROJECT_ID/frontend:latest,lsp=gcr.io/$PROJECT_ID/lsp:latest,sandbox=gcr.io/$PROJECT_ID/sandbox:latest
+  --images=frontend=us-docker.pkg.dev/$PROJECT_ID/gcr.io/frontend,lsp=us-docker.pkg.dev/$PROJECT_ID/gcr.io/lsp,sandbox=us-docker.pkg.dev/$PROJECT_ID/gcr.io/sandbox
 
 # cd client && npm run deploy

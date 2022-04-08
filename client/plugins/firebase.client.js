@@ -16,7 +16,6 @@ export default ({ store, env }, inject) => {
     storageBucket: env.NUXT_ENV_STORAGE_BUCKET,
     messagingSenderId: env.NUXT_ENV_MESSAGING_SENDER_ID,
     appId: env.NUXT_ENV_ID,
-    measurementId: env.NUXT_ENV_MEASUREMENT_ID,
   };
 
   let firebaseApp;
