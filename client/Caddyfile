@@ -7,9 +7,10 @@
         reverse_proxy http://lsp:8080
     }
 
-    root dist
-    file_server
-    handle * {
-        reverse_proxy /index.html
+    root * /app/dist/
+    
+    handle {
+        try_files {path}.html {path} /
+        file_server 
     }
 }

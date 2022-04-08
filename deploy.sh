@@ -4,9 +4,9 @@ PROJECT_ID=$(gcloud config get-value project)
 
 echo $PROJECT_ID
 
-# gcloud builds submit --timeout=1800s
+gcloud builds submit --timeout=1800s
 
-# gcloud deploy apply --file clouddeploy.yaml --region=us-central1 --project=$PROJECT_ID
+gcloud deploy apply --file clouddeploy.yaml --region=us-central1 --project=$PROJECT_ID
 
 gcloud deploy releases create 'rel-$DATE-$TIME' \
   --project=$PROJECT_ID \
