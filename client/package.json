@@ -22,7 +22,7 @@
     "core-js": "^3.9.1",
     "firebase": "^9.6.0",
     "monaco-editor": "^0.24.0",
-    "monaco-languageclient": "next",
+    "monaco-languageclient": "0.13.1-next.9",
     "nuxt": "^2.13.3",
     "postscribe": "^2.0.8",
     "vscode-ws-jsonrpc": "^0.2.0"
