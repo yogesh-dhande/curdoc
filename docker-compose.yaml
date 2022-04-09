@@ -3,14 +3,14 @@ services:
   caddy:
     build:
       context: .
-      dockerfile: Dockerfile-dev
+      dockerfile: Dockerfile.dev
     container_name: caddy
     ports:
       - "4503:8080"
   client:
     build:
       context: client
-      dockerfile: Dockerfile-dev
+      dockerfile: Dockerfile.dev
     container_name: client
     ports:
       - "8081:8080"

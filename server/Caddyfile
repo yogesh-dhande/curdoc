@@ -50,6 +50,11 @@
         reverse_proxy http://localhost:8000
     }
 
+    # Hack to serve static panel resources because they panel serve does not respect --prefix
+    handle /static/extensions/panel/* {
+        reverse_proxy http://localhost:10000
+    }
+
     respond "hello world from the sandbox!"
 }
 

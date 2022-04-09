@@ -1,7 +1,0 @@
-FROM caddy
-
-WORKDIR /app
-
-ADD Caddyfile-dev .
-
-CMD ["caddy", "run", "--config", "Caddyfile-dev"]

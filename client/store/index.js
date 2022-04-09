@@ -110,7 +110,7 @@ export const actions = {
 
     await uploadString(
       ref(this.$firebase.storage, join("users", blob.fullPath)),
-      starterBokehCode
+      "from bokeh.io import curdoc"
     );
 
     const project = {
