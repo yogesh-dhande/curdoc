@@ -168,12 +168,8 @@ export const actions = {
 
       commit("SET_APP_SCRIPT", res.data);
       this.$splitbee.track("getAppScript");
-
-      if (
-        state.codeChanged &&
-        state.project.user &&
-        state.project.user.name !== "guest"
-      ) {
+      console.log(state.codeChanged, state.project.user.name, "Saving code");
+      if (state.project.user && state.project.user.name !== "guest") {
         state.project.blob.map(
           async (blob) =>
             await uploadString(
