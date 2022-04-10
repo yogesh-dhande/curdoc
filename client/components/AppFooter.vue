@@ -81,7 +81,7 @@
                 >
             </nav>
 
-            <p class="mt-8 text-center text-base text-gray-400">
+            <p class="my-4 text-center text-base text-gray-400">
                 &copy; {{ new Date().getFullYear() }} Curdoc. All rights
                 reserved.
             </p>
