@@ -99,7 +99,7 @@ export const actions = {
     }
   },
 
-  async createProject({ state }, slug) {
+  async createProject({ state, commit }, slug) {
     const projectRef = doc(collection(this.$firebase.db, "projects"));
 
     const relativePath = "main.py";
@@ -126,6 +126,7 @@ export const actions = {
 
     await setDoc(projectRef, project);
     this.$splitbee.track("createProject", project);
+    commit("SET_CODE_CHANGED", true);
     this.$router.push(`/${project.user.name}/projects/${project.slug}/code`);
   },
 
