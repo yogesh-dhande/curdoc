@@ -26,8 +26,10 @@
                     "
                 >
                     Build and share
-                    <span class="block text-blue-400"> Bokeh and Panel </span
-                    >applications
+                    <span class="block">
+                        <span class="text-blue-400">Bokeh</span> and
+                        <span class="text-blue-400"> Panel </span>applications
+                    </span>
                 </h1>
             </div>
             <div

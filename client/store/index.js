@@ -12,7 +12,7 @@ import {
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 // eslint-disable-next-line import/order
 import { join } from "path";
-import { starterBokehCode } from "./demo";
+import { starterCode } from "./demo";
 
 export const state = () => ({
   authUserId: null,
@@ -32,7 +32,7 @@ export const state = () => ({
       {
         fullPath: "initialPath",
         relativePath: "app/main.py",
-        text: starterBokehCode,
+        text: starterCode,
       },
     ],
   },
@@ -110,7 +110,7 @@ export const actions = {
 
     await uploadString(
       ref(this.$firebase.storage, join("users", blob.fullPath)),
-      "from bokeh.io import curdoc"
+      starterCode
     );
 
     const project = {

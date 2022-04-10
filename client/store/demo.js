@@ -1,3 +1,10 @@
+export const starterCode = `
+from bokeh.io import curdoc
+from bokeh.models.widgets import Div
+
+curdoc().add_root(Div(text="Hello World"))
+`;
+
 export const starterBokehCode = `
 from random import random
 
