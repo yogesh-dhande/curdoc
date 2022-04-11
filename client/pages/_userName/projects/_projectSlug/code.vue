@@ -31,6 +31,7 @@ export default {
             context.store.state.project.user.name !== returnData.userName
         ) {
             await context.store.dispatch('setProject', returnData)
+            context.store.dispatch('setAppScript', context.query) // No need to wait for script
         }
 
         return returnData
