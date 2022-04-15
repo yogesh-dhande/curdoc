@@ -6,48 +6,36 @@ curdoc().add_root(Div(text="Hello World"))
 `;
 
 export const starterBokehCode = `
-from random import random
-
+# Source: https://docs.bokeh.org/en/latest/docs/user_guide/categorical.html
 from bokeh.layouts import column
-from bokeh.models import Button
-from bokeh.palettes import RdYlBu3
-from bokeh.plotting import figure, curdoc
+from bokeh.models import Slider
+from bokeh.plotting import figure
+from bokeh.io import curdoc
 
-# create a plot and style its properties
-p = figure(x_range=(0, 100), y_range=(0, 100), toolbar_location=None)
-p.border_fill_color = 'black'
-p.background_fill_color = 'black'
-p.outline_line_color = None
-p.grid.grid_line_color = None
+plot = figure(plot_width=400, plot_height=400)
+r = plot.circle(
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+    ],
+    [3, 2, 5, 6, 4],
+    radius=0.2,
+    alpha=0.5,
+)
 
-# add a text renderer to the plot (no data yet)
-r = p.text(x=[], y=[], text=[], text_color=[], text_font_size="26px",
-           text_baseline="middle", text_align="center")
+slider = Slider(title="Size", start=0.1, end=0.5, step=0.01, value=0.2)
 
-i = 0
 
-ds = r.data_source
+def update_glyph(attr, old, new):
+    r.glyph.radius = new
 
-# create a callback that adds a number in a random location
-def callback():
-    global i
 
-    # BEST PRACTICE --- update .data in one step with a new dict
-    new_data = dict()
-    new_data['x'] = ds.data['x'] + [random()*70 + 15]
-    new_data['y'] = ds.data['y'] + [random()*70 + 15]
-    new_data['text_color'] = ds.data['text_color'] + [RdYlBu3[i%3]]
-    new_data['text'] = ds.data['text'] + [str(i)]
-    ds.data = new_data
+slider.on_change("value", update_glyph)
 
-    i = i + 1
-
-# add a button widget and configure with the call back
-button = Button(label="Press Me")
-button.on_click(callback)
-
-# put the button and plot in a layout and add to the document
-curdoc().add_root(column(button, p))
+curdoc().add_root(column(slider, plot))
 `;
 
 export const starterPanelCode = `
