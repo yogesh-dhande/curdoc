@@ -1,4 +1,4 @@
-# bokeh-play
+# curdoc.dev
 
 A playground for building and deploying bokeh apps
 
