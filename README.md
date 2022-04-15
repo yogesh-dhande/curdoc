@@ -1,6 +1,6 @@
 # curdoc.dev
 
-A playground for building and deploying bokeh apps
+A playground for building and deploying bokeh and panel apps
 
 ## Develop locally using docker compose
 
