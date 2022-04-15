@@ -21,7 +21,7 @@ build:
   tagPolicy:
     sha256: {}
 profiles:
-  - name: staging
+  - name: minikube
     deploy:
       kubectl:
         manifests:

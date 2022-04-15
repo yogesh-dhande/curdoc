@@ -35,6 +35,7 @@ function createLanguageClient(connection) {
   });
 }
 
+// eslint-disable-next-line no-unused-vars
 function connectToMonacoServer(url) {
   const webSocket = new WebSocket(url);
   listen({
@@ -70,7 +71,7 @@ const editorService = {
         automaticLayout: true,
       });
       MonacoServices.install(monaco);
-      connectToMonacoServer(url);
+      // connectToMonacoServer(url);
       _editor = editor;
       editorModels = {};
     }
