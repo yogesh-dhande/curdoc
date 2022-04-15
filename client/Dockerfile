@@ -1,19 +1,19 @@
-FROM node
+FROM node:14-alpine as builder
 
-RUN npm install -g firebase-tools && apt-get update && apt-get install -y openjdk-8-jre
+ARG DEPLOY_TARGET=staging
+WORKDIR /app
+ADD package*.json ./
+RUN npm install
+COPY . ./
+ENV DEPLOY_TARGET=$DEPLOY_TARGET
+RUN npm run build
+
+FROM caddy
 
 WORKDIR /app
 
-COPY package*.json .
-RUN npm install
+COPY --from=builder ./app/dist ./dist/
 
-COPY . .
+ADD Caddyfile .
 
-EXPOSE 8080
-
-ARG VUE_APP_BACKEND_URL
-ENV VUE_APP_BACKEND_URL=$VUE_APP_BACKEND_URL
-
-USER node
-
-CMD ["npm", "run", "serve"]
+CMD ["caddy", "run"]

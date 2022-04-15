@@ -1,22 +1,20 @@
-from fastapi import FastAPI
-from fastapi.exceptions import HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.params import Depends
-from starlette import status
+import os
 
-from models.blob import Blob
-from models.project import Project
-from models.user import User
-from services.auth import JWTBearer
-from services.cloud_storage import cloud_storage_service
+from fastapi import APIRouter
+from fastapi import FastAPI
+from fastapi import Header
+from fastapi.middleware.cors import CORSMiddleware
+
+from models.session import Session
 from services.container import container_service
 from services.validation import register_exception_handlers
 
 app = FastAPI()
 
+router = APIRouter()
+
 origins = [
-    "http://localhost:8080",
-    "http://localhost",
+    f"{os.getenv('ORIGIN_PROTOCOL')}://{os.getenv('ORIGIN_DOMAIN')}",
 ]
 
 app.add_middleware(
@@ -34,50 +32,23 @@ register_exception_handlers(app)
 async def shutdown_event():
     print("shuting the server down")
     container_service.stop_all_containers()
-    cloud_storage_service.sync()
 
 
-@app.get("/")
+@router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "from sandbox"}
 
 
-@app.get("/user/{name}")
-async def get_user(name: str):
-    # TODO filter out private projects if current_user_id != id
-    return User.from_name(name).get()
+@router.get("/test")
+async def test():
+    return {"message": "from sandbox/test"}
 
 
-@app.get("/project")
-async def get_project(user_name: str, project_name: str):
-    user = User.from_name(user_name)
-    return Project(user=user, name=project_name).get()
+@router.post("/project")
+async def get_script(session: Session, api_key: str = Header(None)):
+    # if api_key != os.getenv("SANDBOX_API_KEY"):
+    #     raise InvalidAPIKey(api_key=api_key)
+    return session.project.get_app_script(session.new, query=session.query)
 
 
-@app.get("/blob")
-async def get_blob(user_name: str, project_name: str, relative_file_path: str):
-    return Project(user=User.from_name(user_name), name=project_name).get_blob(relative_file_path)
-
-
-@app.get("/script")
-async def get_script(user_name: str, project_name: str):
-    return Project(user=User.from_name(user_name), name=project_name).get_app_script()
-
-
-@app.post("/project")
-async def create_project(project: Project):
-    print(project)
-    project.create()
-    return project
-
-
-@app.put("/blob")
-async def update_blob(project: Project, blob: Blob, current_user_id: str = Depends(JWTBearer())):
-    if current_user_id != project.user.id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"You do not have permission to edit this project",
-        )
-
-    project.update_blob(blob)
-    return blob
+app.include_router(router, prefix="/sandbox")

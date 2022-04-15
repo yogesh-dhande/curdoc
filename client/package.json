@@ -1,60 +1,51 @@
 {
-  "name": "bokeh-play-client",
-  "version": "0.1.0",
+  "name": "client",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "dev": "nuxt",
+    "firebase": "npm run default && firebase emulators:start --import test/.seed",
+    "export": "firebase emulators:export test/.seed",
+    "default": "firebase use staging",
+    "prod": "firebase use production",
+    "start": "nuxt start",
+    "build": "rm -rf dist && nuxt generate",
+    "deploy": "npm run prod && DEPLOY_TARGET=production firebase deploy --only=functions,firestore,storage",
+    "test:firebase": "firebase emulators:exec 'jest --env=node --detectOpenHandles --watch test/firebase/*'",
+    "test": "jest",
+    "reinstall": "rm package-lock.json && rm -rf node_modules && npm i"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.28",
-    "@fortawesome/free-solid-svg-icons": "^5.13.0",
-    "@fortawesome/vue-fontawesome": "^0.1.9",
-    "ace-builds": "^1.4.12",
-    "axios": "^0.21.0",
-    "bootstrap-vue": "2.15.0",
-    "core-js": "^3.6.5",
-    "dotenv": "^8.2.0",
-    "firebase": "^8.2.0",
-    "firebaseui": "^4.5.1",
+    "@nuxtjs/axios": "^5.13.1",
+    "@splitbee/web": "^0.3.0",
+    "axios": "^0.21.4",
+    "core-js": "^3.9.1",
+    "firebase": "^9.6.0",
+    "monaco-editor": "^0.24.0",
+    "monaco-languageclient": "0.13.1-next.9",
+    "nuxt": "^2.13.3",
     "postscribe": "^2.0.8",
-    "uuid": "^8.1.0",
-    "vue": "^2.6.11",
-    "vue-router": "^3.3.2",
-    "vuex": "^3.5.1",
-    "vscode-ws-jsonrpc": "^0.2.0",
-    "monaco-languageclient": "^0.13.0",
-    "monaco-editor": "^0.21.3"
+    "vscode-ws-jsonrpc": "^0.2.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.4.0",
-    "@vue/cli-plugin-eslint": "^4.4.0",
-    "@vue/cli-service": "^4.4.0",
+    "@firebase/rules-unit-testing": "~2.0.1",
+    "@nuxtjs/eslint-config": "^6.0.0",
+    "@nuxtjs/eslint-module": "^3.0.2",
+    "@nuxtjs/tailwindcss": "^4.0.1",
+    "@vue/test-utils": "^1.1.3",
+    "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "monaco-editor-webpack-plugin": "^2.1.0",
-    "vue-template-compiler": "^2.6.11",
-    "webpack-bundle-analyzer": "^3.9.0"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.27.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-nuxt": "^2.0.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-vue": "^7.9.0",
+    "jest": "^26.6.3",
+    "monaco-editor-webpack-plugin": "^3.0.0",
+    "postcss": "^8.2.8",
+    "prettier": "^2.3.0",
+    "vue-jest": "^3.0.4"
+  }
 }

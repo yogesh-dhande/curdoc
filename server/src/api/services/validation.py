@@ -13,7 +13,9 @@ class CustomHTTPException(HTTPException):
 
     @classmethod
     def handle(cls, request: Request, exc: "CustomHTTPException"):
-        return JSONResponse(status_code=cls.status_code, content={"message": exc.get_message()})
+        return JSONResponse(
+            status_code=cls.status_code, content={"message": exc.get_message()}
+        )
 
 
 class UserNotFoundError(CustomHTTPException):
@@ -63,6 +65,16 @@ class BlobNotFoundError(CustomHTTPException):
 
     def get_message(self):
         return f"File at location {self.relative_path} was not found for project {self.project_id}."
+
+
+class InvalidAPIKey(CustomHTTPException):
+    status_code = status.HTTP_403_FORBIDDEN
+
+    def __init__(self, api_key: str) -> None:
+        self.api_key = api_key
+
+    def get_message(self):
+        return f"Invalid api key {self.api_key}"
 
 
 def register_exception_handlers(app: FastAPI):

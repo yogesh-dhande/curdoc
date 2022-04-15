@@ -1,5 +1,11 @@
+!.env.sample
+**.env.*local
+**.runtimeconfig.json
+**serviceKey**
+server/node_modules
+client/node_modules
 server/projects
-server/databrowser-service-account-key.json
+server/*-service-account-key.json
 __pycache__/
 *.py[cod]
 *$py.class

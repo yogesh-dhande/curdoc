@@ -7,15 +7,14 @@ RUN apt-get update -yq \
 
 WORKDIR /app
 
-COPY package.json .
+COPY package*.json ./
 RUN npm install
 
 COPY . .
 
 RUN pip install python-language-server[all]
 
-ENV PORT=3000
-EXPOSE $PORT
+EXPOSE 8080
 
 ARG USER=lsp
 RUN useradd -s /bin/bash -m ${USER}

@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  client:
+    build:
+      context: client
+    container_name: client
+    ports:
+      - "4503:8080"
+    stdin_open: true
+    tty: true
+    volumes:
+      - /app/node_modules
+      - /Users/yogesh/projects/bokeh-play/client:/app
+    env_file:
+      - client/envs/.env.development.local
+  lsp:
+    build: lsp
+    container_name: lsp
+    ports:
+      - "8082:8080"
+    stdin_open: true
+    tty: true
+    volumes:
+      - /app/node_modules
+      - /Users/yogesh/projects/bokeh-play/lsp:/app
+  sandbox:
+    build: server
+    container_name: sandbox
+    stdin_open: true
+    tty: true
+    restart: always
+    volumes:
+      - /app/public
+      - /Users/yogesh/projects/bokeh-play/server:/app
+    environment:
+      - ORIGIN_DOMAIN=127.0.0.1:4503
+      - ORIGIN_PROTOCOL=http
+      - DEPLOY_TARGET=dev

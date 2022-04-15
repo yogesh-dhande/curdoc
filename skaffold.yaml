@@ -1,18 +1,38 @@
-apiVersion: skaffold/v2beta9
+apiVersion: skaffold/v2beta25
 kind: Config
 metadata:
-  name: bokeh-play
+  name: curdc
 build:
   artifacts:
-    - image: bokey-play_client
+    - image: frontend
       context: client
-    - image: bokey-play_sandbox
-      context: sandbox
-    - image: bokey-play_server
+      docker:
+        dockerfile: Dockerfile
+        buildArgs:
+          DEPLOY_TARGET: staging
+    - image: lsp
+      context: lsp
+      docker:
+        dockerfile: Dockerfile
+    - image: sandbox
       context: server
+      docker:
+        dockerfile: Dockerfile
   tagPolicy:
     sha256: {}
-deploy:
-  kubectl:
-    manifests:
-      - kubernates-manifests/*.yaml
+profiles:
+  - name: minikube
+    deploy:
+      kubectl:
+        manifests:
+          - kubernates-manifests/common/*.yaml
+          - kubernates-manifests/dev/*.yaml
+  - name: production
+    build:
+      googleCloudBuild:
+        projectId: bokeh-gcp-deploy
+    deploy:
+      kubectl:
+        manifests:
+          - kubernates-manifests/common/*.yaml
+          - kubernates-manifests/staging/*.yaml

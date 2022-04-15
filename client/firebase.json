@@ -1,20 +1,12 @@
 {
-  "database": {
-    "rules": "database.rules.json"
-  },
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "functions": {
-  },
+  "functions": {},
   "hosting": {
-    "public": "dist",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "**",
@@ -27,23 +19,28 @@
   },
   "emulators": {
     "auth": {
-      "port": 9099
+      "port": 10000,
+      "enabled": true
     },
     "functions": {
-      "port": 10000
+      "port": 10001,
+      "enabled": true
     },
     "firestore": {
-      "port": 10001
-    },
-    "database": {
-      "port": 10002
+      "port": 10002,
+      "enabled": true
     },
     "hosting": {
-      "port": 10003
+      "port": 10003,
+      "enabled": true
     },
     "ui": {
       "enabled": true,
       "port": 10004
+    },
+    "storage": {
+      "enabled": true,
+      "port": 10005
     }
   },
   "remoteconfig": {

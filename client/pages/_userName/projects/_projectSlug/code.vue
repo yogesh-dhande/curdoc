@@ -1,0 +1,77 @@
+<template>
+    <div class="flex flex-col">
+        <h2 v-if="!loggedIn" class="text-blue-100 m-0 p-2 text-center">
+            <span class="text-blue-300">
+                <nuxt-link to="/login">Log in or sign up</nuxt-link></span
+            >
+            to start creating your own projects for free.
+        </h2>
+        <monaco-editor
+            :blob="blob"
+            :can-edit="canEdit"
+            @updateCode="updateCode"
+        ></monaco-editor>
+    </div>
+</template>
+
+<script>
+import { mapState, mapGetters } from 'vuex'
+
+export default {
+    key(route) {
+        return route.name
+    },
+    async asyncData(context) {
+        const returnData = {
+            userName: context.params.userName,
+            projectSlug: context.params.projectSlug,
+        }
+        if (
+            context.store.state.project.slug !== returnData.projectSlug ||
+            context.store.state.project.user.name !== returnData.userName
+        ) {
+            await context.store.dispatch('setProject', returnData)
+            context.store.dispatch('setAppScript', context.query) // No need to wait for script
+        }
+
+        return returnData
+    },
+    data() {
+        return {
+            blob: {
+                fullPath: 'initialPath',
+                relativePath: 'app/main.py',
+                text: '',
+            },
+            codeChanged: false,
+            codeChangeCallback: null,
+        }
+    },
+    computed: {
+        ...mapState(['project']),
+        ...mapGetters(['canEdit', 'loggedIn']),
+    },
+    watch: {
+        project(newValue) {
+            this.setBlobFromProject(newValue)
+        },
+    },
+    mounted() {
+        this.setBlobFromProject(this.project)
+    },
+    methods: {
+        setBlobFromProject(project) {
+            this.blob = project.blob.length > 0 ? project.blob[0] : null
+        },
+        updateCode(evt) {
+            this.$store.dispatch('updateCode', {
+                blob: this.blob,
+                text: evt.text,
+            })
+        },
+    },
+}
+</script>
+
+<style>
+</style>

@@ -1,0 +1,11 @@
+client/node_modules
+client/functions/node_modules
+client/dist
+.git
+.devcontainer
+Dockerfile
+docker-debian.sh
+.github
+.nuxt
+server/*-service-account-key.json
+.vscode

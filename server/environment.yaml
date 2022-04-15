@@ -1,0 +1,11 @@
+channels:
+  - conda-forge
+dependencies:
+  - pip
+  - pip:
+      - fastapi
+      - uvicorn
+      - bokeh
+      - panel
+      - hvplot
+      - panel-chemistry

@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "pysheets-app"
+    "production": "bokeh-gcp-deploy",
+    "staging": "databrowser-ykd"
   }
 }
+

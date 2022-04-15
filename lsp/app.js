@@ -29,15 +29,17 @@ process.on("uncaughtException", function (err) {
   }
 });
 
-const app = express();
-app.use(express.static(__dirname));
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+const router = express.Router();
+router.get("/", (req, res) => {
+  res.send("Hello World from LSP!");
 });
 
-const server = app.listen(8000, () => {
-  console.log(`Example app listening ..`);
+const app = express();
+
+app.use("/lsp", router);
+
+const server = app.listen(8080, () => {
+  console.log(`LSP app listening ..`);
 });
 
 // create the web socket

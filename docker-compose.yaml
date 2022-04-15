@@ -1,38 +1,46 @@
 version: "3.8"
 services:
-  lsp:
-    build: lsp
-    stdin_open: true
-    tty: true
+  caddy:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: caddy
     ports:
-      - "8000:8000"
-    volumes:
-      - /app/node_modules
-      - /Users/yogesh/projects/bokeh-play/lsp:/app
+      - "4503:8080"
   client:
-    build: client
+    build:
+      context: client
+      dockerfile: Dockerfile.dev
+    container_name: client
+    ports:
+      - "8081:8080"
     stdin_open: true
     tty: true
-    ports:
-      - "8080:8080"
     volumes:
       - /app/node_modules
       - /Users/yogesh/projects/bokeh-play/client:/app
-    environment:
-      - VUE_APP_BACKEND_URL=http://localhost:5000
-  server:
-    build: server
+    env_file:
+      - client/envs/.env.development.local
+  lsp:
+    build: lsp
+    container_name: lsp
+    ports:
+      - "8082:8080"
     stdin_open: true
     tty: true
-    ports:
-      - "5000:5000"
-      - "5001-5010"
     volumes:
+      - /app/node_modules
+      - /Users/yogesh/projects/bokeh-play/lsp:/app
+  sandbox:
+    build: server
+    container_name: sandbox
+    stdin_open: true
+    tty: true
+    restart: always
+    volumes:
+      - /app/public
       - /Users/yogesh/projects/bokeh-play/server:/app
-      - projects:/app/projects
-      - /Users/yogesh/projects/bokeh-play/server/projects:/projects
-      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      PROJECTS_DIR: /Users/yogesh/projects/bokeh-play/server/projects
-volumes:
-  projects:
+      - ORIGIN_DOMAIN=127.0.0.1:4503
+      - ORIGIN_PROTOCOL=http
+      - DEPLOY_TARGET=dev
