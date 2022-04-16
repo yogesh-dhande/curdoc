@@ -18,6 +18,9 @@ spec:
       containers:
         - name: server
           image: server:latest
+          volumeMounts:
+            - mountPath: "/projects"
+              name: projects
           resources:
             limits:
               cpu: "400m"
@@ -30,3 +33,7 @@ spec:
               value: "127.0.0.1:4503"
             - name: ORIGIN_PROTOCOL
               value: http
+      volumes:
+        - name: projects
+          hostPath:
+            path: "/projects"
