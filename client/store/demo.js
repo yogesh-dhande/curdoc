@@ -39,31 +39,45 @@ curdoc().add_root(column(slider, plot))
 `;
 
 export const starterPanelCode = `
-# Source: https://panel.holoviz.org/user_guide/APIs.html
-import hvplot.pandas
+# Source: https://panel.holoviz.org/reference/templates/Bootstrap.html
 import panel as pn
-from bokeh.sampledata.autompg import autompg
-import param
+import numpy as np
+import holoviews as hv
 
-columns = list(autompg.columns[:-2])
+pn.extension(sizing_mode="stretch_width")
 
-def autompg_plot(x='mpg', y='hp', color='#058805'):
-    return autompg.hvplot.scatter(x, y, c=color, padding=0.1)
+bootstrap = pn.template.BootstrapTemplate(title="Bootstrap Template")
+
+xs = np.linspace(0, np.pi)
+freq = pn.widgets.FloatSlider(name="Frequency", start=0, end=10, value=2)
+phase = pn.widgets.FloatSlider(name="Phase", start=0, end=np.pi)
 
 
-class MPGExplorer(param.Parameterized):
+@pn.depends(freq=freq, phase=phase)
+def sine(freq, phase):
+    return hv.Curve((xs, np.sin(xs * freq + phase))).opts(
+        responsive=True, min_height=400
+    )
 
-    x = param.Selector(objects=columns)
-    y = param.Selector(default='hp', objects=columns)
-    color = param.Color(default='#0f0f0f')
-    
-    @param.depends('x', 'y', 'color') # optional in this case
-    def plot(self):
-        return autompg_plot(self.x, self.y, self.color)
 
-explorer = MPGExplorer()
+@pn.depends(freq=freq, phase=phase)
+def cosine(freq, phase):
+    return hv.Curve((xs, np.cos(xs * freq + phase))).opts(
+        responsive=True, min_height=400
+    )
 
-pn.Row(explorer.param, explorer.plot).servable()
+
+bootstrap.sidebar.append(freq)
+bootstrap.sidebar.append(phase)
+
+bootstrap.main.append(
+    pn.Row(
+        pn.Card(hv.DynamicMap(sine), title="Sine"),
+        pn.Card(hv.DynamicMap(cosine), title="Cosine"),
+    )
+)
+bootstrap.servable()
+
 `;
 
 function generateId() {

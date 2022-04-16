@@ -1,6 +1,6 @@
 <template>
     <div class="min-h-screen bg-white">
-        <bokeh-app v-if="script" :key="script" :script="script"></bokeh-app>
+        <bokeh-app v-if="url" :key="url" :url="url"></bokeh-app>
     </div>
 </template>
 
@@ -18,13 +18,13 @@ export default {
     beforeRouteEnter(to, from, next) {
         next((vm) => {
             setTimeout(() => {
-                vm.setScript()
+                vm.setAppUrl()
             }, 1000) // let the DOM load
-            vm.scriptWatcher = vm.$watch('appScript', () => {
-                vm.setScript()
-                if (vm.scriptWatcher) {
-                    vm.scriptWatcher()
-                    vm.scriptWatcher = null
+            vm.appUrlWatcher = vm.$watch('appUrl', () => {
+                vm.setAppUrl()
+                if (vm.appUrlWatcher) {
+                    vm.appUrlWatcher()
+                    vm.appUrlWatcher = null
                 }
             })
         })
@@ -33,8 +33,8 @@ export default {
         next()
     },
     beforeRouteLeave(to, from, next) {
-        if (this.scriptWatcher) {
-            this.scriptWatcher()
+        if (this.appUrlWatcher) {
+            this.appUrlWatcher()
         }
         next()
     },
@@ -48,36 +48,36 @@ export default {
             context.store.state.project.user.name !== returnData.userName
         ) {
             await context.store.dispatch('setProject', returnData)
-            await context.store.dispatch('setAppScript', context.query)
+            await context.store.dispatch('setAppUrl', context.query)
         } else if (context.store.state.codeChanged) {
-            await context.store.dispatch('setAppScript', context.query)
+            await context.store.dispatch('setAppUrl', context.query)
         }
         return returnData
     },
     data() {
         return {
-            script: null,
-            scriptWatcher: null,
+            url: null,
+            appUrlWatcher: null,
         }
     },
     computed: {
-        ...mapState(['appScript', 'project', 'codeChanged']),
+        ...mapState(['appUrl', 'project', 'codeChanged']),
     },
     watch: {
         codeChanged(newValue) {
             if (newValue) {
-                this.script = null
+                this.url = null
             }
         },
     },
     mounted() {
-        this.setScript()
+        this.setAppUrl()
     },
     methods: {
-        setScript() {
-            if (this.appScript) {
-                this.script = this.appScript
-                this.$store.commit('SET_APP_SCRIPT', null)
+        setAppUrl() {
+            if (this.appUrl) {
+                this.url = this.appUrl
+                this.$store.commit('SET_APP_URL', null)
             }
         },
     },

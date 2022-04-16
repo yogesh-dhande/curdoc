@@ -45,10 +45,10 @@ async def test():
 
 
 @router.post("/project")
-async def get_script(session: Session, api_key: str = Header(None)):
+async def get_app_url(session: Session, api_key: str = Header(None)):
     # if api_key != os.getenv("SANDBOX_API_KEY"):
     #     raise InvalidAPIKey(api_key=api_key)
-    return session.project.get_app_script(session.new, query=session.query)
+    return session.project.get_app_url(session.new, query=session.query)
 
 
 app.include_router(router, prefix="/sandbox")

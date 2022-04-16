@@ -1,22 +1,20 @@
 <template>
-    <div
-        ref="script-app"
-        class="bg-white flex lg:justify-center min-h-screen pt-4"
-    ></div>
+    <iframe
+        :key="url"
+        :src="url"
+        class="min-h-screen"
+        height="100%"
+        width="100%"
+    ></iframe>
 </template>
 
 <script>
-import postscribe from 'postscribe'
-
 export default {
     props: {
-        script: {
+        url: {
             type: String,
             default: null,
         },
-    },
-    mounted() {
-        postscribe(this.$refs['script-app'], this.script)
     },
 }
 </script>
