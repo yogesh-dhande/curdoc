@@ -1,8 +1,8 @@
 <template>
     <iframe
-        :key="script"
-        :src="script"
-        class="min-h-screen mx-auto"
+        :key="url"
+        :src="url"
+        class="min-h-screen"
         height="100%"
         width="100%"
     ></iframe>
@@ -11,7 +11,7 @@
 <script>
 export default {
     props: {
-        script: {
+        url: {
             type: String,
             default: null,
         },

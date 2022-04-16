@@ -37,7 +37,7 @@ export const state = () => ({
     ],
   },
   codeChanged: false,
-  appScript: null,
+  appUrl: null,
 });
 
 export const getters = {
@@ -159,7 +159,7 @@ export const actions = {
     }
   },
 
-  async setAppScript({ state, commit }, query) {
+  async setAppUrl({ state, commit }, query) {
     try {
       const res = await post(`/sandbox/project`, {
         project: state.project,
@@ -167,8 +167,8 @@ export const actions = {
         query,
       });
 
-      commit("SET_APP_SCRIPT", res.data);
-      this.$splitbee.track("getAppScript");
+      commit("SET_APP_URL", res.data);
+      this.$splitbee.track("getAppUrl");
       console.log(state.codeChanged, state.project.user.name, "Saving code");
       if (state.project.user && state.project.user.name !== "guest") {
         state.project.blob.map(
@@ -181,7 +181,7 @@ export const actions = {
       }
     } catch (error) {
       if (error.response) {
-        commit("SET_APP_SCRIPT", error.response.data.message);
+        commit("SET_APP_URL", error.response.data.message);
         this.$splitbee.track("Error", {
           errors: [error.response.data.message],
         });
@@ -213,8 +213,8 @@ export const mutations = {
   SET_PROJECT(state, project) {
     state.project = project;
   },
-  SET_APP_SCRIPT(state, script) {
-    state.appScript = script;
+  SET_APP_URL(state, url) {
+    state.appUrl = url;
     state.codeChanged = false;
   },
   UPDATE_CODE(state, payload) {
