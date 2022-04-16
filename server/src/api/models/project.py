@@ -34,14 +34,14 @@ class Project(BaseModel):
 
     def get_app_script(self, new=False, query=None) -> Optional[str]:
         self.ensure_locally(overwrite=new)
-        container_session = container_service.get_container_session_for_project(
-            self.id, new=new
-        )
+        container_session = container_service.get_container_session_for_project(self.id, new=new)
         self.wait_for_server_to_be_ready(container_session)
 
         # External link to the app
-        app_url = f"{os.getenv('ORIGIN_PROTOCOL')}://{os.getenv('ORIGIN_DOMAIN')}/sandbox/{container_session.port}/{self.id}"
-        return server_document(url=app_url, arguments=query)
+        app_url = (
+            f"{os.getenv('ORIGIN_PROTOCOL')}://{os.getenv('ORIGIN_DOMAIN')}/sandbox/{container_session.port}/{self.id}"
+        )
+        return app_url
 
     def wait_for_server_to_be_ready(self, container_session: ContainerSessionBase):
         # Internal link to the app
