@@ -8,4 +8,5 @@ dependencies:
       - bokeh
       - panel
       - hvplot
+      - holoviews
       - panel-chemistry
