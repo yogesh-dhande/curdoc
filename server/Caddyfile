@@ -1,60 +1,58 @@
-
 :8080 {
-
-    handle /sandbox/5001/* {
+    handle /server/5001/* {
         reverse_proxy http://localhost:5001
     }
 
-    handle /sandbox/5002/* {
+    handle /server/5002/* {
         reverse_proxy http://localhost:5002
     }
 
-    handle /sandbox/5003/* {
+    handle /server/5003/* {
         reverse_proxy http://localhost:5003
     }
 
-    handle /sandbox/5004/* {
+    handle /server/5004/* {
         reverse_proxy http://localhost:5004
     }
 
-    handle /sandbox/5005/* {
+    handle /server/5005/* {
         reverse_proxy http://localhost:5005
     }
 
-    handle /sandbox/5006/* {
+    handle /server/5006/* {
         reverse_proxy http://localhost:5006
     }
 
-    handle /sandbox/5007/* {
+    handle /server/5007/* {
         reverse_proxy http://localhost:5007
     }
 
-    handle /sandbox/5008/* {
+    handle /server/5008/* {
         reverse_proxy http://localhost:5008
     }
 
-    handle /sandbox/5009/* {
+    handle /server/5009/* {
         reverse_proxy http://localhost:5009
     }
 
-    handle /sandbox/5010/* {
+    handle /server/5010/* {
         reverse_proxy http://localhost:5010
     }
 
-    handle /sandbox/public/* {
-        uri strip_prefix /sandbox
+    handle /server/public/* {
+        uri strip_prefix /server
         file_server 
     }
 
-    handle /sandbox/* {
+    handle /server/* {
         reverse_proxy http://localhost:8000
     }
 
-    # Hack to serve static panel resources because they panel serve does not respect --prefix
+    # Hack to serve static panel resources because the script tag from panel serve does not respect --prefix
     handle /static/extensions/panel/* {
         reverse_proxy http://localhost:10000
     }
 
-    respond "hello world from the sandbox!"
+    respond "hello world from the server!"
 }
 

@@ -36,12 +36,24 @@ async def shutdown_event():
 
 @router.get("/")
 async def root():
-    return {"message": "from sandbox"}
+    return {"message": "from the server"}
 
 
 @router.get("/test")
 async def test():
-    return {"message": "from sandbox/test"}
+    from kubernetes import client
+    from kubernetes import config
+
+    # Configs can be set in Configuration class directly or using helper utility
+    config.load_incluster_config()
+    
+    v1 = client.CoreV1Api()
+    print("Listing pods with their IPs:")
+    ret = v1.list_pod_for_all_namespaces(watch=False)
+    for i in ret.items:
+        print("%s\t%s\t%s" % (i.status.pod_ip, i.metadata.namespace, i.metadata.name))
+
+    return {"message": "from server/test"}
 
 
 @router.post("/project")
@@ -51,4 +63,4 @@ async def get_script(session: Session, api_key: str = Header(None)):
     return session.project.get_app_script(session.new, query=session.query)
 
 
-app.include_router(router, prefix="/sandbox")
+app.include_router(router, prefix="/server")

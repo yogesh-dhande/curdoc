@@ -1,22 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sandbox
+  name: server
   labels:
-    app: sandbox
+    app: server
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: sandbox
+      app: server
   template:
     metadata:
       labels:
-        app: sandbox
+        app: server
     spec:
+      serviceAccount: sandbox-service-account
       containers:
-        - name: sandbox
-          image: sandbox:latest
+        - name: server
+          image: server:latest
           resources:
             limits:
               cpu: "400m"

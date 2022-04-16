@@ -161,7 +161,7 @@ export const actions = {
 
   async setAppScript({ state, commit }, query) {
     try {
-      const res = await post(`/sandbox/project`, {
+      const res = await post(`/server/project`, {
         project: state.project,
         new: state.codeChanged,
         query,

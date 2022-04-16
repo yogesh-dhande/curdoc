@@ -9,11 +9,11 @@ A playground for building and deploying bokeh and panel apps
 
 ---
 
-## Develop locally using kubernates on minikube
+## Develop locally using kubernetes on minikube
 
 - `cd client && npm run emulators`
 - `minikube start`
-- From the command palette, select `Run on Kubernates` and select minikube as the context.
+- From the command palette, select `Run on kubernetes` and select minikube as the context.
 
 ---
 

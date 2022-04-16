@@ -1,0 +1,4 @@
+kubernetes
+panel
+fastapi
+uvicorn

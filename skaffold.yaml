@@ -10,12 +10,12 @@ build:
         dockerfile: Dockerfile
         buildArgs:
           DEPLOY_TARGET: staging
-    - image: lsp
-      context: lsp
+    - image: server
+      context: server
       docker:
         dockerfile: Dockerfile
     - image: sandbox
-      context: server
+      context: sandbox
       docker:
         dockerfile: Dockerfile
   tagPolicy:
@@ -25,8 +25,8 @@ profiles:
     deploy:
       kubectl:
         manifests:
-          - kubernates-manifests/common/*.yaml
-          - kubernates-manifests/dev/*.yaml
+          - kubernetes-manifests/common/*.yaml
+          - kubernetes-manifests/dev/*.yaml
   - name: production
     build:
       googleCloudBuild:
@@ -34,5 +34,5 @@ profiles:
     deploy:
       kubectl:
         manifests:
-          - kubernates-manifests/common/*.yaml
-          - kubernates-manifests/staging/*.yaml
+          - kubernetes-manifests/common/*.yaml
+          - kubernetes-manifests/staging/*.yaml
