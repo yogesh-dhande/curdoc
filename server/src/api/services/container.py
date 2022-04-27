@@ -6,6 +6,8 @@ from contextlib import closing
 from typing import Dict
 from typing import List
 
+from services.storage import storage_service
+
 allowed_ports = range(5001, 5010)
 
 
@@ -57,6 +59,9 @@ class ContainerSessionBase(object):
 
     def is_container_running(self):
         raise NotImplementedError
+
+    def get_log_path(self):
+        return storage_service.get_log_path(self.project_id)
 
 
 class SubprocessContainerSession(ContainerSessionBase):

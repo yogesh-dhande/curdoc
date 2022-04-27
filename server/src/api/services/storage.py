@@ -28,6 +28,11 @@ class StorageService(StorageBase):
     def get_local_path(project_id, relative_path):
         return os.path.join(PROJECTS_DIR, project_id, relative_path)
 
+    @staticmethod
+    def get_log_path(project_id):
+        path = os.path.join(PROJECTS_DIR, project_id, "log")
+        return path
+
     def does_blob_exist_locally(self, project_id, relative_path) -> bool:
         path = self.get_local_path(project_id, relative_path)
         return os.path.exists(path)

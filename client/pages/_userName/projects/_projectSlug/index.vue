@@ -1,6 +1,12 @@
 <template>
     <div class="min-h-screen bg-white">
         <bokeh-app v-if="url" :key="url" :url="url"></bokeh-app>
+        <card
+            v-else-if="error"
+            class="bg-gray-900 whitespace-pre-wrap max-w-lg mx-auto"
+        >
+            {{ error }}
+        </card>
     </div>
 </template>
 
@@ -61,7 +67,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(['appUrl', 'project', 'codeChanged']),
+        ...mapState(['appUrl', 'project', 'codeChanged', 'error']),
     },
     watch: {
         codeChanged(newValue) {

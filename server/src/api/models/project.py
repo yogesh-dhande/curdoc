@@ -66,3 +66,8 @@ class Project(BaseModel):
             time.sleep(wait_period)
 
         print(f"Waited {i*wait_period} seconds for Bokeh server to be ready")
+
+    def get_logs(self):
+        container_session = container_service.get_container_session_for_project(self.id)
+        with open(container_session.get_log_path(), "r") as log_file:
+            return log_file.read()

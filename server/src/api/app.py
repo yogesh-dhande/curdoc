@@ -4,6 +4,7 @@ from fastapi import APIRouter
 from fastapi import FastAPI
 from fastapi import Header
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from models.session import Session
 from services.container import container_service
@@ -48,7 +49,12 @@ async def test():
 async def get_app_url(session: Session, api_key: str = Header(None)):
     # if api_key != os.getenv("SANDBOX_API_KEY"):
     #     raise InvalidAPIKey(api_key=api_key)
-    return session.project.get_app_url(session.new, query=session.query)
+    return JSONResponse(
+        content={
+            "url": session.project.get_app_url(session.new, query=session.query),
+            "logs": session.project.get_logs(),
+        }
+    )
 
 
 app.include_router(router, prefix="/sandbox")
