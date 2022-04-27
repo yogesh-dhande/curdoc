@@ -38,6 +38,8 @@ export const state = () => ({
   },
   codeChanged: false,
   appUrl: null,
+  logs: "",
+  error: "",
 });
 
 export const getters = {
@@ -167,7 +169,8 @@ export const actions = {
         query,
       });
 
-      commit("SET_APP_URL", res.data);
+      commit("SET_APP_URL", res.data.url);
+      commit("SET_APP_LOGS", res.data.logs);
       this.$splitbee.track("getAppUrl");
       console.log(state.codeChanged, state.project.user.name, "Saving code");
       if (state.project.user && state.project.user.name !== "guest") {
@@ -181,7 +184,7 @@ export const actions = {
       }
     } catch (error) {
       if (error.response) {
-        commit("SET_APP_URL", error.response.data.message);
+        commit("SET_APP_ERROR", error.response.data.message);
         this.$splitbee.track("Error", {
           errors: [error.response.data.message],
         });
@@ -216,6 +219,12 @@ export const mutations = {
   SET_APP_URL(state, url) {
     state.appUrl = url;
     state.codeChanged = false;
+  },
+  SET_APP_LOGS(state, logs) {
+    state.logs = logs;
+  },
+  SET_APP_ERROR(state, error) {
+    state.error = error;
   },
   UPDATE_CODE(state, payload) {
     for (const blob of state.project.blob) {

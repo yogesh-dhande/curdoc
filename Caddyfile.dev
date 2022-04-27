@@ -7,11 +7,6 @@
         reverse_proxy http://lsp:8080
     }
 
-    # Hack to serve static panel resources because they panel serve does not respect --prefix
-    handle /static/extensions/panel/* {
-        reverse_proxy http://sandbox:8080
-    }
-
     handle * {
         reverse_proxy http://client:8080
     }

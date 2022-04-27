@@ -1,17 +1,9 @@
 <template>
-    <div class="flex flex-col">
-        <h2 v-if="!loggedIn" class="text-blue-100 m-0 p-2 text-center">
-            <span class="text-blue-300">
-                <nuxt-link to="/login">Log in or sign up</nuxt-link></span
-            >
-            to start creating your own projects for free.
-        </h2>
-        <monaco-editor
-            :blob="blob"
-            :can-edit="canEdit"
-            @updateCode="updateCode"
-        ></monaco-editor>
-    </div>
+    <monaco-editor
+        :blob="blob"
+        :can-edit="canEdit"
+        @updateCode="updateCode"
+    ></monaco-editor>
 </template>
 
 <script>
@@ -49,7 +41,7 @@ export default {
     },
     computed: {
         ...mapState(['project']),
-        ...mapGetters(['canEdit', 'loggedIn']),
+        ...mapGetters(['canEdit']),
     },
     watch: {
         project(newValue) {
